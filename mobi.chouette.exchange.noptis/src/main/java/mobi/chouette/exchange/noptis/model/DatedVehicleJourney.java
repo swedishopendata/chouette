@@ -25,11 +25,6 @@ public class DatedVehicleJourney extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "OperatingDayDate")
     private LocalDate operatingDayDate;
 

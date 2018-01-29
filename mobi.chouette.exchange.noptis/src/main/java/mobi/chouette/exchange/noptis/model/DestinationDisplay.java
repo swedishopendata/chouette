@@ -24,11 +24,6 @@ public class DestinationDisplay extends NoptisDataSourceObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "LineDesignation", nullable = false)
     private String lineDesignation;
 

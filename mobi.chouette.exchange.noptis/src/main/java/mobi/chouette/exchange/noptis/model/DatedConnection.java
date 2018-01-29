@@ -24,11 +24,6 @@ public class DatedConnection extends NoptisDataSourceObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "IsBasedOnConnectionCandidateId", nullable = false)
     private long isBasedOnConnectionCandidateId;
 

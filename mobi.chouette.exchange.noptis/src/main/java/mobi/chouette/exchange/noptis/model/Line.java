@@ -25,11 +25,6 @@ public class Line extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "Number", nullable = false)
     private short number;
 

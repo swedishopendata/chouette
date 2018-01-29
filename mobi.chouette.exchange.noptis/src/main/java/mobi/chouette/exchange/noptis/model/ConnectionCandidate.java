@@ -24,11 +24,6 @@ public class ConnectionCandidate extends NoptisDataSourceObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "IsFromFeederVehicleJourneyId", nullable = false)
     private long isFromFeederVehicleJourneyId;
 

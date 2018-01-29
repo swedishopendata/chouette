@@ -27,11 +27,6 @@ public class NamedJourneyPattern extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "ReferenceName")
     private String referenceName;
 

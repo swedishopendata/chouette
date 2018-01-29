@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "DataSource")
 @NoArgsConstructor
-public class DataSource {
+public class DataSource extends NoptisObject {
 
     @Getter
     @Setter

@@ -25,11 +25,6 @@ public class DirectionOfLine extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "DirectionCode", nullable = false)
     @Enumerated(EnumType.STRING)
     private DirectionCode directionCode;

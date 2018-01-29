@@ -22,11 +22,6 @@ public class RouteLinkTraversableByTransportMode extends NoptisDataSourceObject 
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "IsRouteLinkId", nullable = false)
     private long isRouteLinkId;
 

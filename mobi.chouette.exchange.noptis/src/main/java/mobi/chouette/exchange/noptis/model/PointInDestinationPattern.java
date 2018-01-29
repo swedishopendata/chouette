@@ -24,11 +24,6 @@ public class PointInDestinationPattern extends NoptisDataSourceObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "IsInDestinationPatternId", nullable = false)
     private long isInDestinationPatternId;
 

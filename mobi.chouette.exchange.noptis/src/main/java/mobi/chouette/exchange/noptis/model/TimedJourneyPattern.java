@@ -24,11 +24,6 @@ public class TimedJourneyPattern extends NoptisDataSourceObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "IsBasedOnJourneyPatternId", nullable = false)
     private long isBasedOnJourneyPatternId;
 

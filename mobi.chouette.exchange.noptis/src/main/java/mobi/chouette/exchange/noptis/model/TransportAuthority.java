@@ -27,11 +27,6 @@ public class TransportAuthority extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId", nullable = false)
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "Number", nullable = false)
     private int number;
 

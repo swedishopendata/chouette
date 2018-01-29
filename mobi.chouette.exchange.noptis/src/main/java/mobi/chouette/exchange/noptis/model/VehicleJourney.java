@@ -25,11 +25,6 @@ public class VehicleJourney extends NoptisDataSourceObject {
 
     @Getter
     @Setter
-    @Column(name = "IsFromDataSourceId")
-    private short isFromDataSourceId;
-
-    @Getter
-    @Setter
     @Column(name = "PlannedStartOffsetDateTime", nullable = false)
     private OffsetDayTime plannedStartOffsetDayTime;
 
