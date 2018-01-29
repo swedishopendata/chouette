@@ -1,11 +1,40 @@
 package mobi.chouette.exchange.noptis.model;
 
-public interface DestinationDisplay {
-    long getId();
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    short getIsFromDataSourceId();
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-    String getLineDesignation();
+@Entity
+@Table(name = "DestinationDisplay")
+@NoArgsConstructor
+public class DestinationDisplay extends NoptisDataSourceObject {
 
-    String getPrimaryDestinationName();
+    private static final long serialVersionUID = 1906461481038430787L;
+
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
+
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
+
+    @Getter
+    @Setter
+    @Column(name = "LineDesignation", nullable = false)
+    private String lineDesignation;
+
+    @Getter
+    @Setter
+    @Column(name = "PrimaryDestinationName", nullable = false)
+    private String primaryDestinationName;
+
 }

@@ -1,21 +1,52 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import mobi.chouette.exchange.noptis.model.type.PlannedTypeCode;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
-public interface DatedVehicleJourney {
-    long getId();
+@Entity
+@Table(name = "DatedVehicleJourney")
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class DatedVehicleJourney extends NoptisIdentifiedObject {
 
-    short getIsFromDataSourceId();
+    private static final long serialVersionUID = -1120186859203997846L;
 
-    LocalDate getOperatingDayDate();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    long getGid();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    long getIsBasedOnVehicleJourneyId();
+    @Getter
+    @Setter
+    @Column(name = "OperatingDayDate")
+    private LocalDate operatingDayDate;
 
-    PlannedTypeCode getPlannedTypeCode();
+    @Getter
+    @Setter
+    @Column(name = "IsBasedOnVehicleJourneyId")
+    private long isBasedOnVehicleJourneyId;
 
-    Long getIsReplacedById();
+    @Getter
+    @Setter
+    @Column(name = "PlannedTypeCode")
+    @Enumerated(EnumType.STRING)
+    private PlannedTypeCode plannedTypeCode;
+
+    @Getter
+    @Setter
+    @Column(name = "IsReplacedById")
+    private Long isReplacedById;
+
 }

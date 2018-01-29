@@ -1,31 +1,80 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import mobi.chouette.exchange.noptis.model.type.PointOnLinkTypeCode;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
-public interface PointOnRouteLink {
-    long getId();
+@Entity
+@Table(name = "PointOnRouteLink")
+@NoArgsConstructor
+public class PointOnRouteLink extends NoptisDataSourceObject {
 
-    short getIsFromDataSourceId();
+    private static final long serialVersionUID = -6665416515286275873L;
 
-    PointOnLinkTypeCode getPointOnLinkTypeCode();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    Double getAtOffsetMeters();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    Integer getDurationFromBeginningSeconds();
+    @Getter
+    @Setter
+    @Column(name = "PointOnLinkTypeCode")
+    @Enumerated(EnumType.STRING)
+    private PointOnLinkTypeCode pointOnLinkTypeCode;
 
-    Integer getDurationFromLatestArrival();
+    @Getter
+    @Setter
+    @Column(name = "AtOffsetMeters")
+    private Double atOffsetMeters;
 
-    String getCoordinateSystemName();
+    @Getter
+    @Setter
+    @Column(name = "DurationFromBeginningSeconds")
+    private Integer durationFromBeginningSeconds;
 
-    String getLocationNorthingCoordinate();
+    @Getter
+    @Setter
+    @Column(name = "DurationBeforeLatestArrivalSeconds")
+    private Integer durationFromLatestArrival;
 
-    String getLocationEastingCoordinate();
+    @Getter
+    @Setter
+    @Column(name = "CoordinateSystemName")
+    private String coordinateSystemName;
 
-    long getIsOnRouteLinkId();
+    @Getter
+    @Setter
+    @Column(name = "LocationNorthingCoordinate")
+    private String locationNorthingCoordinate;
 
-    LocalDate getExistsFromDate();
+    @Getter
+    @Setter
+    @Column(name = "LocationEastingCoordinate")
+    private String locationEastingCoordinate;
 
-    LocalDate getExistsUpToDate();
+    @Getter
+    @Setter
+    @Column(name = "IsOnRouteLinkId")
+    private long isOnRouteLinkId;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUptoDate")
+    private LocalDate existsUpToDate;
+
 }

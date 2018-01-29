@@ -1,21 +1,61 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
-public interface RouteLink {
-    long getId();
+@Entity
+@Table(name = "RouteLink")
+@NoArgsConstructor
+public class RouteLink extends NoptisDataSourceObject {
 
-    short getIsFromDataSourceId();
+    private static final long serialVersionUID = 3241415831258603289L;
 
-    long getStartsAtJourneyPatternPointGid();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    long getEndsAtJourneyPatternPointGid();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    String getName();
+    @Getter
+    @Setter
+    @Column(name = "StartsAtJourneyPatternPointGid", nullable = false)
+    private long startsAtJourneyPatternPointGid;
 
-    int getDistanceMeters();
+    @Getter
+    @Setter
+    @Column(name = "EndsAtJourneyPatternPointGid", nullable = false)
+    private long endsAtJourneyPatternPointGid;
 
-    LocalDate getExistsFromDate();
+    @Getter
+    @Setter
+    @Column(name = "name")
+    private String name;
 
-    LocalDate getExistsUpToDate();
+    @Getter
+    @Setter
+    @Column(name = "DistanceMeters", nullable = false)
+    private int distanceMeters;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUptoDate")
+    private LocalDate existsUpToDate;
+
 }

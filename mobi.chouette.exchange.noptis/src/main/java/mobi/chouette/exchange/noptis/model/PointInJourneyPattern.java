@@ -1,20 +1,57 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import mobi.chouette.exchange.noptis.model.type.ArrivalType;
 import mobi.chouette.exchange.noptis.model.type.DepartureType;
 
-public interface PointInJourneyPattern {
-    long getId();
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-    short getIsFromDataSourceId();
+@Entity
+@Table(name = "PointInJourneyPattern")
+@NoArgsConstructor
+public class PointInJourneyPattern extends NoptisDataSourceObject {
 
-    long getIsInJourneyPatternId();
+    private static final long serialVersionUID = -4969226411596859858L;
 
-    long getIsJourneyPatternPointGid();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    int getSequenceNumber();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    DepartureType getDepartureType();
+    @Getter
+    @Setter
+    @Column(name = "IsInJourneyPatternId", nullable = false)
+    private long isInJourneyPatternId;
 
-    ArrivalType getArrivalType();
+    @Getter
+    @Setter
+    @Column(name = "IsJourneyPatternPointGid", nullable = false)
+    private long isJourneyPatternPointGid;
+
+    @Getter
+    @Setter
+    @Column(name = "SequenceNumber", nullable = false)
+    private int sequenceNumber;
+
+    @Getter
+    @Setter
+    @Column(name = "DepartureType", nullable = false)
+    private DepartureType departureType;
+
+    @Getter
+    @Setter
+    @Column(name = "ArrivalType", nullable = false)
+    private ArrivalType arrivalType;
+
 }

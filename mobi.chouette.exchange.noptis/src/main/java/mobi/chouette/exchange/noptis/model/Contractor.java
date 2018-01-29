@@ -1,15 +1,63 @@
 package mobi.chouette.exchange.noptis.model;
 
-public interface Contractor extends GidPeriodState {
-    long getId();
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    short getIsFromDataSourceId();
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalDate;
 
-    int getNumber();
+@Entity
+@Table(name = "Contractor")
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class Contractor extends NoptisIdentifiedObject {
 
-    long getIsPromotedByTransportAuthorityId();
+    private static final long serialVersionUID = 832125517680054862L;
 
-    String getCode();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    String getName();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
+
+    @Getter
+    @Setter
+    @Column(name = "Number", nullable = false)
+    private int number;
+
+    @Getter
+    @Setter
+    @Column(name = "IsPromotedByTransportAuthorityId", nullable = false)
+    private long isPromotedByTransportAuhthorityId;
+
+    @Getter
+    @Setter
+    @Column(name = "Code", nullable = false)
+    private String code;
+
+    @Getter
+    @Setter
+    @Column(name = "Name", nullable = false)
+    private String name;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUptoDate")
+    private LocalDate existsUpToDate;
+
 }

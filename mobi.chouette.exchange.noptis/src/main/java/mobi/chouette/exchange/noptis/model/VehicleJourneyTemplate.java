@@ -1,25 +1,69 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import mobi.chouette.exchange.noptis.model.type.TransportModeCode;
 
-public interface VehicleJourneyTemplate {
-    long getId();
+import javax.persistence.*;
 
-    short getIsFromDataSourceId();
+@Entity
+@Table(name = "VehicleJourneyTemplate")
+@NoArgsConstructor
+public class VehicleJourneyTemplate extends NoptisDataSourceObject {
 
-    long getIsWorkedOnTimedJourneyPatternId();
+    private static final long serialVersionUID = 2013669579604706128L;
 
-    long getUsesNamedJourneyPatternGid();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    Long getIsWorkedOnDirectionOfLineGid();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    TransportModeCode getTransportModeCode();
+    @Getter
+    @Setter
+    @Column(name = "IsWorkedOnTimedJourneyPatternId", nullable = false)
+    private long isWorkedOnTimedJourneyPatternId;
 
-    Long getContractorGid();
+    @Getter
+    @Setter
+    @Column(name = "UsesNamedJourneyPatternGid", nullable = false)
+    private long usesNamedJourneyPatternGid;
 
-    long getIsWorkedAccordingToServiceCalendarId();
+    @Getter
+    @Setter
+    @Column(name = "IsWorkedOnDirectionOfLineGid", nullable = false)
+    private Long isWorkedOnDirectionOfLineGid;
 
-    boolean isExposedInPrintMedia();
+    @Getter
+    @Setter
+    @Column(name = "TransportModeCode", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransportModeCode transportModeCode;
 
-    long getUsesServiceRequirementPatternId();
+    @Getter
+    @Setter
+    @Column(name = "ContractorGid")
+    private Long contractorGid;
+
+    @Getter
+    @Setter
+    @Column(name = "IsWorkedAccordingToServiceCalendarId", nullable = false)
+    private long isWorkedAccordingToServiceCalendarId;
+
+    @Getter
+    @Setter
+    @Column(name = "ExposedInPrintMedia")
+    private boolean exposedInPrintMedia;
+
+    @Getter
+    @Setter
+    @Column(name = "UsesServiceRequirementPatternId", nullable = false)
+    private long usesServiceRequirementPatternId;
+
 }

@@ -1,21 +1,61 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalTime;
 
-public interface AdvanceOrderCondition {
-    long getId();
+@Entity
+@Table(name = "AdvanceOrderCondition")
+@NoArgsConstructor
+public class AdvanceOrderCondition extends NoptisDataSourceObject {
 
-    short getIsFromDataSourceId();
+    private static final long serialVersionUID = -2822778947806455906L;
 
-    long getIsAppliedToVehicleJourneyId();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    Integer getMinimumDaysInAdvanceCount();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    LocalTime getLatestAbsoluteTime();
+    @Getter
+    @Setter
+    @Column(name = "IsAppliedToVehicleJourneyId", nullable = false)
+    private long isAppliedToVehicleJourneyId;
 
-    Integer getLatestTimeSpanInAdvanceDurationSeconds();
+    @Getter
+    @Setter
+    @Column(name = "MinimumDaysInAdvanceCount")
+    private Integer minimumDaysInAdvanceCount;
 
-    boolean isPublic();
+    @Getter
+    @Setter
+    @Column(name = "LatestAbsoluteTime")
+    private LocalTime latestAbsoluteTime;
 
-    String getPublicNote();
+    @Getter
+    @Setter
+    @Column(name = "LatestTimeSpanInAdvanceDurationSeconds")
+    private Integer latestTimeSpanInAdvanceDurationSeconds;
+
+    @Getter
+    @Setter
+    @Column(name = "PublicYesNo")
+    private boolean publicYesNo;
+
+    @Getter
+    @Setter
+    @Column(name = "PublicNote")
+    private String publicNote;
+
 }

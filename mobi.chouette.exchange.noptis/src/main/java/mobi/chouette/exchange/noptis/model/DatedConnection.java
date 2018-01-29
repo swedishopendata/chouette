@@ -1,17 +1,55 @@
 package mobi.chouette.exchange.noptis.model;
 
-public interface DatedConnection {
-    long getId();
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    short getIsFromDataSourceId();
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-    long getIsBasedOnConnectionCandidateId();
+@Entity
+@Table(name = "DatedConnection")
+@NoArgsConstructor
+public class DatedConnection extends NoptisDataSourceObject {
 
-    long getIsFromFeederDatedVehicleJourneyId();
+    private static final long serialVersionUID = 1192912440755238029L;
 
-    long getIsToFetcherDatedVehicleJourneyId();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    Integer getMinimumChangeDurationSeconds();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    Long getIsReplacedById();
+    @Getter
+    @Setter
+    @Column(name = "IsBasedOnConnectionCandidateId", nullable = false)
+    private long isBasedOnConnectionCandidateId;
+
+    @Getter
+    @Setter
+    @Column(name = "IsFromFeederDatedVehicleJourneyId", nullable = false)
+    private long isFromFeederDatedVehicleJourneyId;
+
+    @Getter
+    @Setter
+    @Column(name = "IsToFetcherDatedVehicleJourneyId", nullable = false)
+    private long isToFetcherDatedVehicleJourneyId;
+
+    @Getter
+    @Setter
+    @Column(name = "MinimumChangeDurationSeconds", nullable = true)
+    private Integer minimumChangeDurationSeconds;
+
+    @Getter
+    @Setter
+    @Column(name = "IsReplacedById", nullable = true)
+    private Long isReplacedById;
+
 }

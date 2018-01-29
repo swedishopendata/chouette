@@ -1,25 +1,65 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import mobi.chouette.exchange.noptis.model.type.TransferModeCode;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
-public interface ConnectionLink {
-    long getId();
+@Entity
+@Table(name = "ConnectionLink")
+@NoArgsConstructor
+public class ConnectionLink extends NoptisDataSourceObject {
 
-    short getIsFromDataSourceId();
+    private static final long serialVersionUID = -7382750771644698538L;
 
-    long getStartsAtJourneyPatternPointGid();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    long getEndsAtJourneyPatternPointGid();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    TransferModeCode getTransferModeCode();
+    @Getter
+    @Setter
+    @Column(name = "StartsAtJourneyPatternPointGid", nullable = false)
+    private long startsAtJourneyPatternPointGid;
 
-    Integer getDistanceMeters();
+    @Getter
+    @Setter
+    @Column(name = "EndsAtJourneyPatternPointGid", nullable = false)
+    private long endsAtJourneyPatternPointGid;
 
-    int getDefaultDurationSeconds();
+    @Getter
+    @Setter
+    @Column(name = "TransferModeCode", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransferModeCode transferModeCode;
 
-    LocalDate getExistsFromDate();
+    @Getter
+    @Setter
+    @Column(name = "DistanceMeters")
+    private Integer distanceMeters;
 
-    LocalDate getExistsUpToDate();
+    @Getter
+    @Setter
+    @Column(name = "DefaultDurationSeconds", nullable = false)
+    private int defaultDurationSeconds;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUptoDate")
+    private LocalDate existsUpToDate;
+
 }

@@ -1,29 +1,92 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import mobi.chouette.exchange.noptis.model.type.StopAreaTypeCode;
 
-public interface StopArea extends GidPeriodState {
-    long getId();
+import javax.persistence.*;
+import java.time.LocalDate;
 
-    short getIsFromDataSourceId();
+@Entity
+@Table(name = "StopArea")
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class StopArea extends NoptisIdentifiedObject {
 
-    int getNumber();
+    private static final long serialVersionUID = 4731642204508063552L;
 
-    String getName();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    String getShortName();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    StopAreaTypeCode getTypeCode();
+    @Getter
+    @Setter
+    @Column(name = "Number", nullable = false)
+    private int number;
 
-    long getIsDefinedByTransportAuthorityId();
+    @Getter
+    @Setter
+    @Column(name = "Name", nullable = false)
+    private String name;
 
-    String getCoordinateSystemName();
+    @Getter
+    @Setter
+    @Column(name = "ShortName")
+    private String shortName;
 
-    String getCentroidNorthingCoordinate();
+    @Getter
+    @Setter
+    @Column(name = "TypeCode", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StopAreaTypeCode typeCode;
 
-    String getCentroidEastingCoordinate();
+    @Getter
+    @Setter
+    @Column(name = "IsDefinedByTransportAuthorityId", nullable = false)
+    private long isDefinedByTransportAuthorityId;
 
-    Integer getDefaultInterchangeDurationSeconds();
+    @Getter
+    @Setter
+    @Column(name = "CoordinateSystemName")
+    private String coordinateSystemName;
 
-    Short getInterchangePriority();
+    @Getter
+    @Setter
+    @Column(name = "CentroidNorthingCoordinate")
+    private String centroidNorthingCoordinate;
+
+    @Getter
+    @Setter
+    @Column(name = "CentroidEastingCoordinate")
+    private String centroidEastingCoordinate;
+
+    @Getter
+    @Setter
+    @Column(name = "DefaultInterchangeDurationSeconds")
+    private Integer defaultInterchangeDurationSeconds;
+
+    @Getter
+    @Setter
+    @Column(name = "InterchangePriority")
+    private Short interchangePriority;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUptoDate")
+    private LocalDate existsUpToDate;
+
 }

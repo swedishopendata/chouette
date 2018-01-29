@@ -1,13 +1,43 @@
 package mobi.chouette.exchange.noptis.model;
 
-public interface DataSource {
-    short getId();
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    String getName();
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-    String getDoiDbUser();
+@Entity
+@Table(name = "DataSource")
+@NoArgsConstructor
+public class DataSource {
 
-    String getDoiDbPassword();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    String getDoiDbUrl();
+    @Getter
+    @Setter
+    @Column(name = "Name", nullable = false)
+    private String name;
+
+    @Getter
+    @Setter
+    @Column(name = "DoiDbUser", nullable = false)
+    private String doiDbUser;
+
+    @Getter
+    @Setter
+    @Column(name = "DoiDbPassword", nullable = false)
+    private String doiDbPassword;
+
+    @Getter
+    @Setter
+    @Column(name = "DoiDbUrl", nullable = false)
+    private String doiDbUrl;
+
 }

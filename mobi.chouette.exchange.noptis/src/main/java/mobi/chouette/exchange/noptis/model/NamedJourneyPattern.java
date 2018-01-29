@@ -1,17 +1,68 @@
 package mobi.chouette.exchange.noptis.model;
 
-public interface NamedJourneyPattern extends GidPeriodState {
-    long getId();
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    short getIsFromDataSourceId();
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalDate;
 
-    String getReferenceName();
+@Entity
+@Table(name = "NamedJourneyPattern")
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class NamedJourneyPattern extends NoptisIdentifiedObject {
 
-    Long getIsOnDirectionOfLineId();
+    private static final long serialVersionUID = -6351023476346666640L;
 
-    Long getIsInScopeOfContractorId();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    long getIsJourneyPatternId();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    long getHasDestinationPatternId();
+    @Getter
+    @Setter
+    @Column(name = "ReferenceName")
+    private String referenceName;
+
+    @Getter
+    @Setter
+    @Column(name = "IsOnDirectionOfLineId")
+    private Long isOnDirectionOfLineId;
+
+    @Getter
+    @Setter
+    @Column(name = "IsInScopeOfContractorId")
+    private Long isInScopeOfContractorId;
+
+    @Getter
+    @Setter
+    @Column(name = "IsJourneyPatternId")
+    private long isJourneyPatternId;
+
+    @Getter
+    @Setter
+    @Column(name = "HasDestinationPatternId")
+    private long hasDestinationPatternId;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUpToDate")
+    private LocalDate existsUpToDate;
+
 }

@@ -1,21 +1,72 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import mobi.chouette.exchange.noptis.model.type.TransportModeCode;
 
-public interface Line extends GidPeriodState {
-    long getId();
+import javax.persistence.*;
+import java.time.LocalDate;
 
-    short getIsFromDataSourceId();
+@Entity
+@Table(name = "Line")
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class Line extends NoptisIdentifiedObject {
 
-    short getNumber();
+    private static final long serialVersionUID = -303098337520961027L;
 
-    String getName();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    String getDesignation();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    TransportModeCode getDefaultTransportModeCode();
+    @Getter
+    @Setter
+    @Column(name = "Number", nullable = false)
+    private short number;
 
-    long getIsDefinedByTransportAuthorityId();
+    @Getter
+    @Setter
+    @Column(name = "Name")
+    private String name;
 
-    boolean isMonitored();
+    @Getter
+    @Setter
+    @Column(name = "Designation", nullable = false)
+    private String designation;
+
+    @Getter
+    @Setter
+    @Column(name = "DefaultTransportModeCode", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransportModeCode defaultTransportModeCode;
+
+    @Getter
+    @Setter
+    @Column(name = "IsDefinedByTransportAuthorityId", nullable = false)
+    private long isDefinedByTransportAuthorityId;
+
+    @Getter
+    @Setter
+    @Column(name = "Monitored")
+    private boolean monitored;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUpToDate")
+    private LocalDate existsUpToDate;
+
 }

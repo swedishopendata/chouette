@@ -1,29 +1,92 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import mobi.chouette.exchange.noptis.model.type.StopPointTypeCode;
 
-public interface StopPoint extends GidPeriodState {
-    long getId();
+import javax.persistence.*;
+import java.time.LocalDate;
 
-    short getIsFromDataSourceId();
+@Entity
+@Table(name = "StopPoint")
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class StopPoint extends NoptisIdentifiedObject {
 
-    String getName();
+    private static final long serialVersionUID = 7309390943720162102L;
 
-    String getShortName();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    String getDesignation();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    short getLocalNumber();
+    @Getter
+    @Setter
+    @Column(name = "Name")
+    private String name;
 
-    long getIsJourneyPatternPointGid();
+    @Getter
+    @Setter
+    @Column(name = "ShortName")
+    private String shortName;
 
-    long getIsIncludedInStopAreaGid();
+    @Getter
+    @Setter
+    @Column(name = "Designation")
+    private String designation;
 
-    StopPointTypeCode getTypeCode();
+    @Getter
+    @Setter
+    @Column(name = "LocalNumber", nullable = false)
+    private short localNumber;
 
-    boolean isForAlighting();
+    @Getter
+    @Setter
+    @Column(name = "IsJourneyPatternPointGid", nullable = false)
+    private long isJourneyPatternPointGid;
 
-    boolean isForBoarding();
+    @Getter
+    @Setter
+    @Column(name = "IsIncludedInStopAreaGid", nullable = false)
+    private long isIncludedInStopAreaGid;
 
-    boolean isFictitious();
+    @Getter
+    @Setter
+    @Column(name = "TypeCode", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StopPointTypeCode typeCode;
+
+    @Getter
+    @Setter
+    @Column(name = "ForAlighting", nullable = false)
+    private boolean forAlighting;
+
+    @Getter
+    @Setter
+    @Column(name = "ForBoarding", nullable = false)
+    private boolean forBoarding;
+
+    @Getter
+    @Setter
+    @Column(name = "Fictitious", nullable = false)
+    private boolean fictitious;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUptoDate")
+    private LocalDate existsUpToDate;
+
 }

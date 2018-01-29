@@ -1,17 +1,62 @@
 package mobi.chouette.exchange.noptis.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import mobi.chouette.exchange.noptis.model.type.DirectionCode;
 
-public interface DirectionOfLine extends GidPeriodState {
-    long getId();
+import javax.persistence.*;
+import java.time.LocalDate;
 
-    short getIsFromDataSourceId();
+@Entity
+@Table(name = "DirectionOfLine")
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class DirectionOfLine extends NoptisIdentifiedObject {
 
-    DirectionCode getDirectionCode();
+    private static final long serialVersionUID = -1068853786349408960L;
 
-    String getName();
+    @Getter
+    @Setter
+    @Id
+    @Column(name = "Id")
+    private Long id;
 
-    long getIsOnLineId();
+    @Getter
+    @Setter
+    @Column(name = "IsFromDataSourceId")
+    private short isFromDataSourceId;
 
-    String getDescriptionNote();
+    @Getter
+    @Setter
+    @Column(name = "DirectionCode", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DirectionCode directionCode;
+
+    @Getter
+    @Setter
+    @Column(name = "Name")
+    private String name;
+
+    @Getter
+    @Setter
+    @Column(name = "IsOnLineId", nullable = false)
+    private long isOnLineId;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsFromDate", nullable = false)
+    private LocalDate existsFromDate;
+
+    @Getter
+    @Setter
+    @Column(name = "ExistsUpToDate")
+    private LocalDate existsUpToDate;
+
+    @Getter
+    @Setter
+    @Column(name = "DescriptionNote")
+    private String descriptionNote;
+
 }
