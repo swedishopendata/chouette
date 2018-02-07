@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Factory" verbose="5" >
+  <test name="ImportNOPTIS" >
+    <packages>
+      <package name="mobi.chouette.exchange.noptis.importer" >
+      </package>
+   </packages>
+  </test>
+</suite>
