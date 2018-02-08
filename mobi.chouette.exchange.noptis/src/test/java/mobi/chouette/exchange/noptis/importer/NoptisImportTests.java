@@ -134,7 +134,7 @@ public class NoptisImportTests extends Arquillian implements Constant, ReportCon
 		configuration.setCleanRepository(true);
 		configuration.setOrganisationName("organisation");
 		configuration.setReferentialName("test");
-		configuration.setObjectIdPrefix("TST");
+		configuration.setObjectIdPrefix("OTR");
 		JobDataTest jobData = new JobDataTest();
 		context.put(JOB_DATA, jobData);
 		jobData.setPathName("target/referential/test");
