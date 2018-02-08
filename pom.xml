@@ -509,7 +509,7 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>mobi.chouette.exchange.netex</artifactId>
+				<artifactId>mobi.chouette.exchange.noptis</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
