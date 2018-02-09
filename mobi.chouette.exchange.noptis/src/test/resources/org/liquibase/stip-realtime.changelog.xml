@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="martin.valldeby">
+        <createTable schemaName="dbo" tableName="DataSource">
+            <column name="Id" type="tinyint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DoiDbUser" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DoiDbPassword" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DoiDbUrl" type="nvarchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="martin.valldeby">
+        <createTable schemaName="dbo" tableName="TransportAuthority">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Number" type="numeric(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TimeTableReleaseForPublicUseUptoDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUptoDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="Code" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FormalName" type="nvarchar(50)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="martin.valldeby">
+        <createTable schemaName="dbo" tableName="Contractor">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Number" type="numeric(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsPromotedByTransportAuthorityId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUptoDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="Code" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="martin.valldeby">
+        <createTable schemaName="dbo" tableName="StopArea">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Number" type="numeric(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ShortName" type="nvarchar(16)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="TypeCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsDefinedByTransportAuthorityId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CoordinateSystemName" type="nvarchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="CentroidNorthingCoordinate" type="varchar(30)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="CentroidEastingCoordinate" type="varchar(30)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DefaultInterchangeDurationSeconds" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="InterchangePriority" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUptoDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="martin.valldeby">
+        <createTable schemaName="dbo" tableName="StopPoint">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ShortName" type="nvarchar(16)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="Designation" type="nvarchar(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LocalNumber" type="numeric(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsJourneyPatternPointGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsIncludedInStopAreaGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TypeCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ForAlighting" type="bit">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ForBoarding" type="bit">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Fictitious" type="bit">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUptoDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="martin.valldeby">
+        <createTable tableName="RouteLinkTraversableByTransportMode">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsRouteLinkId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TransportModeCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7" author="martin.valldeby">
+        <createTable tableName="RouteLink">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StartsAtJourneyPatternPointGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EndsAtJourneyPatternPointGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DistanceMeters" type="decimal(12,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUptoDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8" author="martin.valldeby">
+        <createTable tableName="PointOnRouteLink">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PointOnLinkTypeCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AtOffsetMeters" type="decimal(12,2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DurationFromBeginningSeconds" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DurationBeforeLatestArrivalSeconds" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="CoordinateSystemName" type="nvarchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="LocationNorthingCoordinate" type="varchar(30)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="LocationEastingCoordinate" type="varchar(30)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="IsOnRouteLinkId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUptoDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="8b" author="dick.zetterberg">
+        <createIndex
+                indexName="IX_PointOnRouteLink_IsOnRouteLinkId"
+                schemaName="dbo"
+                tableName="PointOnRouteLink"
+                unique="false">
+            <column name="IsOnRouteLinkId"/>
+            <column name="AtOffsetMeters"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="9" author="martin.valldeby">
+        <createTable schemaName="dbo" tableName="JourneyPatternPoint">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Number" type="numeric(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsDefinedByTransportAuthorityId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CoordinateSystemName" type="nvarchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="LocationNorthingCoordinate" type="varchar(30)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="LocationEastingCoordinate" type="varchar(30)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUptoDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="10" author="tobias.hagglund">
+        <insert tableName="DataSource">
+            <column name="Id">1</column>
+            <column name="Name">SL</column>
+            <column name="DoiDbUser">doi-pp-readonly</column>
+            <column name="DoiDbPassword">FreeHumanity!</column>
+            <column name="DoiDbUrl">jdbc:jtds:sqlserver://preprod-sql02:1433/ptDOI4_SL-not-yet-existing</column>
+        </insert>
+        <insert tableName="DataSource">
+            <column name="Id">3</column>
+            <column name="Name">UL</column>
+            <column name="DoiDbUser">doi-pp-readonly</column>
+            <column name="DoiDbPassword">FreeHumanity!</column>
+            <column name="DoiDbUrl">jdbc:jtds:sqlserver://preprod-sql02:1433/ptDOI4_UL</column>
+        </insert>
+        <insert tableName="DataSource">
+            <column name="Id">5</column>
+            <column name="Name">Östgötatrafiken</column>
+            <column name="DoiDbUser">doi-pp-readonly</column>
+            <column name="DoiDbPassword">FreeHumanity!</column>
+            <column name="DoiDbUrl">jdbc:jtds:sqlserver://preprod-sql02:1433/ptDOI4_OTRAF-not-yet-existing</column>
+        </insert>
+        <insert tableName="DataSource">
+            <column name="Id">14</column>
+            <column name="Name">Västtrafik</column>
+            <column name="DoiDbUser">doi-pp-vasttrafik-ro</column>
+            <column name="DoiDbPassword">FreeHumanity!</column>
+            <column name="DoiDbUrl">jdbc:jtds:sqlserver://preprod-sql02:1433/ptDOI_Mini_PR</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="11" author="martin.valldeby">
+        <createTable tableName="PointInJourneyPattern">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsInJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsJourneyPatternPointGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SequenceNumber" type="numeric(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DepartureType" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ArrivalType" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="11b" author="dick.zetterberg">
+        <createIndex
+                indexName="IX_PointInJourneyPattern_IsInJourneyPatternId"
+                schemaName="dbo"
+                tableName="PointInJourneyPattern"
+                unique="false">
+            <column name="IsInJourneyPatternId"/>
+            <column name="SequenceNumber"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="12" author="martin.valldeby">
+        <createTable tableName="JourneyPattern">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsOnDirectionOfLineId" type="numeric(18)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="13" author="martin.valldeby">
+        <createTable tableName="ConnectionLink">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="StartsAtJourneyPatternPointGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EndsAtJourneyPatternPointGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TransferModeCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DistanceMeters" type="decimal(12,2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DefaultDurationSeconds" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUptoDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="14" author="kalle">
+        <createTable tableName="DestinationDisplay">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LineDesignation" type="nvarchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PrimaryDestinationName" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="15" author="kalle">
+        <createTable tableName="VehicleJourney">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PlannedStartOffsetDateTime" type="dateTime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PlannedEndOffsetDateTime" type="dateTime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsDescribedByVehicleJourneyTemplateId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="16" author="kalle">
+        <createTable tableName="VehicleJourneyTemplate">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsWorkedOnTimedJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UsesNamedJourneyPatternGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsWorkedOnDirectionOfLineGid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TransportModeCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ContractorGid" type="numeric(16)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="IsWorkedAccordingToServiceCalendarId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExposedInPrintMedia" type="bit">
+                <constraints nullable="true"/>
+            </column>
+            <column name="UsesServiceRequirementPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="17" author="kalle">
+        <createTable tableName="DirectionOfLine">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DirectionCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="IsOnLineId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUpToDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="DescriptionNote" type="nvarchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="18" author="martin.valldeby">
+        <createTable tableName="Line">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Number" type="numeric(4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Name" type="nvarchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="Designation" type="nvarchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DefaultTransportModeCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsDefinedByTransportAuthorityId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Monitored" type="bit">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUpToDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="19" author="martin.valldeby">
+        <createTable tableName="DatedVehicleJourney">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OperatingDayDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsBasedOnVehicleJourneyId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PlannedTypeCode" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsReplacedById" type="numeric(18)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="19b" author="dick.zetterberg">
+        <createIndex
+                indexName="IX_DatedVehicleJourney_IsBasedOnVehicleJourneyId"
+                schemaName="dbo"
+                tableName="DatedVehicleJourney"
+                unique="false">
+            <column name="IsBasedOnVehicleJourneyId"/>
+            <column name="OperatingDayDate"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20" author="kalle">
+        <createTable tableName="TimedJourneyPattern">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsBasedOnJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="21" author="kalle">
+        <createTable tableName="CallOnTimedJourneyPattern">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsOnTimedJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsOnPointInJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EarliestDepartureTimeOffsetSeconds" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LatestArrivalTimeOffsetSeconds" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TimingPoint" type="bit">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="21b" author="dick.zetterberg">
+        <createIndex
+                indexName="IX_CallOnTimedJourneyPattern_IsOnTimedJourneyPatternId"
+                schemaName="dbo"
+                tableName="CallOnTimedJourneyPattern"
+                unique="false">
+            <column name="IsOnTimedJourneyPatternId"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="22" author="kalle">
+        <createTable tableName="PointInDestinationPattern">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsInDestinationPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsOnPointInJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="HasDestinationDisplayId" type="numeric(18)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="23" author="martin.valldeby">
+        <createTable tableName="DestinationPattern">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsOnJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="24" author="tobias.hagglund">
+        <createTable tableName="AdvanceOrderCondition">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsAppliedToVehicleJourneyId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MinimumDaysInAdvanceCount" type="numeric(12)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="LatestAbsoluteTime" type="datetime2(0))">
+                <constraints nullable="true"/>
+            </column>
+            <column name="LatestTimeSpanInAdvanceDurationSeconds" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="PublicYesNo" type="bit">
+                <constraints nullable="true"/>
+            </column>
+            <column name="PublicNote" type="nvarchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="25" author="tobias.hagglund">
+        <createTable tableName="DatedConnection">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsBasedOnConnectionCandidateId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsFromFeederDatedVehicleJourneyId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsToFetcherDatedVehicleJourneyId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MinimumChangeDurationSeconds" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="IsReplacedById" type="numeric(18)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="25b" author="dick.zetterberg">
+        <sql dbms="mssql">
+            CREATE NONCLUSTERED INDEX IX_DatedConnection_IsBasedOnConnectionCandidateId ON [dbo].[DatedConnection]
+            (
+            	[IsBasedOnConnectionCandidateId] ASC
+            )
+            INCLUDE ([IsFromFeederDatedVehicleJourneyId],[IsToFetcherDatedVehicleJourneyId])
+        </sql>
+    </changeSet>
+
+    <changeSet id="26" author="tobias.hagglund">
+        <createTable tableName="ConnectionCandidate">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsFromFeederVehicleJourneyId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsFromFeederCallOnTimedJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsToFetcherVehicleJourneyId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsToFetcherCallOnTimedJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="27" author="tobias.hagglund">
+        <createTable tableName="NamedJourneyPattern">
+            <column name="Id" type="numeric(18)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IsFromDataSourceId" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ReferenceName" type="nvarchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Gid" type="numeric(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IsOnDirectionOfLineId" type="numeric(18)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="IsInScopeOfContractorId" type="numeric(18)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="IsJourneyPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="HasDestinationPatternId" type="numeric(18)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsFromDate" type="datetime2(0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ExistsUpToDate" type="datetime2(0)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+    <persistence-unit name="stip-inmemory" transaction-type="RESOURCE_LOCAL">
+
+        <class>mobi.chouette.exchange.noptis.model.AdvanceOrderCondition</class>
+        <class>mobi.chouette.exchange.noptis.model.CallOnTimedJourneyPattern</class>
+        <class>mobi.chouette.exchange.noptis.model.ConnectionCandidate</class>
+        <class>mobi.chouette.exchange.noptis.model.ConnectionLink</class>
+        <class>mobi.chouette.exchange.noptis.model.Contractor</class>
+        <class>mobi.chouette.exchange.noptis.model.DataSource</class>
+        <class>mobi.chouette.exchange.noptis.model.DatedConnection</class>
+        <class>mobi.chouette.exchange.noptis.model.DatedVehicleJourney</class>
+        <class>mobi.chouette.exchange.noptis.model.DestinationDisplay</class>
+        <class>mobi.chouette.exchange.noptis.model.DestinationPattern</class>
+        <class>mobi.chouette.exchange.noptis.model.DirectionOfLine</class>
+        <class>mobi.chouette.exchange.noptis.model.JourneyPattern</class>
+        <class>mobi.chouette.exchange.noptis.model.JourneyPatternPoint</class>
+        <class>mobi.chouette.exchange.noptis.model.Line</class>
+        <class>mobi.chouette.exchange.noptis.model.NamedJourneyPattern</class>
+        <class>mobi.chouette.exchange.noptis.model.PointInDestinationPattern</class>
+        <class>mobi.chouette.exchange.noptis.model.PointInJourneyPattern</class>
+        <class>mobi.chouette.exchange.noptis.model.PointOnRouteLink</class>
+        <class>mobi.chouette.exchange.noptis.model.RouteLink</class>
+        <class>mobi.chouette.exchange.noptis.model.RouteLinkTraversableByTransportMode</class>
+        <class>mobi.chouette.exchange.noptis.model.StopArea</class>
+        <class>mobi.chouette.exchange.noptis.model.StopPoint</class>
+        <class>mobi.chouette.exchange.noptis.model.TimedJourneyPattern</class>
+        <class>mobi.chouette.exchange.noptis.model.TransportAuthority</class>
+        <class>mobi.chouette.exchange.noptis.model.VehicleJourney</class>
+        <class>mobi.chouette.exchange.noptis.model.VehicleJourneyTemplate</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <validation-mode>NONE</validation-mode>
+
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:stip-inmemory"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.default_schema" value="dbo"/>
+            <property name="hibernate.show_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>

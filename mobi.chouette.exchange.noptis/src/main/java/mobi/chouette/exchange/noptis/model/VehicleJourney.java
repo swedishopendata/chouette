@@ -3,12 +3,10 @@ package mobi.chouette.exchange.noptis.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mobi.chouette.exchange.noptis.model.converter.OffsetDayTimeConverter;
 import mobi.chouette.exchange.noptis.model.util.OffsetDayTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "VehicleJourney")
@@ -25,11 +23,13 @@ public class VehicleJourney extends NoptisDataSourceObject {
 
     @Getter
     @Setter
+    @Convert(converter = OffsetDayTimeConverter.class)
     @Column(name = "PlannedStartOffsetDateTime", nullable = false)
     private OffsetDayTime plannedStartOffsetDayTime;
 
     @Getter
     @Setter
+    @Convert(converter = OffsetDayTimeConverter.class)
     @Column(name = "PlannedEndOffsetDateTime", nullable = false)
     private OffsetDayTime plannedEndOffsetDayTime;
 

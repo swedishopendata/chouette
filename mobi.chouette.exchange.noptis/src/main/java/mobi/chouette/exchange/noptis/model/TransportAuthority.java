@@ -4,11 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import mobi.chouette.exchange.noptis.model.converter.LocalDateConverter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -47,16 +45,19 @@ public class TransportAuthority extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "TimeTableReleaseForPublicUseUptoDate", nullable = false)
     private LocalDate timetableReleseaseForPublicUseUptoDate;
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "ExistsFromDate", nullable = false)
     private LocalDate existsFromDate;
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "ExistsUptoDate")
     private LocalDate existsUpToDate;
 

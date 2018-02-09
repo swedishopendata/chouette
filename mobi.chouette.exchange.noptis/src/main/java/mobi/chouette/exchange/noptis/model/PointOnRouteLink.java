@@ -3,6 +3,7 @@ package mobi.chouette.exchange.noptis.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mobi.chouette.exchange.noptis.model.converter.LocalDateConverter;
 import mobi.chouette.exchange.noptis.model.type.PointOnLinkTypeCode;
 
 import javax.persistence.*;
@@ -64,11 +65,13 @@ public class PointOnRouteLink extends NoptisDataSourceObject {
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "ExistsFromDate", nullable = false)
     private LocalDate existsFromDate;
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "ExistsUptoDate")
     private LocalDate existsUpToDate;
 

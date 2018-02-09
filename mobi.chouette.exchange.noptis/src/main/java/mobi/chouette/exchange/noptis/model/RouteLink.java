@@ -3,11 +3,9 @@ package mobi.chouette.exchange.noptis.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mobi.chouette.exchange.noptis.model.converter.LocalDateConverter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -45,11 +43,13 @@ public class RouteLink extends NoptisDataSourceObject {
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "ExistsFromDate", nullable = false)
     private LocalDate existsFromDate;
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "ExistsUptoDate")
     private LocalDate existsUpToDate;
 

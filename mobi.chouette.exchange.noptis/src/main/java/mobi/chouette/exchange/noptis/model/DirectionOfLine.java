@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import mobi.chouette.exchange.noptis.model.converter.LocalDateConverter;
 import mobi.chouette.exchange.noptis.model.type.DirectionCode;
 
 import javax.persistence.*;
@@ -41,11 +42,13 @@ public class DirectionOfLine extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "ExistsFromDate", nullable = false)
     private LocalDate existsFromDate;
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "ExistsUpToDate")
     private LocalDate existsUpToDate;
 
