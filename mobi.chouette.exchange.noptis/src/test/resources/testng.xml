@@ -1,11 +1,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="Factory" verbose="5">
+<!--
 	<test name="Utils">
 		<packages>
 			<package name="mobi.chouette.exchange.noptis"/>
 		</packages>
 	</test>
+-->
 	<test name="Importer">
 		<packages>
 			<package name="mobi.chouette.exchange.noptis.importer"/>

@@ -10,6 +10,7 @@ import liquibase.exception.LockException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.extern.log4j.Log4j;
 import org.h2.jdbcx.JdbcDataSource;
+import org.testng.annotations.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

@@ -131,6 +131,56 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>com.btmatthews.maven.plugins.inmemdb</groupId>
+				<artifactId>inmemdb-maven-plugin</artifactId>
+				<version>1.4.3</version>
+				<configuration>
+					<monitorKey>inmemdb</monitorKey>
+					<monitorPort>11527</monitorPort>
+				</configuration>
+				<executions>
+					<execution>
+						<id>run</id>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>pre-integration-test</phase>
+						<configuration>
+							<daemon>true</daemon>
+							<type>h2</type>
+							<database>stip-inmemory</database>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop</id>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+						<phase>post-integration-test</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>3.5.3</version>
+				<configuration>
+					<changeLogFile>src/test/resources/org/liquibase/stip-realtime.changelog.xml</changeLogFile>
+					<driver>org.h2.Driver</driver>
+					<url>jdbc:h2:mem:stip-inmemory;INIT=CREATE SCHEMA IF NOT EXISTS dbo;</url>
+					<defaultSchemaName>dbo</defaultSchemaName>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -138,6 +188,36 @@
 						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
 					</suiteXmlFiles>
 				</configuration>
+			</plugin>
+            -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.17</version>
+				<configuration>
+					<suiteXmlFiles>
+						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+					<argLine>-Djboss.socket.binding.port-offset=300 -XX:MaxPermSize=256m</argLine>
+					<!-- Fork every test because it will launch a separate AS instance -->
+					<forkCount>1</forkCount>
+					<systemPropertyVariables>
+						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+						<!-- the maven dependency plugin will have already downloaded the server
+							on /target -->
+						<jboss.home>${project.rootDir}/target/wildfly-${wildfly.version}</jboss.home>
+						<module.path>${project.rootDir}/target/wildfly-${wildfly.version}/modules</module.path>
+					</systemPropertyVariables>
+					<redirectTestOutputToFile>false</redirectTestOutputToFile>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
