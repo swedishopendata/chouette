@@ -104,6 +104,18 @@
 			<type>ejb</type>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mobi.chouette.model.stip</artifactId>
+			<type>ejb</type>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>mobi.chouette.dao.stip</artifactId>
+			<type>ejb</type>
+			<version>${project.version}</version>
+		</dependency>
     </dependencies>
 	<build>
 		<plugins>
