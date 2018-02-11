@@ -5,18 +5,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import mobi.chouette.model.stip.converter.LocalDateConverter;
-import mobi.chouette.model.stip.type.TransportModeCode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Line")
+@Table(name = "NamedJourneyPattern")
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class Line extends NoptisIdentifiedObject {
+public class NamedJourneyPattern extends NoptisIdentifiedObject {
 
-    private static final long serialVersionUID = -303098337520961027L;
+    private static final long serialVersionUID = -6351023476346666640L;
 
     @Getter
     @Setter
@@ -26,34 +25,28 @@ public class Line extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
-    @Column(name = "Number", nullable = false)
-    private short number;
+    @Column(name = "ReferenceName")
+    private String referenceName;
 
     @Getter
     @Setter
-    @Column(name = "Name")
-    private String name;
+    @Column(name = "IsOnDirectionOfLineId")
+    private Long isOnDirectionOfLineId;
 
     @Getter
     @Setter
-    @Column(name = "Designation", nullable = false)
-    private String designation;
+    @Column(name = "IsInScopeOfContractorId")
+    private Long isInScopeOfContractorId;
 
     @Getter
     @Setter
-    @Column(name = "DefaultTransportModeCode", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private TransportModeCode defaultTransportModeCode;
+    @Column(name = "IsJourneyPatternId")
+    private long isJourneyPatternId;
 
     @Getter
     @Setter
-    @Column(name = "IsDefinedByTransportAuthorityId", nullable = false)
-    private long isDefinedByTransportAuthorityId;
-
-    @Getter
-    @Setter
-    @Column(name = "Monitored")
-    private boolean monitored;
+    @Column(name = "HasDestinationPatternId")
+    private long hasDestinationPatternId;
 
     @Getter
     @Setter

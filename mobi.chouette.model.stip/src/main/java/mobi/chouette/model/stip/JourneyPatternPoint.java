@@ -5,18 +5,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import mobi.chouette.model.stip.converter.LocalDateConverter;
-import mobi.chouette.model.stip.type.TransportModeCode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Line")
+@Table(name = "JourneyPatternPoint")
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class Line extends NoptisIdentifiedObject {
+public class JourneyPatternPoint extends NoptisIdentifiedObject {
 
-    private static final long serialVersionUID = -303098337520961027L;
+    private static final long serialVersionUID = -5709567812288937708L;
 
     @Getter
     @Setter
@@ -27,23 +26,7 @@ public class Line extends NoptisIdentifiedObject {
     @Getter
     @Setter
     @Column(name = "Number", nullable = false)
-    private short number;
-
-    @Getter
-    @Setter
-    @Column(name = "Name")
-    private String name;
-
-    @Getter
-    @Setter
-    @Column(name = "Designation", nullable = false)
-    private String designation;
-
-    @Getter
-    @Setter
-    @Column(name = "DefaultTransportModeCode", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private TransportModeCode defaultTransportModeCode;
+    private int number;
 
     @Getter
     @Setter
@@ -52,8 +35,18 @@ public class Line extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
-    @Column(name = "Monitored")
-    private boolean monitored;
+    @Column(name = "CoordinateSystemName")
+    private String coordinateSystemName;
+
+    @Getter
+    @Setter
+    @Column(name = "LocationNorthingCoordinate")
+    private String locationNorthingCoordinate;
+
+    @Getter
+    @Setter
+    @Column(name = "LocationEastingCoordinate")
+    private String locationEastingCoordinate;
 
     @Getter
     @Setter
@@ -64,7 +57,7 @@ public class Line extends NoptisIdentifiedObject {
     @Getter
     @Setter
     @Convert(converter = LocalDateConverter.class)
-    @Column(name = "ExistsUpToDate")
+    @Column(name = "ExistsUptoDate")
     private LocalDate existsUpToDate;
 
 }
