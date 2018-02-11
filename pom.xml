@@ -484,7 +484,17 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>mobi.chouette.model.stip</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>mobi.chouette.dao</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>mobi.chouette.dao.stip</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -808,8 +818,10 @@
 		<module>mobi.chouette.persistence.hibernate</module>
 		<module>mobi.chouette.model</module>
 		<module>mobi.chouette.model.iev</module>
+		<module>mobi.chouette.model.stip</module>
 		<module>mobi.chouette.dao</module>
 		<module>mobi.chouette.dao.iev</module>
+		<module>mobi.chouette.dao.stip</module>		
 		<module>mobi.chouette.exchange</module>
 		<module>mobi.chouette.exchange.neptune</module>
 		<module>mobi.chouette.exchange.netex</module>
