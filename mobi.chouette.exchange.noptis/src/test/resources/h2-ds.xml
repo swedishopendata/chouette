@@ -4,7 +4,7 @@
         http://www.jboss.org/ironjacamar/schema
         http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
 
-	<datasource jndi-name="java:jboss/datasources/TestDS" pool-name="test">
+	<datasource jndi-name="java:jboss/datasources/stip" pool-name="stip" enabled="true" use-java-context="true">
 		<connection-url>jdbc:h2:mem:stip-inmemory;INIT=CREATE SCHEMA IF NOT EXISTS dbo;</connection-url>
 		<driver-class>org.h2.Driver</driver-class>
 		<driver>h2</driver>
@@ -13,5 +13,5 @@
 			<password></password>
 		</security>
 	</datasource>
-
+	
 </datasources>
