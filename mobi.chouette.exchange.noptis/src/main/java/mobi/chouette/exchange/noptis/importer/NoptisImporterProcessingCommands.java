@@ -13,8 +13,8 @@ import mobi.chouette.exchange.ProcessingCommandsFactory;
 import mobi.chouette.exchange.importer.CleanRepositoryCommand;
 import mobi.chouette.exchange.importer.UncompressCommand;
 import mobi.chouette.exchange.noptis.Constant;
-import mobi.chouette.exchange.noptis.model.Line;
 import mobi.chouette.exchange.report.ActionReporter;
+import mobi.chouette.model.stip.Line;
 
 import javax.naming.InitialContext;
 import java.io.IOException;

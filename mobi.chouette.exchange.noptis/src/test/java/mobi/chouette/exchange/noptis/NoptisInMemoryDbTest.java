@@ -1,21 +1,5 @@
 package mobi.chouette.exchange.noptis;
 
-import com.google.common.reflect.ClassPath;
-import mobi.chouette.exchange.noptis.model.DestinationDisplay;
-import mobi.chouette.exchange.noptis.model.DirectionOfLine;
-import mobi.chouette.exchange.noptis.model.Line;
-import mobi.chouette.exchange.noptis.model.TransportAuthority;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public class NoptisInMemoryDbTest {
 
 /*
