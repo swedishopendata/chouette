@@ -70,7 +70,32 @@
     <persistence-unit name="stip" transaction-type="JTA">
         <jta-data-source>java:jboss/datasources/stip</jta-data-source>
 
+        <class>mobi.chouette.model.stip.AdvanceOrderCondition</class>
+        <class>mobi.chouette.model.stip.CallOnTimedJourneyPattern</class>
+        <class>mobi.chouette.model.stip.ConnectionCandidate</class>
+        <class>mobi.chouette.model.stip.ConnectionLink</class>
+        <class>mobi.chouette.model.stip.Contractor</class>
+        <class>mobi.chouette.model.stip.DataSource</class>
+        <class>mobi.chouette.model.stip.DatedConnection</class>
+        <class>mobi.chouette.model.stip.DatedVehicleJourney</class>
+        <class>mobi.chouette.model.stip.DestinationDisplay</class>
+        <class>mobi.chouette.model.stip.DestinationPattern</class>
+        <class>mobi.chouette.model.stip.DirectionOfLine</class>
+        <class>mobi.chouette.model.stip.JourneyPattern</class>
+        <class>mobi.chouette.model.stip.JourneyPatternPoint</class>
         <class>mobi.chouette.model.stip.Line</class>
+        <class>mobi.chouette.model.stip.NamedJourneyPattern</class>
+        <class>mobi.chouette.model.stip.PointInDestinationPattern</class>
+        <class>mobi.chouette.model.stip.PointInJourneyPattern</class>
+        <class>mobi.chouette.model.stip.PointOnRouteLink</class>
+        <class>mobi.chouette.model.stip.RouteLink</class>
+        <class>mobi.chouette.model.stip.RouteLinkTraversableByTransportMode</class>
+        <class>mobi.chouette.model.stip.StopArea</class>
+        <class>mobi.chouette.model.stip.StopPoint</class>
+        <class>mobi.chouette.model.stip.TimedJourneyPattern</class>
+        <class>mobi.chouette.model.stip.TransportAuthority</class>
+        <class>mobi.chouette.model.stip.VehicleJourney</class>
+        <class>mobi.chouette.model.stip.VehicleJourneyTemplate</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <validation-mode>NONE</validation-mode>
