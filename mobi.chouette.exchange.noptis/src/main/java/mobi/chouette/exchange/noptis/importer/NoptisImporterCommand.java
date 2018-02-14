@@ -20,7 +20,7 @@ import javax.naming.InitialContext;
 import java.io.IOException;
 
 @Log4j
-public class NoptisImporterCommand extends AbstractImporterCommand implements Command, Constant {
+public class NoptisImporterCommand extends AbstractNoptisImporterCommand implements Command, Constant {
 
 	public static final String COMMAND = "NoptisImporterCommand";
 
