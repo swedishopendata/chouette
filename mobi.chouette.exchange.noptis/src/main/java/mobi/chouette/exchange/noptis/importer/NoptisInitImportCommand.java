@@ -28,72 +28,78 @@ import java.util.List;
 @Stateless(name = NoptisInitImportCommand.COMMAND)
 public class NoptisInitImportCommand implements Command, Constant {
 
-	public static final String COMMAND = "NoptisInitImportCommand";
+    public static final String COMMAND = "NoptisInitImportCommand";
 
-	@EJB private LineDAO lineDAO;
+    @EJB
+    private LineDAO lineDAO;
 
-	@Override
-	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	public boolean execute(Context context) throws Exception {
-		boolean result = ERROR;
-		Monitor monitor = MonitorFactory.start(COMMAND);
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public boolean execute(Context context) throws Exception {
+        boolean result = ERROR;
+        Monitor monitor = MonitorFactory.start(COMMAND);
 
-		try {
-			NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
-			context.put(REFERENTIAL, new Referential());
-			context.put(VALIDATION_DATA, new ValidationData());
-			context.put(OPTIMIZED, false);
+        try {
+            NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
+            context.put(REFERENTIAL, new Referential());
+            context.put(VALIDATION_DATA, new ValidationData());
+            context.put(OPTIMIZED, false);
 
-			String objectIdPrefix = parameters.getObjectIdPrefix();
+            String objectIdPrefix = parameters.getObjectIdPrefix();
+            List<Line> lines;
 
-			List<Line> lines = lineDAO.findAll();
-			System.out.println("There are : " + lines.size() + " lines in the database");
-			//List<Line> lines = lineDAO.findByDataSourceId(objectIdPrefix.equalsIgnoreCase("ULA") ? (short) 1 : (short) 2);
-			//context.put(NOPTIS_LINE_DATA, lines);
+            // for now only supporting operator=ULA
+            if (objectIdPrefix.equalsIgnoreCase("ULA")) {
+                lines = lineDAO.findByDataSourceId((short) 3);
+            } else {
+                lines = lineDAO.findAll();
+            }
 
-			ActionReporter reporter = ActionReporter.Factory.getInstance();
-			reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.NETWORK, "networks", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
-			reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.STOP_AREA, "stop areas", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
-			reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.COMPANY, "companies", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
-			reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.CONNECTION_LINK, "connection links", ActionReporter.OBJECT_STATE.OK,
-					IO_TYPE.INPUT);
-			reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.ACCESS_POINT, "access points", ActionReporter.OBJECT_STATE.OK,
-					IO_TYPE.INPUT);
-			reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.TIMETABLE, "calendars", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
+            context.put(NOPTIS_LINE_DATA, lines);
 
-			result = SUCCESS;
-		} catch (Exception e) {
-			log.error(e, e);
-			throw e;
-		} finally {
-			log.info(Color.MAGENTA + monitor.stop() + Color.NORMAL);
-		}
+            ActionReporter reporter = ActionReporter.Factory.getInstance();
+            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.NETWORK, "networks", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
+            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.STOP_AREA, "stop areas", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
+            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.COMPANY, "companies", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
+            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.CONNECTION_LINK, "connection links", ActionReporter.OBJECT_STATE.OK,
+                    IO_TYPE.INPUT);
+            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.ACCESS_POINT, "access points", ActionReporter.OBJECT_STATE.OK,
+                    IO_TYPE.INPUT);
+            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.TIMETABLE, "calendars", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
 
-		return result;
-	}
+            result = SUCCESS;
+        } catch (Exception e) {
+            log.error(e, e);
+            throw e;
+        } finally {
+            log.info(Color.MAGENTA + monitor.stop() + Color.NORMAL);
+        }
 
-	public static class DefaultCommandFactory extends CommandFactory {
+        return result;
+    }
 
-		@Override
-		protected Command create(InitialContext context) throws IOException {
-			Command result = null;
-			try {
-				String name = "java:app/mobi.chouette.exchange.noptis/" + COMMAND;
-				result = (Command) context.lookup(name);
-			} catch (NamingException e) {
-				String name = "java:module/" + COMMAND;
-				try {
-					result = (Command) context.lookup(name);
-				} catch (NamingException e1) {
-					log.error(e);
-				}
-			}
-			return result;
-		}
-	}
+    public static class DefaultCommandFactory extends CommandFactory {
 
-	static {
-		CommandFactory.factories.put(NoptisInitImportCommand.class.getName(), new NoptisInitImportCommand.DefaultCommandFactory());
-	}
+        @Override
+        protected Command create(InitialContext context) throws IOException {
+            Command result = null;
+            try {
+                String name = "java:app/mobi.chouette.exchange.noptis/" + COMMAND;
+                result = (Command) context.lookup(name);
+            } catch (NamingException e) {
+                String name = "java:module/" + COMMAND;
+                try {
+                    result = (Command) context.lookup(name);
+                } catch (NamingException e1) {
+                    log.error(e);
+                }
+            }
+            return result;
+        }
+    }
+
+    static {
+        CommandFactory.factories.put(NoptisInitImportCommand.class.getName(), new NoptisInitImportCommand.DefaultCommandFactory());
+    }
 
 }

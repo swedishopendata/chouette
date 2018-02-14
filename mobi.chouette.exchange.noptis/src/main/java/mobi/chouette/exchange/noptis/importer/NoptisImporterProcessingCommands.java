@@ -77,14 +77,19 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 			Chain mainChain = (Chain) CommandFactory.create(initialContext, ChainCommand.class.getName());
 			commands.add(mainChain);
 
-            //List<Line> lines = (List<Line>) context.get(NOPTIS_LINE_DATA);
-            //for (Line line : lines) {
+			ChainCommand lineChains = (ChainCommand) CommandFactory.create(initialContext, ChainCommand.class.getName());
+			lineChains.setIgnored(parameters.isContinueOnLineErrors());
+			mainChain.add(lineChains);
 
-                //log.info("Line name is : " + line.getName());
+            List<Line> lines = (List<Line>) context.get(NOPTIS_LINE_DATA);
 
-                // conversion
-                //NoptisLineConverterCommand converter = (NoptisLineConverterCommand) CommandFactory.create(initialContext, NoptisLineConverterCommand.class.getName());
-                //mainChain.add(converter);
+            for (Line line : lines) {
+				Chain lineChain = (Chain) CommandFactory.create(initialContext, ChainCommand.class.getName());
+				lineChains.add(lineChain);
+
+				// conversion
+                NoptisLineConverterCommand converter = (NoptisLineConverterCommand) CommandFactory.create(initialContext, NoptisLineConverterCommand.class.getName());
+                lineChain.add(converter);
 /*
                 if (withDao && !parameters.isNoSave()) {
 
@@ -104,7 +109,7 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
                     mainChain.add(validate);
                 }
 */
-            //}
+            }
 		} catch (Exception e) {
 			log.error("Error creating importer commands", e);
 		}

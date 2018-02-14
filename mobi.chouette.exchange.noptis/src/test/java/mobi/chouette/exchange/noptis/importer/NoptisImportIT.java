@@ -182,7 +182,7 @@ public class NoptisImportIT extends Arquillian implements Constant, ReportConsta
 		assertTrue(true);
 	}
 
-	@Test(groups = { "ImportLine" }, description = "Import Plugin should import file")
+	@Test(enabled = false, groups = { "ImportLine" }, description = "Import Plugin should import file")
 	public void verifyImportCompressedLine() throws Exception {
 		Context context = initImportContext();
 
@@ -210,7 +210,7 @@ public class NoptisImportIT extends Arquillian implements Constant, ReportConsta
 		assertTrue(true);
 	}
 
-	@Test(groups = { "ImportLine" }, description = "Import Plugin should import file")
+	@Test(enabled = false, groups = { "ImportLine" }, description = "Import Plugin should import file")
 	public void verifyImportCompressedMultipleLines() throws Exception {
 		Context context = initImportContext();
 
