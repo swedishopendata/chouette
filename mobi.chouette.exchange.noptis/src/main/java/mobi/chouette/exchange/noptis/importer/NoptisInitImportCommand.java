@@ -7,18 +7,22 @@ import mobi.chouette.common.Color;
 import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
+import mobi.chouette.dao.stip.LineDAO;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.exchange.report.IO_TYPE;
 import mobi.chouette.exchange.validation.ValidationData;
+import mobi.chouette.model.stip.Line;
 import mobi.chouette.model.util.Referential;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.util.List;
 
 @Log4j
 @Stateless(name = NoptisInitImportCommand.COMMAND)
@@ -26,7 +30,7 @@ public class NoptisInitImportCommand implements Command, Constant {
 
 	public static final String COMMAND = "NoptisInitImportCommand";
 
-	//@EJB private LineDAO lineDAO;
+	@EJB private LineDAO lineDAO;
 
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -41,7 +45,10 @@ public class NoptisInitImportCommand implements Command, Constant {
 			context.put(OPTIMIZED, false);
 
 			String objectIdPrefix = parameters.getObjectIdPrefix();
-			//List<Line> lines = lineDAO.findByDataSourceId(objectIdPrefix.equalsIgnoreCase("ULA") ? 1L : 2L);
+
+			List<Line> lines = lineDAO.findAll();
+			System.out.println("There are : " + lines.size() + " lines in the database");
+			//List<Line> lines = lineDAO.findByDataSourceId(objectIdPrefix.equalsIgnoreCase("ULA") ? (short) 1 : (short) 2);
 			//context.put(NOPTIS_LINE_DATA, lines);
 
 			ActionReporter reporter = ActionReporter.Factory.getInstance();

@@ -5,28 +5,46 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import mobi.chouette.model.stip.converter.LocalDateConverter;
+import mobi.chouette.model.stip.type.TransportModeCode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "JourneyPatternPoint")
+@Table(name = "Line")
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class JourneyPatternPoint extends NoptisIdentifiedObject {
+public class Line extends NoptisIdentifiedObject {
 
-    private static final long serialVersionUID = -5709567812288937708L;
+    private static final long serialVersionUID = -303098337520961027L;
 
     @Getter
     @Setter
     @Id
     @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Getter
     @Setter
     @Column(name = "Number", nullable = false)
-    private int number;
+    private short number;
+
+    @Getter
+    @Setter
+    @Column(name = "Name")
+    private String name;
+
+    @Getter
+    @Setter
+    @Column(name = "Designation", nullable = false)
+    private String designation;
+
+    @Getter
+    @Setter
+    @Column(name = "DefaultTransportModeCode", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TransportModeCode defaultTransportModeCode;
 
     @Getter
     @Setter
@@ -35,18 +53,8 @@ public class JourneyPatternPoint extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
-    @Column(name = "CoordinateSystemName")
-    private String coordinateSystemName;
-
-    @Getter
-    @Setter
-    @Column(name = "LocationNorthingCoordinate")
-    private String locationNorthingCoordinate;
-
-    @Getter
-    @Setter
-    @Column(name = "LocationEastingCoordinate")
-    private String locationEastingCoordinate;
+    @Column(name = "Monitored")
+    private boolean monitored;
 
     @Getter
     @Setter
@@ -57,7 +65,7 @@ public class JourneyPatternPoint extends NoptisIdentifiedObject {
     @Getter
     @Setter
     @Convert(converter = LocalDateConverter.class)
-    @Column(name = "ExistsUptoDate")
+    @Column(name = "ExistsUpToDate")
     private LocalDate existsUpToDate;
 
 }

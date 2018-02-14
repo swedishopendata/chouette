@@ -10,7 +10,6 @@ import liquibase.exception.LockException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.extern.log4j.Log4j;
 import org.h2.jdbcx.JdbcDataSource;
-import org.testng.annotations.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -46,7 +45,7 @@ public class NoptisInMemoryDb {
         liquibaseDb = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(dataSource.getConnection()));
         liquibaseDb.setDefaultSchemaName("dbo");
         log.debug("Default schema is set");
-        liquibase = new Liquibase("org/liquibase/stip-realtime.changelog.xml", new ClassLoaderResourceAccessor(), liquibaseDb);
+        liquibase = new Liquibase("org/liquibase/stip.changelog.xml", new ClassLoaderResourceAccessor(), liquibaseDb);
         log.debug("Liquibase created");
         log.debug("Now calling Liquibase update...");
         liquibase.update("test,!prod");
