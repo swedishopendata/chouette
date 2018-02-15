@@ -38,11 +38,11 @@ public class DaoNoptisLineConverterCommand implements Command, Constant {
         try {
             Long lineId = (Long) context.get(LINE_ID);
             Line line = lineDAO.find(lineId);
+            context.put(LINE, line);
 
             InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
             Command converterCommand = CommandFactory.create(initialContext, NoptisLineConverterCommand.class.getName());
 
-            context.put(LINE, line);
             result = converterCommand.execute(context);
             daoContext.setRollbackOnly();
             lineDAO.clear();

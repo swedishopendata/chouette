@@ -70,11 +70,6 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 		try {
 			if (withDao) {
 				commands.add(CommandFactory.create(initialContext, DaoNoptisLineConverterCommand.class.getName()));
-				//DaoNoptisLineConverterCommand converter = (NoptisLineConverterCommand) CommandFactory.create(initialContext, NoptisLineConverterCommand.class.getName());
-				//commands.add(CommandFactory.create(initialContext, DaoNetexLineProducerCommand.class.getName()));
-
-				//NoptisLineConverterCommand converter = (NoptisLineConverterCommand) CommandFactory.create(initialContext, NoptisLineConverterCommand.class.getName());
-				//commands.add(CommandFactory.create(initialContext, DaoNetexLineProducerCommand.class.getName()));
 			}
 			if (withDao && !parameters.isNoSave()) {
 				//Command clean = CommandFactory.create(initialContext, NoptisLineDeleteCommand.class.getName());

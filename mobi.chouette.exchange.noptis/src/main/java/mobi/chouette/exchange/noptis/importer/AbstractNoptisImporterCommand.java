@@ -11,7 +11,6 @@ import mobi.chouette.exchange.report.ActionReporter.OBJECT_TYPE;
 import mobi.chouette.model.util.Referential;
 
 import javax.ejb.EJB;
-import javax.naming.InitialContext;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -32,7 +31,6 @@ public class AbstractNoptisImporterCommand implements Constant {
 			boolean continueProcesingOnError, Mode mode) throws Exception {
 		boolean result = ERROR;
 		boolean disposeResult = SUCCESS;
-		InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
 		ActionReporter reporter = ActionReporter.Factory.getInstance();
 		NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
 
@@ -101,32 +99,6 @@ public class AbstractNoptisImporterCommand implements Constant {
 					progression.execute(context);
 					return ERROR;
 				}
-
-/*
-				List<? extends Command> lineProcessingCommands = commands.getLineProcessingCommands(context, true);
-
-				ChainCommand master = (ChainCommand) CommandFactory
-						.create(initialContext, ChainCommand.class.getName());
-				master.setIgnored(continueProcesingOnError);
-
-				for (Command command : lineProcessingCommands) {
-					master.add(progression);
-					master.add(command);
-				}
-				progression.execute(context);
-
-				Referential referential = (Referential) context.get(REFERENTIAL);
-				if (referential != null) {
-					referential.clear(true);
-					// System.gc();
-				}
-				if (lineProcessingCommands.size() > 0) {
-					progression.start(context, lineProcessingCommands.size());
-					if (master.execute(context) == ERROR && !continueProcesingOnError) {
-						return ERROR;
-					}
-				}
-*/
 
 				// check if CopyCommands ended (with timeout to 5 minutes >
 				// transaction timeout)
