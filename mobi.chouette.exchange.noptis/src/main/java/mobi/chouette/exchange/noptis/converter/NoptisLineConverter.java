@@ -1,7 +1,6 @@
 package mobi.chouette.exchange.noptis.converter;
 
 import mobi.chouette.common.Context;
-import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.Converter;
 import mobi.chouette.exchange.noptis.importer.ConverterFactory;
@@ -12,6 +11,8 @@ import mobi.chouette.model.stip.type.TransportModeCode;
 import mobi.chouette.model.type.TransportModeNameEnum;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
+
+import java.util.Calendar;
 
 public class NoptisLineConverter extends NoptisConverter implements Converter, Constant {
 
@@ -27,9 +28,7 @@ public class NoptisLineConverter extends NoptisConverter implements Converter, C
         mobi.chouette.model.Line neptuneLine = ObjectFactory.getLine(referential, lineId);
         convert(context, noptisLine, neptuneLine);
 
-        String ptNetworkId = configuration.getObjectIdPrefix() + ":" + Network.PTNETWORK_KEY + ":" + configuration.getObjectIdPrefix();
-        Network ptNetwork = ObjectFactory.getPTNetwork(referential, ptNetworkId);
-        neptuneLine.setNetwork(ptNetwork);
+        neptuneLine.setNetwork(createPTNetwork(referential, configuration));
 
         if (noptisLine.getIsDefinedByTransportAuthorityId() != null) {
             String companyId = NoptisConverter.composeObjectId(configuration.getObjectIdPrefix(), Company.COMPANY_KEY,
@@ -40,11 +39,6 @@ public class NoptisLineConverter extends NoptisConverter implements Converter, C
             Company company = referential.getSharedCompanies().values().iterator().next();
             neptuneLine.setCompany(company);
         }
-/*
-        GtfsTripParser gtfsTripParser = (GtfsTripParser) ParserFactory.create(GtfsTripParser.class.getName());
-        gtfsTripParser.setGtfsRouteId(gtfsRouteId);
-        gtfsTripParser.parse(context);
-*/
     }
 
     private void convert(Context context, mobi.chouette.model.stip.Line noptisLine, mobi.chouette.model.Line neptuneLine) {
@@ -72,6 +66,17 @@ public class NoptisLineConverter extends NoptisConverter implements Converter, C
         neptuneLine.setFilled(true);
 
         System.out.println(neptuneLine.toString());
+    }
+
+    private Network createPTNetwork(Referential referential, NoptisImportParameters configuration) {
+        String prefix = configuration.getObjectIdPrefix();
+        String ptNetworkId = prefix + ":" + Network.PTNETWORK_KEY + ":" + prefix;
+        Network ptNetwork = ObjectFactory.getPTNetwork(referential, ptNetworkId);
+        ptNetwork.setVersionDate(Calendar.getInstance().getTime());
+        ptNetwork.setName(prefix);
+        ptNetwork.setRegistrationNumber(prefix);
+        ptNetwork.setSourceName("NOPTIS");
+        return ptNetwork;
     }
 
     private TransportModeNameEnum toTransportModeNameEnum(TransportModeCode type) {
