@@ -11,16 +11,21 @@ import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.converter.NoptisLineConverter;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.model.stip.Line;
-import mobi.chouette.model.util.NamingUtil;
 import mobi.chouette.model.util.Referential;
 
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.naming.InitialContext;
 import java.io.IOException;
 
 @Log4j
-public class NoptisLineConverterCommand implements Command, Constant {
+@Stateless(name = NoptisDataCollectorCommand.COMMAND)
+public class NoptisDataCollectorCommand implements Command, Constant {
 
-    public static final String COMMAND = "NoptisLineConverterCommand";
+    public static final String COMMAND = "NoptisDataCollectorCommand";
+
+    @EJB
+    private NoptisDataCollector collector;
 
     @Override
     public boolean execute(Context context) throws Exception {
@@ -44,15 +49,13 @@ public class NoptisLineConverterCommand implements Command, Constant {
             log.info("procesing line with gid : " + line.getGid());
             context.put(NOPTIS_DATA_CONTEXT, line);
 
-/*
-            ExportableData collection = (ExportableData) context.get(EXPORTABLE_DATA);
+            ImportableNoptisData collection = (ImportableNoptisData) context.get(IMPORTABLE_NOPTIS_DATA);
             if (collection == null) {
-                collection = new ExportableData();
-                context.put(EXPORTABLE_DATA, collection);
+                collection = new ImportableNoptisData();
+                context.put(IMPORTABLE_NOPTIS_DATA, collection);
             } else {
                 collection.clear();
             }
-*/
 
 /*
             NetexDataCollector collector = new NetexDataCollector();
@@ -82,6 +85,7 @@ public class NoptisLineConverterCommand implements Command, Constant {
 
 */
 
+            // TODO consider moving this call to a separate command (NoptisLineConverterCommand), and dedicate this command to data collection only
             NoptisLineConverter converter = (NoptisLineConverter) ConverterFactory.create(NoptisLineConverter.class.getName());
             converter.convert(context);
 
@@ -102,11 +106,11 @@ public class NoptisLineConverterCommand implements Command, Constant {
 
         @Override
         protected Command create(InitialContext context) throws IOException {
-            return new NoptisLineConverterCommand();
+            return new NoptisDataCollectorCommand();
         }
     }
 
     static {
-        CommandFactory.factories.put(NoptisLineConverterCommand.class.getName(), new DefaultCommandFactory());
+        CommandFactory.factories.put(NoptisDataCollectorCommand.class.getName(), new DefaultCommandFactory());
     }
 }

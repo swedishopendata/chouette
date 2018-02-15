@@ -6,5 +6,6 @@ public interface Constant extends mobi.chouette.common.Constant {
 	String NOPTIS_LINE_DATA = "noptis_line_data";
 	String NOPTIS_DATA_CONTEXT = "netex_data_context";
 	String CONVERSION_CONTEXT = "conversion_context";
+	String IMPORTABLE_NOPTIS_DATA = "importable_noptis_data";
 
 }
