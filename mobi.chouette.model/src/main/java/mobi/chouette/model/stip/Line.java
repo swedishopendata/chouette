@@ -49,7 +49,8 @@ public class Line extends NoptisIdentifiedObject {
     @Getter
     @Setter
     @Column(name = "IsDefinedByTransportAuthorityId", nullable = false)
-    private long isDefinedByTransportAuthorityId;
+    //private long isDefinedByTransportAuthorityId;
+    private Long isDefinedByTransportAuthorityId;
 
     @Getter
     @Setter

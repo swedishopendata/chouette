@@ -2,8 +2,27 @@ package mobi.chouette.exchange.noptis.converter;
 
 import mobi.chouette.common.Context;
 import mobi.chouette.exchange.noptis.Constant;
+import org.apache.log4j.Logger;
 
 public class NoptisConverter implements Constant {
+
+    public static String getNonEmptyTrimedString(String source) {
+        if (source == null)
+            return null;
+        String target = source.trim();
+        return (target.length() == 0 ? null : target);
+    }
+
+    public static String composeObjectId(String prefix, String type, String id) {
+        if (id == null || id.isEmpty() ) return "";
+        String[] tokens = id.split("\\.");
+        if (tokens.length == 2) {
+            return tokens[0].trim().replaceAll("[^a-zA-Z_0-9]", "_") + ":" + type + ":"
+                    + tokens[1].trim().replaceAll("[^a-zA-Z_0-9\\-]", "_");
+        }
+        return prefix + ":" + type + ":" + id.trim().replaceAll("[^a-zA-Z_0-9\\-]", "_");
+    }
+
 
     public static void resetContext(Context context) {
         Context conversionContext = (Context) context.get(CONVERSION_CONTEXT);

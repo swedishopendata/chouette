@@ -40,7 +40,7 @@ public class NoptisLineConverterCommand implements Command, Constant {
             }
 
             Line line = (Line) context.get(LINE);
-            log.info("procesing line " + line.getGid());
+            context.put(NOPTIS_DATA_CONTEXT, line);
 
             NoptisLineConverter converter = (NoptisLineConverter) ConverterFactory.create(NoptisLineConverter.class.getName());
             converter.convert(context);
