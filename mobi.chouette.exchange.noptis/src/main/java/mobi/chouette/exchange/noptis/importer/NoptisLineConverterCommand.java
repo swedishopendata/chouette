@@ -9,6 +9,8 @@ import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.converter.NoptisLineConverter;
+import mobi.chouette.exchange.report.ActionReporter;
+import mobi.chouette.model.stip.Line;
 import mobi.chouette.model.util.Referential;
 
 import javax.naming.InitialContext;
@@ -23,10 +25,10 @@ public class NoptisLineConverterCommand implements Command, Constant {
     public boolean execute(Context context) throws Exception {
         boolean result = ERROR;
         Monitor monitor = MonitorFactory.start(COMMAND);
+        ActionReporter reporter = ActionReporter.Factory.getInstance();
 
 /*
         String fileName = path.getFileName().toString();
-        ActionReporter reporter = ActionReporter.Factory.getInstance();
         reporter.addFileReport(context, fileName, IO_TYPE.INPUT);
         context.put(FILE_NAME, fileName);
 */
@@ -36,6 +38,9 @@ public class NoptisLineConverterCommand implements Command, Constant {
             if (referential != null) {
                 referential.clear(true);
             }
+
+            Line line = (Line) context.get(LINE);
+            log.info("procesing line " + line.getGid());
 
             NoptisLineConverter converter = (NoptisLineConverter) ConverterFactory.create(NoptisLineConverter.class.getName());
             converter.convert(context);

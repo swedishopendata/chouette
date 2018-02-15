@@ -2,6 +2,7 @@ package mobi.chouette.exchange.noptis.importer;
 
 import lombok.extern.log4j.Log4j;
 import mobi.chouette.common.Context;
+import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.dao.LineDAO;
 import mobi.chouette.dao.StopAreaDAO;
@@ -158,8 +159,7 @@ public class NoptisImportIT extends Arquillian implements Constant, ReportConsta
 	public void verifyImportLine() throws Exception {
 		Context context = initImportContext();
 
-		NoptisImporterCommand command = (NoptisImporterCommand) CommandFactory.create(
-				initialContext, NoptisImporterCommand.class.getName());
+		Command command = CommandFactory.create(initialContext, NoptisImporterCommand.class.getName());
 
 		NoptisTestUtils.copyFile("sample_line.xml");
 

@@ -3,22 +3,25 @@ package mobi.chouette.exchange.noptis.importer;
 import lombok.extern.log4j.Log4j;
 import mobi.chouette.common.Constant;
 import mobi.chouette.common.Context;
-import mobi.chouette.common.chain.ChainCommand;
 import mobi.chouette.common.chain.Command;
-import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.ProcessingCommands;
 import mobi.chouette.exchange.ProgressionCommand;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.exchange.report.ActionReporter.OBJECT_TYPE;
 import mobi.chouette.model.util.Referential;
 
+import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Log4j
 public class AbstractNoptisImporterCommand implements Constant {
+
+	@EJB
+	private NoptisDaoReader daoReader;
 
 	protected enum Mode {
 		line, stopareas
@@ -31,6 +34,7 @@ public class AbstractNoptisImporterCommand implements Constant {
 		boolean disposeResult = SUCCESS;
 		InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
 		ActionReporter reporter = ActionReporter.Factory.getInstance();
+		NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
 
 		try {
 			// Initialization
@@ -48,7 +52,57 @@ public class AbstractNoptisImporterCommand implements Constant {
 			}
 
 			if (mode.equals(Mode.line)) {
-				// get lines info
+				String objectIdPrefix = parameters.getObjectIdPrefix();
+
+				// for now only supporting operator=ULA
+				if (!objectIdPrefix.equalsIgnoreCase("ULA")) {
+					throw new UnsupportedOperationException();
+				}
+
+				Set<Long> lineIds = daoReader.loadLineIds();
+				if (lineIds.isEmpty()) {
+					reporter.setActionError(context, ActionReporter.ERROR_CODE.NO_DATA_FOUND, "no data selected");
+					return ERROR;
+				}
+				progression.execute(context);
+
+				Referential referential = (Referential) context.get(REFERENTIAL);
+				if (referential != null) {
+					referential.clear(true);
+				}
+
+				// process lines
+				List<? extends Command> lineProcessingCommands = commands.getLineProcessingCommands(context, true);
+
+				int lineCount = 0;
+				for (Long lineId : lineIds) {
+					context.put(LINE_ID, lineId);
+					boolean importFailed = false;
+
+					if (lineProcessingCommands.size() > 0) {
+						progression.start(context, lineProcessingCommands.size());
+						for (Command importCommand : lineProcessingCommands) {
+							result = importCommand.execute(context);
+							if (!result) {
+								importFailed = true;
+								break;
+							}
+						}
+					}
+					progression.execute(context);
+					if (!importFailed) {
+						lineCount++;
+					} else if (!continueProcesingOnError) {
+						return ERROR;
+					}
+
+				}
+				if (lineCount == 0) {
+					progression.execute(context);
+					return ERROR;
+				}
+
+/*
 				List<? extends Command> lineProcessingCommands = commands.getLineProcessingCommands(context, true);
 
 				ChainCommand master = (ChainCommand) CommandFactory
@@ -72,6 +126,7 @@ public class AbstractNoptisImporterCommand implements Constant {
 						return ERROR;
 					}
 				}
+*/
 
 				// check if CopyCommands ended (with timeout to 5 minutes >
 				// transaction timeout)
