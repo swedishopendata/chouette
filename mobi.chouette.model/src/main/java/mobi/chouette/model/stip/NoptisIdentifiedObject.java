@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import mobi.chouette.model.stip.util.NoptisObjectIdTypes;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -12,7 +13,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 @EqualsAndHashCode(of = { "gid" }, callSuper = false)
 @ToString(callSuper = true)
-public abstract class NoptisIdentifiedObject extends NoptisDataSourceObject {
+public abstract class NoptisIdentifiedObject extends NoptisDataSourceObject implements NoptisObjectIdTypes {
 
     @Getter
     @Setter

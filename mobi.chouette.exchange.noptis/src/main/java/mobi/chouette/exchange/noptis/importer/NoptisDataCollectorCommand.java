@@ -32,6 +32,7 @@ public class NoptisDataCollectorCommand implements Command, Constant {
         boolean result = ERROR;
         Monitor monitor = MonitorFactory.start(COMMAND);
         ActionReporter reporter = ActionReporter.Factory.getInstance();
+        NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
 
         try {
             Referential referential = (Referential) context.get(REFERENTIAL);
@@ -51,7 +52,7 @@ public class NoptisDataCollectorCommand implements Command, Constant {
                 collection.clear();
             }
 
-            boolean isValidData = collector.collect(collection, line);
+            boolean isValidData = collector.collect(collection, line, configuration.getObjectIdPrefix());
             if (isValidData) {
                 result = SUCCESS;
             } else {
