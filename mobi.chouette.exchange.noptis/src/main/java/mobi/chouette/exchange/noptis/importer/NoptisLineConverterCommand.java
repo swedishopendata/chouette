@@ -10,9 +10,6 @@ import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.converter.NoptisLineConverter;
 import mobi.chouette.exchange.report.ActionReporter;
-import mobi.chouette.model.stip.Line;
-import mobi.chouette.model.util.NamingUtil;
-import mobi.chouette.model.util.Referential;
 
 import javax.naming.InitialContext;
 import java.io.IOException;
@@ -28,66 +25,13 @@ public class NoptisLineConverterCommand implements Command, Constant {
         Monitor monitor = MonitorFactory.start(COMMAND);
         ActionReporter reporter = ActionReporter.Factory.getInstance();
 
-/*
-        String fileName = path.getFileName().toString();
-        reporter.addFileReport(context, fileName, IO_TYPE.INPUT);
-        context.put(FILE_NAME, fileName);
-*/
-
         try {
-            Referential referential = (Referential) context.get(REFERENTIAL);
-            if (referential != null) {
-                referential.clear(true);
-            }
-
-            Line line = (Line) context.get(LINE);
-            log.info("procesing line with gid : " + line.getGid());
-            context.put(NOPTIS_DATA_CONTEXT, line);
-
-/*
-            ExportableData collection = (ExportableData) context.get(EXPORTABLE_DATA);
-            if (collection == null) {
-                collection = new ExportableData();
-                context.put(EXPORTABLE_DATA, collection);
-            } else {
-                collection.clear();
-            }
-*/
-
-/*
-            NetexDataCollector collector = new NetexDataCollector();
-            boolean cont = (collector.collect(collection, line, startDate, endDate));
-
-            if (cont) {
-                try {
-                    NetexLineDataProducer producer = new NetexLineDataProducer();
-                    producer.produce(context);
-                    result = SUCCESS;
-                } catch (MarshalException e) {
-                    if (e.getCause() != null && e.getCause() instanceof SAXParseException) {
-                        log.error(e.getCause().getMessage());
-                        reporter.addErrorToObjectReport(context, line.getObjectId(), ActionReporter.OBJECT_TYPE.LINE,
-                                ActionReporter.ERROR_CODE.INVALID_FORMAT, e.getCause().getMessage());
-                    } else {
-                        log.error(e.getMessage());
-                        reporter.addErrorToObjectReport(context, line.getObjectId(), ActionReporter.OBJECT_TYPE.LINE,
-                                ActionReporter.ERROR_CODE.INVALID_FORMAT, e.getMessage());
-                    }
-                }
-            } else {
-                reporter.addErrorToObjectReport(context, line.getObjectId(), ActionReporter.OBJECT_TYPE.LINE,
-                        ActionReporter.ERROR_CODE.NO_DATA_ON_PERIOD, "no data on period");
-                result = ERROR;
-            }
-
-*/
+            NoptisImportParameters parameters = (NoptisImportParameters) context.get(Constant.CONFIGURATION);
+            ImportableNoptisData importableData = (ImportableNoptisData) context.get(IMPORTABLE_NOPTIS_DATA);
 
             NoptisLineConverter converter = (NoptisLineConverter) ConverterFactory.create(NoptisLineConverter.class.getName());
             converter.convert(context);
 
-            Context validationContext = (Context) context.get(VALIDATION_CONTEXT);
-            //addStats(context, reporter, validationContext, referential);
-            //reporter.setFileState(context, fileName, IO_TYPE.INPUT, ActionReporter.FILE_STATE.OK);
             result = SUCCESS;
         } catch (Exception e) {
             //reporter.addFileErrorInReport(context, fileName, ActionReporter.FILE_ERROR_CODE.INTERNAL_ERROR, e.toString());
@@ -96,7 +40,8 @@ public class NoptisLineConverterCommand implements Command, Constant {
             log.info(Color.MAGENTA + monitor.stop() + Color.NORMAL);
         }
 
-        return result;    }
+        return result;
+    }
 
     public static class DefaultCommandFactory extends CommandFactory {
 

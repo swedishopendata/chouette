@@ -18,10 +18,10 @@ import javax.naming.NamingException;
 import java.io.IOException;
 
 @Log4j
-@Stateless(name = DaoNoptisLineConverterCommand.COMMAND)
-public class DaoNoptisLineConverterCommand implements Command, Constant {
+@Stateless(name = DaoNoptisDataCollectorCommand.COMMAND)
+public class DaoNoptisDataCollectorCommand implements Command, Constant {
 
-    public static final String COMMAND = "DaoNoptisLineConverterCommand";
+    public static final String COMMAND = "DaoNoptisDataCollectorCommand";
 
     @Resource
     private SessionContext daoContext;
@@ -41,9 +41,9 @@ public class DaoNoptisLineConverterCommand implements Command, Constant {
             context.put(LINE, line);
 
             InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
-            Command converterCommand = CommandFactory.create(initialContext, NoptisLineConverterCommand.class.getName());
+            Command dataCollectorCommand = CommandFactory.create(initialContext, NoptisDataCollectorCommand.class.getName());
 
-            result = converterCommand.execute(context);
+            result = dataCollectorCommand.execute(context);
             daoContext.setRollbackOnly();
             lineDAO.clear();
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class DaoNoptisLineConverterCommand implements Command, Constant {
     }
 
     static {
-        CommandFactory.factories.put(DaoNoptisLineConverterCommand.class.getName(), new DaoNoptisLineConverterCommand.DefaultCommandFactory());
+        CommandFactory.factories.put(DaoNoptisDataCollectorCommand.class.getName(), new DaoNoptisDataCollectorCommand.DefaultCommandFactory());
     }
 
 }

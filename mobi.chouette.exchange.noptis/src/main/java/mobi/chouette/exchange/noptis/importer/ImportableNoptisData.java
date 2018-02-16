@@ -6,7 +6,9 @@ import mobi.chouette.model.stip.Line;
 import mobi.chouette.model.stip.TransportAuthority;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class ImportableNoptisData {
 
@@ -16,15 +18,20 @@ public class ImportableNoptisData {
 
     @Getter
     @Setter
+    private Set<TransportAuthority> transportAuthorities = new HashSet<>();
+
+    @Getter
+    @Setter
     private Map<String, TransportAuthority> sharedTransportAuthorities = new HashMap<>();
 
     public void clear() {
-        // TODO : clear line specific data below
+        line = null;
+        transportAuthorities.clear();
     }
 
     public void dispose() {
         clear();
-        // TODO : clea shared data below
+        sharedTransportAuthorities.clear();
     }
 
 }

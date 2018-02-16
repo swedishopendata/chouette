@@ -1,5 +1,6 @@
 package mobi.chouette.exchange.noptis.converter;
 
+import lombok.extern.log4j.Log4j;
 import mobi.chouette.common.Context;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.Converter;
@@ -10,6 +11,7 @@ import mobi.chouette.model.stip.TransportAuthority;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 
+@Log4j
 public class NoptisTransportAuthorityConverter extends NoptisConverter implements Converter, Constant {
 
     @Override
@@ -17,6 +19,7 @@ public class NoptisTransportAuthorityConverter extends NoptisConverter implement
         Referential referential = (Referential) context.get(REFERENTIAL);
         NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
         TransportAuthority transportAuthority = (TransportAuthority) context.get(NOPTIS_DATA_CONTEXT);
+        log.info(transportAuthority.toString());
 
         String objectId = NoptisConverter.composeObjectId(configuration.getObjectIdPrefix(), Company.COMPANY_KEY, String.valueOf(transportAuthority.getGid()));
         Company company = ObjectFactory.getCompany(referential, objectId);
