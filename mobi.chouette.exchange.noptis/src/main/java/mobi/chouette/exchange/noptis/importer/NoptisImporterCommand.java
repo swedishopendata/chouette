@@ -1,5 +1,7 @@
 package mobi.chouette.exchange.noptis.importer;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import lombok.extern.log4j.Log4j;
@@ -21,12 +23,16 @@ import javax.ejb.TransactionAttributeType;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.util.Map;
 
 @Log4j
 @Stateless(name = NoptisImporterCommand.COMMAND)
 public class NoptisImporterCommand extends AbstractNoptisImporterCommand implements Command, Constant {
 
 	public static final String COMMAND = "NoptisImporterCommand";
+
+	private static final Map<String, Short> DATA_SOURCES = ImmutableMap.of(
+			"OTR", (short)3, "ULA", (short)4, "VTK", (short)5, "SLT", (short)6);
 
 	@Override
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
