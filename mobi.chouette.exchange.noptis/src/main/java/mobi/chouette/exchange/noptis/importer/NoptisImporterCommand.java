@@ -1,6 +1,5 @@
 package mobi.chouette.exchange.noptis.importer;
 
-import com.google.common.collect.ImmutableMap;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import lombok.extern.log4j.Log4j;
@@ -22,16 +21,12 @@ import javax.ejb.TransactionAttributeType;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
-import java.util.Map;
 
 @Log4j
 @Stateless(name = NoptisImporterCommand.COMMAND)
 public class NoptisImporterCommand extends AbstractNoptisImporterCommand implements Command, Constant {
 
     public static final String COMMAND = "NoptisImporterCommand";
-
-    private static final Map<String, Short> DATA_SOURCES = ImmutableMap.of(
-            "OTR", (short) 3, "ULA", (short) 4, "VTK", (short) 5, "SLT", (short) 6);
 
     @Override
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -57,9 +52,6 @@ public class NoptisImporterCommand extends AbstractNoptisImporterCommand impleme
                 actionReporter.setActionError(context, ActionReporter.ERROR_CODE.INVALID_PARAMETERS, "invalid parameters for noptis import " + configuration.getClass().getName());
                 return false;
             }
-
-            log.debug("OBJECT ID PREFIX IS : " + ((NoptisImportParameters) configuration).getObjectIdPrefix());
-            log.debug("REFERENTIAL NAME IS : " + ((NoptisImportParameters) configuration).getReferentialName());
 
             ProcessingCommands commands = ProcessingCommandsFactory.create(NoptisImporterProcessingCommands.class.getName());
             result = process(context, commands, progression, true, Mode.line);
