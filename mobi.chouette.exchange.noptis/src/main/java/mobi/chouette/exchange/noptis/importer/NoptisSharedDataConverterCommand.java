@@ -9,6 +9,7 @@ import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.dao.stip.TransportAuthorityDAO;
 import mobi.chouette.exchange.noptis.Constant;
+import mobi.chouette.exchange.noptis.converter.NoptisTransportAuthorityConverter;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.model.stip.TransportAuthority;
 
@@ -43,8 +44,12 @@ public class NoptisSharedDataConverterCommand implements Command, Constant {
             short dataSourceId = NoptisImporterUtils.getDataSourceId(parameters.getObjectIdPrefix());
             List<TransportAuthority> transportAuthorities = transportAuthorityDAO.findByDataSourceId(dataSourceId);
 
+            NoptisTransportAuthorityConverter transportAuthorityConverter = (NoptisTransportAuthorityConverter)
+                    ConverterFactory.create(NoptisTransportAuthorityConverter.class.getName());
+
             for (TransportAuthority transportAuthority : transportAuthorities) {
-                log.info(transportAuthority.toString());
+                context.put(NOPTIS_DATA_CONTEXT, transportAuthority);
+                transportAuthorityConverter.convert(context);
             }
 
             result = SUCCESS;

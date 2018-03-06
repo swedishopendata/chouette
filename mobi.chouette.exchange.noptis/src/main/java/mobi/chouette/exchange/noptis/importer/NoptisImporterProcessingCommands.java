@@ -68,6 +68,7 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 		//Path path = Paths.get(jobData.getPathName(), INPUT);
 
 		try {
+			commands.add(CommandFactory.create(initialContext, NoptisSharedDataConverterCommand.class.getName()));
 			commands.add(CommandFactory.create(initialContext, DaoNoptisDataCollectorCommand.class.getName()));
 			commands.add(CommandFactory.create(initialContext, NoptisLineConverterCommand.class.getName()));
 

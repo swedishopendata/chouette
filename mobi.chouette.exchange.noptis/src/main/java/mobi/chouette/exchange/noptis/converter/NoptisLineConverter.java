@@ -46,8 +46,8 @@ public class NoptisLineConverter extends NoptisConverter implements Converter, C
             Company company = ObjectFactory.getCompany(referential, companyId);
             neptuneLine.setCompany(company);
 
-            NoptisTransportAuthorityConverter transportAuthorityConverter = (NoptisTransportAuthorityConverter) ConverterFactory.create(NoptisTransportAuthorityConverter.class.getName());
-            transportAuthorityConverter.convert(context);
+//            NoptisTransportAuthorityConverter transportAuthorityConverter = (NoptisTransportAuthorityConverter) ConverterFactory.create(NoptisTransportAuthorityConverter.class.getName());
+//            transportAuthorityConverter.convert(context);
         } else if (!referential.getSharedCompanies().isEmpty()) {
             Company company = referential.getSharedCompanies().values().iterator().next();
             neptuneLine.setCompany(company);
