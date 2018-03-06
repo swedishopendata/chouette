@@ -7,13 +7,17 @@ import mobi.chouette.common.Color;
 import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
+import mobi.chouette.dao.stip.JourneyPatternPointDAO;
 import mobi.chouette.dao.stip.StopAreaDAO;
+import mobi.chouette.dao.stip.StopPointDAO;
 import mobi.chouette.dao.stip.TransportAuthorityDAO;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.converter.NoptisStopAreaConverter;
 import mobi.chouette.exchange.noptis.converter.NoptisTransportAuthorityConverter;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
+import mobi.chouette.model.stip.JourneyPatternPoint;
 import mobi.chouette.model.stip.StopArea;
+import mobi.chouette.model.stip.StopPoint;
 import mobi.chouette.model.stip.TransportAuthority;
 
 import javax.annotation.Resource;
@@ -39,6 +43,12 @@ public class NoptisSharedDataConverterCommand implements Command, Constant {
 
     @EJB
     private StopAreaDAO stopAreaDAO;
+
+    @EJB
+    private StopPointDAO stopPointDAO;
+
+    @EJB
+    private JourneyPatternPointDAO journeyPatternPointDAO;
 
     @Override
     public boolean execute(Context context) throws Exception {
@@ -67,6 +77,22 @@ public class NoptisSharedDataConverterCommand implements Command, Constant {
             for (StopArea stopArea : stopAreas) {
                 context.put(NOPTIS_DATA_CONTEXT, stopArea);
                 stopAreaConverter.convert(context);
+            }
+
+            List<StopPoint> stopPoints = stopPointDAO.findByDataSourceId(dataSourceId);
+
+            for (StopPoint stopPoint : stopPoints) {
+                log.info(stopPoint.toString());
+
+                // TODO get from id mapping cache instead
+                //StopArea stopArea = stopDao.findStopArea(stopPoint.getIsIncludedInStopAreaGid());
+                //JourneyPatternPoint journeyPatternPoint = stopDao.findJourneyPatternPoint(stopPoint.getIsJourneyPatternPointGid());
+            }
+
+            List<JourneyPatternPoint> journeyPatternPoints = journeyPatternPointDAO.findByDataSourceId(dataSourceId);
+
+            for (JourneyPatternPoint journeyPatternPoint : journeyPatternPoints) {
+                log.info(journeyPatternPoint.toString());
             }
 
             result = SUCCESS;
