@@ -7,10 +7,13 @@ import mobi.chouette.common.Color;
 import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
+import mobi.chouette.dao.stip.StopAreaDAO;
 import mobi.chouette.dao.stip.TransportAuthorityDAO;
 import mobi.chouette.exchange.noptis.Constant;
+import mobi.chouette.exchange.noptis.converter.NoptisStopAreaConverter;
 import mobi.chouette.exchange.noptis.converter.NoptisTransportAuthorityConverter;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
+import mobi.chouette.model.stip.StopArea;
 import mobi.chouette.model.stip.TransportAuthority;
 
 import javax.annotation.Resource;
@@ -34,6 +37,9 @@ public class NoptisSharedDataConverterCommand implements Command, Constant {
     @EJB
     private TransportAuthorityDAO transportAuthorityDAO;
 
+    @EJB
+    private StopAreaDAO stopAreaDAO;
+
     @Override
     public boolean execute(Context context) throws Exception {
         boolean result = ERROR;
@@ -42,6 +48,7 @@ public class NoptisSharedDataConverterCommand implements Command, Constant {
         try {
             NoptisImportParameters parameters = (NoptisImportParameters) context.get(Constant.CONFIGURATION);
             short dataSourceId = NoptisImporterUtils.getDataSourceId(parameters.getObjectIdPrefix());
+
             List<TransportAuthority> transportAuthorities = transportAuthorityDAO.findByDataSourceId(dataSourceId);
 
             NoptisTransportAuthorityConverter transportAuthorityConverter = (NoptisTransportAuthorityConverter)
@@ -50,6 +57,16 @@ public class NoptisSharedDataConverterCommand implements Command, Constant {
             for (TransportAuthority transportAuthority : transportAuthorities) {
                 context.put(NOPTIS_DATA_CONTEXT, transportAuthority);
                 transportAuthorityConverter.convert(context);
+            }
+
+            List<StopArea> stopAreas = stopAreaDAO.findByDataSourceId(dataSourceId);
+
+            NoptisStopAreaConverter stopAreaConverter = (NoptisStopAreaConverter)
+                    ConverterFactory.create(NoptisStopAreaConverter.class.getName());
+
+            for (StopArea stopArea : stopAreas) {
+                context.put(NOPTIS_DATA_CONTEXT, stopArea);
+                stopAreaConverter.convert(context);
             }
 
             result = SUCCESS;

@@ -179,3 +179,7 @@ INSERT INTO dbo.pointindestinationpattern (Id, IsFromDataSourceId, IsInDestinati
 INSERT INTO dbo.destinationpattern (Id, IsFromDataSourceId, IsOnJourneyPatternId) VALUES (33010000047020023, 3, 33010000047019973);
 INSERT INTO dbo.destinationpattern (Id, IsFromDataSourceId, IsOnJourneyPatternId) VALUES (33010000047020041, 3, 33010000047019973);
 INSERT INTO dbo.destinationpattern (Id, IsFromDataSourceId, IsOnJourneyPatternId) VALUES (33010000048253355, 3, 33010000047019973);
+
+INSERT INTO dbo.StopArea (Id, IsFromDataSourceId, Gid, Number, Name, ShortName, TypeCode, IsDefinedByTransportAuthorityId, CoordinateSystemName, CentroidNorthingCoordinate, CentroidEastingCoordinate, DefaultInterchangeDurationSeconds, InterchangePriority, ExistsFromDate, ExistsUptoDate) VALUES (33010000045947312, 3, 9021003719000000, 719000, 'Älvkarleby station (Älvkarleby)', 'Älvkarleby stati', 'BUSTERM', 33010000000001407, 'WGS84', '60.557311', '17.426339', 120, 14, '2017-04-20 00:00:00', null);
+INSERT INTO dbo.StopArea (Id, IsFromDataSourceId, Gid, Number, Name, ShortName, TypeCode, IsDefinedByTransportAuthorityId, CoordinateSystemName, CentroidNorthingCoordinate, CentroidEastingCoordinate, DefaultInterchangeDurationSeconds, InterchangePriority, ExistsFromDate, ExistsUptoDate) VALUES (33010000045947350, 3, 9021003719007000, 719007, 'Älvkarleby kraftverk (Älvkarleby)', 'Älvkarleby kraft', 'BUSTERM', 33010000000001407, 'WGS84', '60.560902', '17.444006', 300, 13, '2017-04-20 00:00:00', null);
+
