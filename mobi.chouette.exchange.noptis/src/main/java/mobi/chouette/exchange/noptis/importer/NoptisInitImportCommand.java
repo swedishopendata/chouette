@@ -1,5 +1,6 @@
 package mobi.chouette.exchange.noptis.importer;
 
+import com.google.common.collect.ImmutableSet;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import lombok.extern.log4j.Log4j;
@@ -9,10 +10,10 @@ import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.dao.stip.LineDAO;
 import mobi.chouette.exchange.noptis.Constant;
+import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.exchange.report.IO_TYPE;
 import mobi.chouette.exchange.validation.ValidationData;
-import mobi.chouette.model.stip.Line;
 import mobi.chouette.model.util.Referential;
 
 import javax.ejb.EJB;
@@ -23,6 +24,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @Log4j
 @Stateless(name = NoptisInitImportCommand.COMMAND)
@@ -45,17 +47,9 @@ public class NoptisInitImportCommand implements Command, Constant {
             context.put(VALIDATION_DATA, new ValidationData());
             context.put(OPTIMIZED, false);
 
-            String objectIdPrefix = parameters.getObjectIdPrefix();
-            List<Line> lines;
-
-            // for now only supporting operator=ULA
-            if (objectIdPrefix.equalsIgnoreCase("ULA")) {
-                lines = lineDAO.findByDataSourceId((short) 3);
-            } else {
-                lines = lineDAO.findAll();
-            }
-
-            context.put(NOPTIS_LINE_DATA, lines);
+            short dataSourceId = NoptisImporterUtils.getDataSourceId(parameters.getObjectIdPrefix());
+            List<Long> lineGids = lineDAO.findGidsByDataSourceId(dataSourceId);
+            context.put(NOPTIS_LINE_GIDS, ImmutableSet.copyOf(lineGids));
 
             ActionReporter reporter = ActionReporter.Factory.getInstance();
             reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.NETWORK, "networks", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);

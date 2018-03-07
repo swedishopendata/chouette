@@ -10,6 +10,7 @@ import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.ProcessingCommands;
 import mobi.chouette.exchange.ProcessingCommandsFactory;
 import mobi.chouette.exchange.importer.CleanRepositoryCommand;
+import mobi.chouette.exchange.importer.StopAreaRegisterCommand;
 import mobi.chouette.exchange.importer.UncompressCommand;
 import mobi.chouette.exchange.noptis.Constant;
 
@@ -17,6 +18,7 @@ import javax.naming.InitialContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Log4j
@@ -45,7 +47,7 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 			if (withDao && parameters.isCleanRepository()) {
 				initChain.add(CommandFactory.create(initialContext, CleanRepositoryCommand.class.getName()));
 			}
-			initChain.add(CommandFactory.create(initialContext, UncompressCommand.class.getName()));
+			initChain.add(CommandFactory.create(initialContext, UncompressCommand.class.getName())); // TODO remove...
 			initChain.add(CommandFactory.create(initialContext, NoptisInitImportCommand.class.getName()));
 			commands.add(initChain);
 		} catch (Exception e) {
@@ -61,33 +63,48 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 	public List<? extends Command> getLineProcessingCommands(Context context, boolean withDao) {
 		InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
 		NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
-		List<Command> commands = new ArrayList<>();
-
 		boolean level3validation = context.get(VALIDATION) != null;
-		//JobData jobData = (JobData) context.get(JOB_DATA);
-		//Path path = Paths.get(jobData.getPathName(), INPUT);
+		List<Command> commands = new ArrayList<>();
+		Set<Long> lineGids = (Set<Long>) context.get(NOPTIS_LINE_GIDS);
 
 		try {
-			commands.add(CommandFactory.create(initialContext, NoptisSharedDataConverterCommand.class.getName()));
-			commands.add(CommandFactory.create(initialContext, DaoNoptisDataCollectorCommand.class.getName()));
-			commands.add(CommandFactory.create(initialContext, NoptisLineConverterCommand.class.getName()));
 
-			if (withDao && !parameters.isNoSave()) {
-				//Command clean = CommandFactory.create(initialContext, NoptisLineDeleteCommand.class.getName());
-				//commands.add(CommandFactory.create(initialContext, DaoNetexLineProducerCommand.class.getName()));
+			{
+				Chain chain = (Chain) CommandFactory.create(initialContext, ChainCommand.class.getName());
+				chain.add(CommandFactory.create(initialContext, NoptisStopAreaParserCommand.class.getName()));
 
-				//Command register = CommandFactory.create(initialContext, LineRegisterCommand.class.getName());
-				//commands.add(CommandFactory.create(initialContext, DaoNetexLineProducerCommand.class.getName()));
+				if (withDao && !parameters.isNoSave()) {
+					Command saveArea = CommandFactory.create(initialContext, StopAreaRegisterCommand.class.getName());
+					chain.add(saveArea);
+				}
 
-				//Command copy = CommandFactory.create(initialContext, CopyCommand.class.getName());
-				//commands.add(CommandFactory.create(initialContext, DaoNetexLineProducerCommand.class.getName()));
+				commands.add(chain);
 			}
-			if (level3validation) {
-				// add validation
-				//Command validate = CommandFactory.create(initialContext, ImportedLineValidatorCommand.class.getName());
+
+			for (Long ignored : lineGids) {
+				Chain chain = (Chain) CommandFactory.create(initialContext, ChainCommand.class.getName());
+				Command lineParser = CommandFactory.create(initialContext, NoptisLineParserCommand.class.getName());
+				chain.add(lineParser);
+
+				if (withDao && !parameters.isNoSave()) {
+
+					// register
+					//Command register = CommandFactory.create(initialContext, LineRegisterCommand.class.getName());
+					//chain.add(register);
+
+					//Command copy = CommandFactory.create(initialContext, CopyCommand.class.getName());
+					//chain.add(copy);
+				}
+				if (level3validation) {
+					// add validation
+					//Command validate = CommandFactory.create(initialContext, ImportedLineValidatorCommand.class.getName());
+					//chain.add(validate);
+				}
+				commands.add(chain);
 			}
 		} catch (Exception e) {
-			log.error("Error creating importer commands", e);
+			log.error(e, e);
+			throw new RuntimeException("unable to call factories");
 		}
 
 		return commands;

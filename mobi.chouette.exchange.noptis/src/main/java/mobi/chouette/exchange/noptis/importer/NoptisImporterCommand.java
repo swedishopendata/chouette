@@ -11,6 +11,7 @@ import mobi.chouette.exchange.CommandCancelledException;
 import mobi.chouette.exchange.ProcessingCommands;
 import mobi.chouette.exchange.ProcessingCommandsFactory;
 import mobi.chouette.exchange.ProgressionCommand;
+import mobi.chouette.exchange.importer.AbstractImporterCommand;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.model.util.Referential;
@@ -24,7 +25,7 @@ import java.io.IOException;
 
 @Log4j
 @Stateless(name = NoptisImporterCommand.COMMAND)
-public class NoptisImporterCommand extends AbstractNoptisImporterCommand implements Command, Constant {
+public class NoptisImporterCommand extends AbstractImporterCommand implements Command, Constant {
 
     public static final String COMMAND = "NoptisImporterCommand";
 
