@@ -2,7 +2,6 @@ package mobi.chouette.exchange.noptis.converter;
 
 import mobi.chouette.common.Context;
 import mobi.chouette.exchange.noptis.Constant;
-import org.apache.log4j.Logger;
 
 public class NoptisConverter implements Constant {
 

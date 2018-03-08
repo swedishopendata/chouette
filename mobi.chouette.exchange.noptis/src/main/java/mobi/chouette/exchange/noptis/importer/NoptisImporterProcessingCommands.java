@@ -9,9 +9,9 @@ import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.ProcessingCommands;
 import mobi.chouette.exchange.ProcessingCommandsFactory;
-import mobi.chouette.exchange.importer.*;
+import mobi.chouette.exchange.importer.CleanRepositoryCommand;
+import mobi.chouette.exchange.importer.UncompressCommand;
 import mobi.chouette.exchange.noptis.Constant;
-import mobi.chouette.exchange.validation.ImportedLineValidatorCommand;
 
 import javax.naming.InitialContext;
 import java.io.IOException;

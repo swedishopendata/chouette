@@ -7,15 +7,11 @@ import mobi.chouette.common.Color;
 import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
-import mobi.chouette.dao.stip.LineDAO;
 import mobi.chouette.dao.stip.StopAreaDAO;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
-import mobi.chouette.exchange.noptis.parser.NoptisLineParser;
 import mobi.chouette.exchange.noptis.parser.NoptisStopAreaParser;
-import mobi.chouette.exchange.report.ActionReporter;
-import mobi.chouette.model.stip.Line;
 import mobi.chouette.model.stip.StopArea;
 import mobi.chouette.model.util.Referential;
 
