@@ -8,4 +8,5 @@ public interface Constant extends mobi.chouette.common.Constant {
 	String CONVERSION_CONTEXT = "conversion_context";
 	String IMPORTABLE_NOPTIS_DATA = "importable_noptis_data";
 
+	String TRANSPORT_AUTHORITY = "transport_authority";
 }

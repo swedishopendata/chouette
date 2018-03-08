@@ -10,6 +10,7 @@ import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.ProcessingCommands;
 import mobi.chouette.exchange.ProcessingCommandsFactory;
 import mobi.chouette.exchange.importer.CleanRepositoryCommand;
+import mobi.chouette.exchange.importer.LineRegisterCommand;
 import mobi.chouette.exchange.importer.UncompressCommand;
 import mobi.chouette.exchange.noptis.Constant;
 
@@ -69,7 +70,7 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 				//commands.add(CommandFactory.create(initialContext, NoptisLineParserCommand.class.getName()));
 			}
 			if (withDao && !parameters.isNoSave()) {
-				//commands.add(CommandFactory.create(initialContext, LineRegisterCommand.class.getName()));
+				commands.add(CommandFactory.create(initialContext, LineRegisterCommand.class.getName()));
 				//commands.add(CommandFactory.create(initialContext, CopyCommand.class.getName()));
 			}
 			if (level3validation) {
