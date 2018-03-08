@@ -73,6 +73,16 @@ public class NoptisLineParserCommand implements Command, Constant {
 
             // 3. TODO parse shared timetables
 
+            // Timetable
+            if (referential.getSharedTimetables().isEmpty()) {
+                //GtfsCalendarParser gtfsCalendarParser = (GtfsCalendarParser) ParserFactory.create(GtfsCalendarParser.class.getName());
+                //gtfsCalendarParser.parse(context);
+                reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.TIMETABLE,
+                        "time tables", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
+                reporter.setStatToObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.TIMETABLE,
+                        ActionReporter.OBJECT_TYPE.TIMETABLE, referential.getSharedTimetables().size());
+            }
+
             NoptisLineParser noptisLineParser = (NoptisLineParser) ParserFactory.create(NoptisLineParser.class.getName());
             noptisLineParser.setNoptisLine(line);
             noptisLineParser.parse(context);

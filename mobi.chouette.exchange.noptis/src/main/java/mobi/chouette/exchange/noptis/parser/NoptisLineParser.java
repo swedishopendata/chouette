@@ -51,6 +51,11 @@ public class NoptisLineParser implements Parser, Constant {
             Company company = referential.getSharedCompanies().values().iterator().next();
             neptuneLine.setCompany(company);
         }
+
+        // Route VehicleJourney VehicleJourneyAtStop , JourneyPattern ,StopPoint
+        //GtfsTripParser gtfsTripParser = (GtfsTripParser) ParserFactory.create(GtfsTripParser.class.getName());
+        //gtfsTripParser.setGtfsRouteId(gtfsRouteId);
+        //gtfsTripParser.parse(context);
     }
 
     private void convert(Context context, mobi.chouette.model.stip.Line noptisLine, mobi.chouette.model.Line neptuneLine) {

@@ -33,4 +33,11 @@ public class StopPointDAOImpl extends GenericDAOImpl<StopPoint> implements StopP
                 .getResultList();
     }
 
+    @Override
+    public StopPoint findByJourneyPatternPointGid(long isJourneyPatternPointGid) {
+        return em.createQuery("SELECT s FROM StopPoint s WHERE s.isJourneyPatternPointGid = :isJourneyPatternPointGid", StopPoint.class)
+                .setParameter("isJourneyPatternPointGid", isJourneyPatternPointGid)
+                .getSingleResult();
+    }
+
 }
