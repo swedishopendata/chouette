@@ -1,6 +1,5 @@
 package mobi.chouette.exchange.noptis.importer;
 
-import com.google.common.collect.ImmutableSet;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import lombok.extern.log4j.Log4j;
@@ -10,7 +9,7 @@ import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.dao.stip.LineDAO;
 import mobi.chouette.exchange.noptis.Constant;
-import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
+import mobi.chouette.exchange.noptis.importer.util.NoptisReferential;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.exchange.report.IO_TYPE;
 import mobi.chouette.exchange.validation.ValidationData;
@@ -23,8 +22,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 
 @Log4j
 @Stateless(name = NoptisInitImportCommand.COMMAND)
@@ -42,23 +39,20 @@ public class NoptisInitImportCommand implements Command, Constant {
         Monitor monitor = MonitorFactory.start(COMMAND);
 
         try {
-            NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
             context.put(REFERENTIAL, new Referential());
+
+            NoptisReferential noptisReferential = new NoptisReferential();
+            context.put(NOPTIS_REFERENTIAL, noptisReferential);
+
             context.put(VALIDATION_DATA, new ValidationData());
             context.put(OPTIMIZED, false);
-
-            short dataSourceId = NoptisImporterUtils.getDataSourceId(parameters.getObjectIdPrefix());
-            List<Long> lineGids = lineDAO.findGidsByDataSourceId(dataSourceId);
-            context.put(NOPTIS_LINE_GIDS, ImmutableSet.copyOf(lineGids));
 
             ActionReporter reporter = ActionReporter.Factory.getInstance();
             reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.NETWORK, "networks", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
             reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.STOP_AREA, "stop areas", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
             reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.COMPANY, "companies", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
-            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.CONNECTION_LINK, "connection links", ActionReporter.OBJECT_STATE.OK,
-                    IO_TYPE.INPUT);
-            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.ACCESS_POINT, "access points", ActionReporter.OBJECT_STATE.OK,
-                    IO_TYPE.INPUT);
+            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.CONNECTION_LINK, "connection links", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
+            reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.ACCESS_POINT, "access points", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
             reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.TIMETABLE, "calendars", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
 
             result = SUCCESS;

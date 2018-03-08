@@ -35,6 +35,13 @@ public class LineDAOImpl extends GenericDAOImpl<Line> implements LineDAO {
     }
 
     @Override
+    public List<Long> findIdsByDataSourceId(short dataSourceId) {
+        return em.createQuery("SELECT l.id FROM Line l WHERE l.isFromDataSourceId = :dataSourceId", Long.class)
+                .setParameter("dataSourceId", dataSourceId)
+                .getResultList();
+    }
+
+    @Override
     public List<Long> findGidsByDataSourceId(short dataSourceId) {
         return em.createQuery("SELECT l.gid FROM Line l WHERE l.isFromDataSourceId = :dataSourceId", Long.class)
                 .setParameter("dataSourceId", dataSourceId)

@@ -9,16 +9,14 @@ import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.ProcessingCommands;
 import mobi.chouette.exchange.ProcessingCommandsFactory;
-import mobi.chouette.exchange.importer.CleanRepositoryCommand;
-import mobi.chouette.exchange.importer.StopAreaRegisterCommand;
-import mobi.chouette.exchange.importer.UncompressCommand;
+import mobi.chouette.exchange.importer.*;
 import mobi.chouette.exchange.noptis.Constant;
+import mobi.chouette.exchange.validation.ImportedLineValidatorCommand;
 
 import javax.naming.InitialContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Log4j
@@ -58,49 +56,24 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 		return commands;
 	}
 
-	@SuppressWarnings("unchecked")
-    @Override
+	@Override
 	public List<? extends Command> getLineProcessingCommands(Context context, boolean withDao) {
 		InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
 		NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
 		boolean level3validation = context.get(VALIDATION) != null;
 		List<Command> commands = new ArrayList<>();
-		Set<Long> lineGids = (Set<Long>) context.get(NOPTIS_LINE_GIDS);
 
 		try {
-
-			{
-				Chain chain = (Chain) CommandFactory.create(initialContext, ChainCommand.class.getName());
-				chain.add(CommandFactory.create(initialContext, NoptisStopAreaParserCommand.class.getName()));
-
-				if (withDao && !parameters.isNoSave()) {
-					Command saveArea = CommandFactory.create(initialContext, StopAreaRegisterCommand.class.getName());
-					chain.add(saveArea);
-				}
-
-				commands.add(chain);
+			if (withDao) {
+				commands.add(CommandFactory.create(initialContext, DaoNoptisLineParserCommand.class.getName()));
+				//commands.add(CommandFactory.create(initialContext, NoptisLineParserCommand.class.getName()));
 			}
-
-			for (Long ignored : lineGids) {
-				Chain chain = (Chain) CommandFactory.create(initialContext, ChainCommand.class.getName());
-				Command lineParser = CommandFactory.create(initialContext, NoptisLineParserCommand.class.getName());
-				chain.add(lineParser);
-
-				if (withDao && !parameters.isNoSave()) {
-
-					// register
-					//Command register = CommandFactory.create(initialContext, LineRegisterCommand.class.getName());
-					//chain.add(register);
-
-					//Command copy = CommandFactory.create(initialContext, CopyCommand.class.getName());
-					//chain.add(copy);
-				}
-				if (level3validation) {
-					// add validation
-					//Command validate = CommandFactory.create(initialContext, ImportedLineValidatorCommand.class.getName());
-					//chain.add(validate);
-				}
-				commands.add(chain);
+			if (withDao && !parameters.isNoSave()) {
+				//commands.add(CommandFactory.create(initialContext, LineRegisterCommand.class.getName()));
+				//commands.add(CommandFactory.create(initialContext, CopyCommand.class.getName()));
+			}
+			if (level3validation) {
+				//commands.add(CommandFactory.create(initialContext, ImportedLineValidatorCommand.class.getName()));
 			}
 		} catch (Exception e) {
 			log.error(e, e);
@@ -134,7 +107,22 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 
 	@Override
 	public List<? extends Command> getStopAreaProcessingCommands(Context context, boolean withDao) {
-		return new ArrayList<>();
+		InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
+		NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
+		List<Command> commands = new ArrayList<>();
+
+		try {
+			commands.add(CommandFactory.create(initialContext, NoptisStopAreaParserCommand.class.getName()));
+
+			if (withDao && !parameters.isNoSave()) {
+				//commands.add(CommandFactory.create(initialContext, StopAreaRegisterCommand.class.getName()));
+			}
+		} catch (Exception e) {
+			log.error(e, e);
+			throw new RuntimeException("unable to call factories");
+		}
+
+		return commands;
 	}
 
 	@Override

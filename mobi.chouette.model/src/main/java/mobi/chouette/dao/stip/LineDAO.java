@@ -12,5 +12,8 @@ public interface LineDAO extends GenericDAO<Line> {
 
     List<Line> findByDataSourceId(short dataSourceId);
 
+    List<Long> findIdsByDataSourceId(short dataSourceId);
+
     List<Long> findGidsByDataSourceId(short dataSourceId);
+
 }
