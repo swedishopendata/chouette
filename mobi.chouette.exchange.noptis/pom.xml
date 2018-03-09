@@ -209,7 +209,8 @@
                             <password>sa</password>
                             <autocommit>true</autocommit>
                             <srcFiles>
-                                <srcFile>src/test/sql/stip_test.sql</srcFile>
+                                <!--<srcFile>src/test/sql/stip_test.sql</srcFile>-->
+                                <srcFile>src/test/sql/stip_test-20180309.sql</srcFile>
                             </srcFiles>
                             <skip>false</skip>
                         </configuration>

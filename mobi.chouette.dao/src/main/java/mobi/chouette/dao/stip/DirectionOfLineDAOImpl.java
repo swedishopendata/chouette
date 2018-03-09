@@ -27,4 +27,13 @@ public class DirectionOfLineDAOImpl extends GenericDAOImpl<DirectionOfLine> impl
                 .getResultList();
     }
 
+    @Override
+    public List<DirectionOfLine> findByDataSourceAndLineId(short dataSourceId, long lineId) {
+        return em.createQuery("SELECT d FROM DirectionOfLine d WHERE d.isFromDataSourceId = :dataSourceId AND d.isOnLineId = :lineId " +
+                "ORDER BY d.gid, d.directionCode", DirectionOfLine.class)
+                .setParameter("dataSourceId", dataSourceId)
+                .setParameter("lineId", lineId)
+                .getResultList();
+    }
+
 }

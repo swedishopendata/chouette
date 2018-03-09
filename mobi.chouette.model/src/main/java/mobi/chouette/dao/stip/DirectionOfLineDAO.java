@@ -8,4 +8,6 @@ import java.util.List;
 public interface DirectionOfLineDAO extends GenericDAO<DirectionOfLine> {
 
     List<DirectionOfLine> findByDataSourceId(short dataSourceId);
+
+    List<DirectionOfLine> findByDataSourceAndLineId(short dataSourceId, long lineId);
 }

@@ -73,6 +73,8 @@ public class NoptisLineParserCommand implements Command, Constant {
 
             // 3. TODO parse shared timetables
 
+            // TODO A calendar in noptis is based on specific vehicle journeys (vehicle journey id) and should be processed during vehicle journey parser only
+
             // Timetable
             if (referential.getSharedTimetables().isEmpty()) {
                 //GtfsCalendarParser gtfsCalendarParser = (GtfsCalendarParser) ParserFactory.create(GtfsCalendarParser.class.getName());
