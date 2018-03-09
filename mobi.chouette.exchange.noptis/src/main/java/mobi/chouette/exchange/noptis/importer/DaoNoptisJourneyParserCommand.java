@@ -92,6 +92,7 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
             daoContext.setRollbackOnly();
             directionOfLineDAO.clear();
             vehicleJourneyTemplateDAO.clear();
+            timetableDAO.clear();
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
