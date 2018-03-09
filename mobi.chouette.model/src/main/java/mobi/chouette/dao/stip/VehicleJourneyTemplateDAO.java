@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface VehicleJourneyTemplateDAO extends GenericDAO<VehicleJourneyTemplate> {
 
-    public List<Object[]> findVehicleJourneyAndTemplatesForDirectionOfLine(short dataSourceId, long directionOfLineGid);
+    List findVehicleJourneyAndTemplatesForDirectionOfLine(short dataSourceId, long directionOfLineGid);
 }

@@ -8,10 +8,15 @@ import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.dao.stip.DirectionOfLineDAO;
+import mobi.chouette.dao.stip.TimetableDAO;
+import mobi.chouette.dao.stip.VehicleJourneyTemplateDAO;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
+import mobi.chouette.exchange.noptis.parser.VehicleJourneyAndTemplate;
 import mobi.chouette.model.stip.DirectionOfLine;
 import mobi.chouette.model.stip.Line;
+import mobi.chouette.model.stip.VehicleJourney;
+import mobi.chouette.model.stip.VehicleJourneyTemplate;
 import mobi.chouette.model.util.Referential;
 
 import javax.annotation.Resource;
@@ -19,6 +24,7 @@ import javax.ejb.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j
@@ -33,6 +39,13 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
     @EJB
     private DirectionOfLineDAO directionOfLineDAO;
 
+    @EJB
+    private VehicleJourneyTemplateDAO vehicleJourneyTemplateDAO;
+
+    @EJB
+    private TimetableDAO timetableDAO;
+
+    @SuppressWarnings("unchecked")
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public boolean execute(Context context) throws Exception {
@@ -46,10 +59,29 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
             short dataSourceId = NoptisImporterUtils.getDataSourceId(configuration.getObjectIdPrefix());
             Line line = (Line) context.get(LINE);
 
+            // Retrieve DirectionOfLines
+
             List<DirectionOfLine> directionOfLines = directionOfLineDAO.findByDataSourceAndLineId(dataSourceId, line.getId());
             for (DirectionOfLine directionOfLine : directionOfLines) {
                 log.info(directionOfLine);
+
+                // Retrieve VehicleJourneys
+
+                List<Object[]> vehicleJourneysAndTemplates = timetableDAO.findVehicleJourneyAndTemplatesForDirectionOfLine(dataSourceId, directionOfLine.getGid());
+                List<VehicleJourneyAndTemplate> vehicleJourneyAndTemplates = new ArrayList<>();
+
+                for (Object[] journeyRecord : vehicleJourneysAndTemplates) {
+                    VehicleJourneyTemplate vehicleJourneyTemplate = (VehicleJourneyTemplate) journeyRecord[0];
+                    VehicleJourney vehicleJourney = (VehicleJourney) journeyRecord[1];
+                    vehicleJourneyAndTemplates.add(new VehicleJourneyAndTemplate(vehicleJourneyTemplate, vehicleJourney));
+                }
+                for (VehicleJourneyAndTemplate vehicleJourneyAndTemplate : vehicleJourneyAndTemplates) {
+                    log.info(vehicleJourneyAndTemplate.getVehicleJourneyTemplate());
+                    log.info(vehicleJourneyAndTemplate.getVehicleJourney());
+                }
             }
+
+            // TODO consider adding all retrieved objects for the current line in cache (NoptisReferential)
 
 //            InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
 //            Command parser = CommandFactory.create(initialContext, NoptisLineParserCommand.class.getName());
@@ -59,6 +91,7 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
             daoContext.setRollbackOnly();
             directionOfLineDAO.clear();
+            vehicleJourneyTemplateDAO.clear();
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -20,10 +20,10 @@ public class VehicleJourneyTemplateDAOImpl extends GenericDAOImpl<VehicleJourney
     }
 
     @Override
-    public List<Object[]> findVehicleJourneyAndTemplatesForDirectionOfLine(short dataSourceId, long directionOfLineGid) {
-        return em.createQuery("SELECT vt, v FROM VehicleJourneyTemplateEntity vt " +
-                "INNER JOIN VehicleJourneyEntity v ON v.isDescribedByVehicleJourneyTemplateId = vt.id " +
-                "WHERE vt.isFromDataSourceId = :dataSourceId AND vt.isWorkedOnDirectionOfLineGid = :directionOfLineGid", Object[].class)
+    public List findVehicleJourneyAndTemplatesForDirectionOfLine(short dataSourceId, long directionOfLineGid) {
+        return em.createQuery("SELECT vt, v FROM VehicleJourneyTemplate vt " +
+                "INNER JOIN VehicleJourney v ON v.isDescribedByVehicleJourneyTemplateId = vt.id " +
+                "WHERE vt.isFromDataSourceId = :dataSourceId AND vt.isWorkedOnDirectionOfLineGid = :directionOfLineGid")
                 .setParameter("dataSourceId", dataSourceId)
                 .setParameter("directionOfLineGid", directionOfLineGid)
                 .getResultList();
