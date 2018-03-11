@@ -75,6 +75,11 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                     VehicleJourney vehicleJourney = (VehicleJourney) journeyRecord[1];
                     vehicleJourneyAndTemplates.add(new VehicleJourneyAndTemplate(vehicleJourneyTemplate, vehicleJourney));
                 }
+
+                // TODO Retrieve timed journey patterns by direction of line here
+
+                // Iterate all templates and journeys and create a neptune VehicleJourney for each
+
                 for (VehicleJourneyAndTemplate vehicleJourneyAndTemplate : vehicleJourneyAndTemplates) {
                     log.info(vehicleJourneyAndTemplate.getVehicleJourneyTemplate());
                     log.info(vehicleJourneyAndTemplate.getVehicleJourney());
