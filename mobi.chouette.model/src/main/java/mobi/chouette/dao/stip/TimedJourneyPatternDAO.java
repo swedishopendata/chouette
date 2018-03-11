@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TimedJourneyPatternDAO extends GenericDAO<TimedJourneyPattern> {
 
-    public List<TimedJourneyPattern> findTimedJourneyPatternsForDirectionOfLine(short dataSourceId, long directionOfLineGid);
+    List<TimedJourneyPattern> findTimedJourneyPatternsForDirectionOfLine(short dataSourceId, long directionOfLineGid);
 }

@@ -18,14 +18,16 @@ public class TimedJourneyPatternDAOImpl extends GenericDAOImpl<TimedJourneyPatte
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
-
+    
     @Override
     public List<TimedJourneyPattern> findTimedJourneyPatternsForDirectionOfLine(short dataSourceId, long directionOfLineGid) {
-        return em.createQuery("SELECT t FROM TimedJourneyPatternEntity t INNER JOIN VehicleJourneyTemplateEntity vt " +
-                "ON vt.isWorkedOnTimedJourneyPatternId = t.id WHERE vt.isFromDataSourceId = :dataSourceId " +
+        return em.createQuery("SELECT t FROM TimedJourneyPattern t, VehicleJourneyTemplate vt " +
+                "WHERE vt.isWorkedOnTimedJourneyPatternId = t.id " +
+                "AND vt.isFromDataSourceId = :dataSourceId " +
                 "AND vt.isWorkedOnDirectionOfLineGid = :directionOfLineGid", TimedJourneyPattern.class)
                 .setParameter("dataSourceId", dataSourceId)
                 .setParameter("directionOfLineGid", directionOfLineGid)
                 .getResultList();
     }
+
 }
