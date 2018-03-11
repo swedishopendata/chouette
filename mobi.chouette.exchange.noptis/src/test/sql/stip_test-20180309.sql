@@ -29,3 +29,8 @@ INSERT INTO dbo.VehicleJourneyTemplate (Id, IsFromDataSourceId, IsWorkedOnTimedJ
 
 INSERT INTO dbo.VehicleJourney (Id, IsFromDataSourceId, PlannedStartOffsetDateTime, PlannedEndOffsetDateTime, IsDescribedByVehicleJourneyTemplateId) VALUES (33010000049257800, 3, '1900-01-01 06:45:00', '1900-01-01 07:01:00', 33010000049257800);
 INSERT INTO dbo.VehicleJourney (Id, IsFromDataSourceId, PlannedStartOffsetDateTime, PlannedEndOffsetDateTime, IsDescribedByVehicleJourneyTemplateId) VALUES (33010000078436400, 3, '1900-01-01 06:45:00', '1900-01-01 07:01:00', 33010000078436400);
+
+-- TimedJourneyPatterns
+
+INSERT INTO dbo.TimedJourneyPattern (Id, IsFromDataSourceId, IsBasedOnJourneyPatternId) VALUES (33010000049257800, 3, 14010000440888550);
+INSERT INTO dbo.TimedJourneyPattern (Id, IsFromDataSourceId, IsBasedOnJourneyPatternId) VALUES (33010000078436400, 3, 14010000440888550);

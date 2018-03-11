@@ -8,15 +8,13 @@ import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.dao.stip.DirectionOfLineDAO;
+import mobi.chouette.dao.stip.TimedJourneyPatternDAO;
 import mobi.chouette.dao.stip.TimetableDAO;
 import mobi.chouette.dao.stip.VehicleJourneyTemplateDAO;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.exchange.noptis.parser.VehicleJourneyAndTemplate;
-import mobi.chouette.model.stip.DirectionOfLine;
-import mobi.chouette.model.stip.Line;
-import mobi.chouette.model.stip.VehicleJourney;
-import mobi.chouette.model.stip.VehicleJourneyTemplate;
+import mobi.chouette.model.stip.*;
 import mobi.chouette.model.util.Referential;
 
 import javax.annotation.Resource;
@@ -41,6 +39,9 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
     @EJB
     private VehicleJourneyTemplateDAO vehicleJourneyTemplateDAO;
+
+    @EJB
+    private TimedJourneyPatternDAO timedJourneyPatternDAO;
 
     @EJB
     private TimetableDAO timetableDAO;
@@ -76,7 +77,12 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                     vehicleJourneyAndTemplates.add(new VehicleJourneyAndTemplate(vehicleJourneyTemplate, vehicleJourney));
                 }
 
-                // TODO Retrieve timed journey patterns by direction of line here
+                // Retrieve TimedJourneyPatterns
+
+                List<TimedJourneyPattern> timedJourneyPatterns = timedJourneyPatternDAO.findTimedJourneyPatternsForDirectionOfLine(dataSourceId, directionOfLine.getGid());
+                for (TimedJourneyPattern timedJourneyPattern : timedJourneyPatterns) {
+                    log.info(timedJourneyPattern);
+                }
 
                 // Iterate all templates and journeys and create a neptune VehicleJourney for each
 
