@@ -13,8 +13,10 @@ import mobi.chouette.dao.stip.TimetableDAO;
 import mobi.chouette.dao.stip.VehicleJourneyTemplateDAO;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
+import mobi.chouette.exchange.noptis.parser.AbstractNoptisParser;
 import mobi.chouette.exchange.noptis.parser.VehicleJourneyAndTemplate;
 import mobi.chouette.model.stip.*;
+import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 
 import javax.annotation.Resource;
@@ -23,7 +25,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Log4j
 @Stateless(name = DaoNoptisJourneyParserCommand.COMMAND)
@@ -68,14 +72,9 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
                 // Retrieve VehicleJourneys
 
-                List<Object[]> vehicleJourneysAndTemplates = timetableDAO.findVehicleJourneyAndTemplatesForDirectionOfLine(dataSourceId, directionOfLine.getGid());
+                List<Object[]> resultList = timetableDAO.findVehicleJourneyAndTemplatesForDirectionOfLine(dataSourceId, directionOfLine.getGid());
                 List<VehicleJourneyAndTemplate> vehicleJourneyAndTemplates = new ArrayList<>();
-
-                for (Object[] journeyRecord : vehicleJourneysAndTemplates) {
-                    VehicleJourneyTemplate vehicleJourneyTemplate = (VehicleJourneyTemplate) journeyRecord[0];
-                    VehicleJourney vehicleJourney = (VehicleJourney) journeyRecord[1];
-                    vehicleJourneyAndTemplates.add(new VehicleJourneyAndTemplate(vehicleJourneyTemplate, vehicleJourney));
-                }
+                resultList.forEach(resultRecord -> vehicleJourneyAndTemplates.add(new VehicleJourneyAndTemplate((VehicleJourneyTemplate) resultRecord[0], (VehicleJourney) resultRecord[1])));
 
                 // Retrieve TimedJourneyPatterns
 
@@ -84,11 +83,31 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                     log.info(timedJourneyPattern);
                 }
 
+                // Cache all TimedJourneyPatterns for easy access by id later
+
+                Map<Long, TimedJourneyPattern> timedJourneyPatternMap = new HashMap<>();
+                timedJourneyPatterns.forEach(timedJourneyPattern -> timedJourneyPatternMap.put(timedJourneyPattern.getId(), timedJourneyPattern));
+
                 // Iterate all templates and journeys and create a neptune VehicleJourney for each
 
                 for (VehicleJourneyAndTemplate vehicleJourneyAndTemplate : vehicleJourneyAndTemplates) {
-                    log.info(vehicleJourneyAndTemplate.getVehicleJourneyTemplate());
-                    log.info(vehicleJourneyAndTemplate.getVehicleJourney());
+                    VehicleJourneyTemplate vehicleJourneyTemplate = vehicleJourneyAndTemplate.getVehicleJourneyTemplate();
+                    mobi.chouette.model.stip.VehicleJourney noptisVehicleJourney = vehicleJourneyAndTemplate.getVehicleJourney();
+
+                    String objectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
+                            mobi.chouette.model.VehicleJourney.VEHICLEJOURNEY_KEY, String.valueOf(noptisVehicleJourney.getId()));
+                    mobi.chouette.model.VehicleJourney neptuneVehicleJourney = ObjectFactory.getVehicleJourney(referential, objectId);
+
+                    try {
+                        neptuneVehicleJourney.setNumber(noptisVehicleJourney.getId());
+                    } catch (NumberFormatException e) {
+                        neptuneVehicleJourney.setNumber(0L);
+                        neptuneVehicleJourney.setPublishedJourneyName(String.valueOf(noptisVehicleJourney.getId()));
+                    }
+
+                    //neptuneVehicleJourney.setRoute(journeyPattern.getRoute());
+                    //neptuneVehicleJourney.setJourneyPattern(journeyPattern);
+                    neptuneVehicleJourney.setFilled(true);
                 }
             }
 
@@ -104,6 +123,7 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
             directionOfLineDAO.clear();
             vehicleJourneyTemplateDAO.clear();
             timetableDAO.clear();
+            timedJourneyPatternDAO.clear();
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
