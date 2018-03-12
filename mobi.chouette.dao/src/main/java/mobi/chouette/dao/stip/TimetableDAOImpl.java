@@ -8,7 +8,8 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Log4j
-@Stateless(name="StipTimetableDAO")
+@SuppressWarnings("unchecked")
+@Stateless(name = "StipTimetableDAO")
 public class TimetableDAOImpl extends GenericQueryDAOImpl implements TimetableDAO {
 
     @PersistenceContext(unitName = "stip")
@@ -16,7 +17,7 @@ public class TimetableDAOImpl extends GenericQueryDAOImpl implements TimetableDA
         this.em = em;
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
     public List findVehicleJourneyAndTemplatesForDirectionOfLine(short dataSourceId, long directionOfLineGid) {
         return em.createQuery("SELECT vt, v FROM VehicleJourneyTemplate vt, VehicleJourney v " +
                 "WHERE v.isDescribedByVehicleJourneyTemplateId = vt.id " +
@@ -24,6 +25,15 @@ public class TimetableDAOImpl extends GenericQueryDAOImpl implements TimetableDA
                 "AND vt.isWorkedOnDirectionOfLineGid = :directionOfLineGid")
                 .setParameter("dataSourceId", dataSourceId)
                 .setParameter("directionOfLineGid", directionOfLineGid)
+                .getResultList();
+    }
+
+    @Override
+    public List findCallsForTimedJourneyPattern(long timedJourneyPatternId) {
+        return em.createQuery("SELECT c, pj FROM CallOnTimedJourneyPattern c, PointInJourneyPattern pj " +
+                "WHERE c.isOnPointInJourneyPatternId = pj.id " +
+                "AND c.isOnTimedJourneyPatternId = :timedJourneyPatternId ")
+                .setParameter("timedJourneyPatternId", timedJourneyPatternId)
                 .getResultList();
     }
 

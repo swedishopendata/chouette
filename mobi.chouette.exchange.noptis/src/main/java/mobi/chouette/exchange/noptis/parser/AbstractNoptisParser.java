@@ -2,6 +2,12 @@ package mobi.chouette.exchange.noptis.parser;
 
 import mobi.chouette.common.Context;
 import mobi.chouette.exchange.noptis.Constant;
+import mobi.chouette.model.stip.type.ArrivalType;
+import mobi.chouette.model.stip.type.DepartureType;
+import mobi.chouette.model.stip.type.TransportModeCode;
+import mobi.chouette.model.type.AlightingPossibilityEnum;
+import mobi.chouette.model.type.BoardingPossibilityEnum;
+import mobi.chouette.model.type.TransportModeNameEnum;
 
 public abstract class AbstractNoptisParser implements Constant {
 
@@ -69,6 +75,71 @@ public abstract class AbstractNoptisParser implements Constant {
         }
 
         return objectContext;
+    }
+
+    public static TransportModeNameEnum convertTransportModeCode(TransportModeCode type) {
+        switch (type) {
+            case TRAM:
+                return TransportModeNameEnum.Tramway;
+            case METRO:
+                return TransportModeNameEnum.Metro;
+            case TRAIN:
+                return TransportModeNameEnum.Train;
+            case BUS:
+                return TransportModeNameEnum.Bus;
+            case FERRY:
+                return TransportModeNameEnum.Ferry;
+            case SHIP:
+                return TransportModeNameEnum.Waterborne;
+            case TAXI:
+                return TransportModeNameEnum.Taxi;
+            case UNSPECIFIED:
+                return TransportModeNameEnum.Other;
+            default:
+                return TransportModeNameEnum.Other;
+        }
+    }
+
+    public static BoardingPossibilityEnum convertDepartureType(DepartureType departureType) {
+        if (departureType != null) {
+            switch (departureType) {
+                case NO_STOP:
+                    return BoardingPossibilityEnum.forbidden;
+                case STOP_NO_BOARDING:
+                    return BoardingPossibilityEnum.forbidden;
+                case STOP_BOARDING_IF_NECESSARY:
+                    return BoardingPossibilityEnum.request_stop;
+                case STOP_BOARDING_ALWAYS:
+                    return BoardingPossibilityEnum.normal;
+                case FLEXIBLE_STOP:
+                    return BoardingPossibilityEnum.is_flexible;
+                default:
+                    return BoardingPossibilityEnum.normal;
+            }
+        }
+
+        return BoardingPossibilityEnum.normal;
+    }
+
+    public static AlightingPossibilityEnum convertArrivalType(ArrivalType arrivalType) {
+        if (arrivalType != null) {
+            switch (arrivalType) {
+                case NO_STOP:
+                    return AlightingPossibilityEnum.forbidden;
+                case STOP_NO_ALIGHTING:
+                    return AlightingPossibilityEnum.forbidden;
+                case STOP_ALIGHTING_IF_NECESSARY:
+                    return AlightingPossibilityEnum.request_stop;
+                case STOP_ALIGHTING_ALWAYS:
+                    return AlightingPossibilityEnum.normal;
+                case FLEXIBLE_STOP:
+                    return AlightingPossibilityEnum.is_flexible;
+                default:
+                    return AlightingPossibilityEnum.normal;
+            }
+        }
+
+        return AlightingPossibilityEnum.normal;
     }
 
 }

@@ -15,6 +15,10 @@ INSERT INTO dbo.DirectionOfLine (Id, IsFromDataSourceId, Gid, DirectionCode, Nam
 
 INSERT INTO dbo.TransportAuthority (Id, Gid, IsFromDataSourceId, Number, TimeTableReleaseForPublicUseUptoDate, ExistsFromDate, ExistsUptoDate, Code, Name, FormalName) VALUES (33010000000001407, 9010003000000000, 3, 3, '2016-12-31 00:00:00', '2015-05-19 00:00:00', null, 'UL', 'UL', 'Kollektivtrafikförvaltningen, UL');
 
+-- Contractor
+
+INSERT INTO dbo.Contractor (Id, IsFromDataSourceId, Gid, Number, IsPromotedByTransportAuthorityId, ExistsFromDate, ExistsUptoDate, Code, Name) VALUES (33010000000547207, 3, 9013003000100000, 1, 33010000000001407, '2016-12-31 00:00:00', null, 'NOB', 'Nobina');
+
 -- StopArea
 
 INSERT INTO dbo.StopArea (Id, IsFromDataSourceId, Gid, Number, Name, ShortName, TypeCode, IsDefinedByTransportAuthorityId, CoordinateSystemName, CentroidNorthingCoordinate, CentroidEastingCoordinate, DefaultInterchangeDurationSeconds, InterchangePriority, ExistsFromDate, ExistsUptoDate) VALUES (33010000045947312, 3, 9021003719000000, 719000, 'Älvkarleby station (Älvkarleby)', 'Älvkarleby stati', 'BUSTERM', 33010000000001407, 'WGS84', '60.557311', '17.426339', 120, 14, '2017-04-20 00:00:00', null);
@@ -22,8 +26,8 @@ INSERT INTO dbo.StopArea (Id, IsFromDataSourceId, Gid, Number, Name, ShortName, 
 
 -- VehicleJourneyTemplates
 
-INSERT INTO dbo.VehicleJourneyTemplate (Id, IsFromDataSourceId, IsWorkedOnTimedJourneyPatternId, UsesNamedJourneyPatternGid, IsWorkedOnDirectionOfLineGid, TransportModeCode, ContractorGid, IsWorkedAccordingToServiceCalendarId, ExposedInPrintMedia, UsesServiceRequirementPatternId) VALUES (33010000049257800, 3, 33010000049257800, 3010000049257710, 9014003000110000, 'BUS', 9013003000500000, 33010000000357900, 0, 33010000049257800);
-INSERT INTO dbo.VehicleJourneyTemplate (Id, IsFromDataSourceId, IsWorkedOnTimedJourneyPatternId, UsesNamedJourneyPatternGid, IsWorkedOnDirectionOfLineGid, TransportModeCode, ContractorGid, IsWorkedAccordingToServiceCalendarId, ExposedInPrintMedia, UsesServiceRequirementPatternId) VALUES (33010000078436400, 3, 33010000078436400, 3010000078435310, 9014003000120000, 'BUS', 9013003000500000, 33010000000357900, 0, 33010000078436400);
+INSERT INTO dbo.VehicleJourneyTemplate (Id, IsFromDataSourceId, IsWorkedOnTimedJourneyPatternId, UsesNamedJourneyPatternGid, IsWorkedOnDirectionOfLineGid, TransportModeCode, ContractorGid, IsWorkedAccordingToServiceCalendarId, ExposedInPrintMedia, UsesServiceRequirementPatternId) VALUES (33010000049257800, 3, 33010000049257800, 3010000049257710, 9014003000110000, 'BUS', 9013003000100000, 33010000000357900, 0, 33010000049257800);
+INSERT INTO dbo.VehicleJourneyTemplate (Id, IsFromDataSourceId, IsWorkedOnTimedJourneyPatternId, UsesNamedJourneyPatternGid, IsWorkedOnDirectionOfLineGid, TransportModeCode, ContractorGid, IsWorkedAccordingToServiceCalendarId, ExposedInPrintMedia, UsesServiceRequirementPatternId) VALUES (33010000078436400, 3, 33010000078436400, 3010000078435310, 9014003000120000, 'BUS', 9013003000100000, 33010000000357900, 0, 33010000078436400);
 
 -- VehicleJourneys
 

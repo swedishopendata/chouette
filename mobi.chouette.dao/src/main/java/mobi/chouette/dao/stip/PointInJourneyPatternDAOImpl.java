@@ -22,7 +22,8 @@ public class PointInJourneyPatternDAOImpl extends GenericDAOImpl<PointInJourneyP
     @Override
     public List<PointInJourneyPattern> findByJourneyPatternId(long journeyPatternId) {
         return em.createQuery("SELECT pjp FROM PointInJourneyPattern pjp " +
-                "WHERE pjp.isInJourneyPatternId = :journeyPatternId", PointInJourneyPattern.class)
+                "WHERE pjp.isInJourneyPatternId = :journeyPatternId " +
+                "ORDER BY pjp.sequenceNumber", PointInJourneyPattern.class)
                 .setParameter("journeyPatternId", journeyPatternId)
                 .getResultList();
     }

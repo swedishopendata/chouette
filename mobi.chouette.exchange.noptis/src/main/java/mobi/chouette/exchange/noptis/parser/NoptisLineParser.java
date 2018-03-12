@@ -11,9 +11,6 @@ import mobi.chouette.exchange.noptis.converter.NoptisConverter;
 import mobi.chouette.exchange.noptis.importer.NoptisImportParameters;
 import mobi.chouette.model.Company;
 import mobi.chouette.model.Network;
-import mobi.chouette.model.stip.TransportAuthority;
-import mobi.chouette.model.stip.type.TransportModeCode;
-import mobi.chouette.model.type.TransportModeNameEnum;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 
@@ -72,7 +69,7 @@ public class NoptisLineParser implements Parser, Constant {
             neptuneLine.setName(neptuneLine.getNumber());
         }
 
-        neptuneLine.setTransportModeName(toTransportModeNameEnum(noptisLine.getDefaultTransportModeCode()));
+        neptuneLine.setTransportModeName(AbstractNoptisParser.convertTransportModeCode(noptisLine.getDefaultTransportModeCode()));
 
         String[] token = neptuneLine.getObjectId().split(":");
         neptuneLine.setRegistrationNumber(token[2]);
@@ -92,29 +89,6 @@ public class NoptisLineParser implements Parser, Constant {
         ptNetwork.setRegistrationNumber(prefix);
         ptNetwork.setSourceName("NOPTIS");
         return ptNetwork;
-    }
-
-    private TransportModeNameEnum toTransportModeNameEnum(TransportModeCode type) {
-        switch (type) {
-            case TRAM:
-                return TransportModeNameEnum.Tramway;
-            case METRO:
-                return TransportModeNameEnum.Metro;
-            case TRAIN:
-                return TransportModeNameEnum.Train;
-            case BUS:
-                return TransportModeNameEnum.Bus;
-            case FERRY:
-                return TransportModeNameEnum.Ferry;
-            case SHIP:
-                return TransportModeNameEnum.Waterborne;
-            case TAXI:
-                return TransportModeNameEnum.Taxi;
-            case UNSPECIFIED:
-                return TransportModeNameEnum.Other;
-            default:
-                return TransportModeNameEnum.Other;
-        }
     }
 
     static {

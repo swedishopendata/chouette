@@ -3,6 +3,7 @@ package mobi.chouette.model.stip;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import mobi.chouette.model.stip.type.TransportModeCode;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "VehicleJourneyTemplate")
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class VehicleJourneyTemplate extends NoptisDataSourceObject {
 
     private static final long serialVersionUID = 2013669579604706128L;
