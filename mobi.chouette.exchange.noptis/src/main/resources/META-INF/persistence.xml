@@ -35,7 +35,7 @@
         <validation-mode>NONE</validation-mode>
 
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://192.168.10.239:1433;DatabaseName=stip-pp"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://192.168.1.215:1433;DatabaseName=stip-pp"/>
             <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
             <property name="hibernate.default_schema" value="dbo"/>
