@@ -9,6 +9,7 @@ import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
+import mobi.chouette.exchange.noptis.parser.AbstractNoptisParser;
 import mobi.chouette.exchange.noptis.parser.NoptisLineParser;
 import mobi.chouette.exchange.noptis.parser.NoptisTransportAuthorityParser;
 import mobi.chouette.exchange.report.ActionReporter;
@@ -56,21 +57,6 @@ public class NoptisLineParserCommand implements Command, Constant {
                         ActionReporter.OBJECT_TYPE.NETWORK, referential.getSharedPTNetworks().size());
             }
 
-            TransportAuthority transportAuthority = (TransportAuthority) context.get(TRANSPORT_AUTHORITY);
-            log.info(transportAuthority);
-
-            // Company
-            if (referential.getSharedCompanies().isEmpty()) {
-                NoptisTransportAuthorityParser transportAuthorityParser = (NoptisTransportAuthorityParser)
-                        ParserFactory.create(NoptisTransportAuthorityParser.class.getName());
-                transportAuthorityParser.setTransportAuthority(transportAuthority);
-                transportAuthorityParser.parse(context);
-                reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.COMPANY,
-                        "companies", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
-                reporter.setStatToObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.COMPANY,
-                        ActionReporter.OBJECT_TYPE.COMPANY, referential.getSharedCompanies().size());
-            }
-
             // 3. TODO parse shared timetables
 
             // TODO A calendar in noptis is based on specific vehicle journeys (vehicle journey id) and should be processed during vehicle journey parser only
@@ -100,12 +86,12 @@ public class NoptisLineParserCommand implements Command, Constant {
     }
 
     private Network createPTNetwork(Referential referential, NoptisImportParameters configuration) {
-        String prefix = configuration.getObjectIdPrefix();
-        String ptNetworkId = prefix + ":" + Network.PTNETWORK_KEY + ":" + prefix;
+        String objectIdPrefix = configuration.getObjectIdPrefix();
+        String ptNetworkId = AbstractNoptisParser.composeObjectId(objectIdPrefix, Network.PTNETWORK_KEY, objectIdPrefix);
         Network ptNetwork = ObjectFactory.getPTNetwork(referential, ptNetworkId);
         ptNetwork.setVersionDate(Calendar.getInstance().getTime());
-        ptNetwork.setName(prefix);
-        ptNetwork.setRegistrationNumber(prefix);
+        ptNetwork.setName(objectIdPrefix);
+        ptNetwork.setRegistrationNumber(objectIdPrefix);
         ptNetwork.setSourceName("NOPTIS");
         return ptNetwork;
     }

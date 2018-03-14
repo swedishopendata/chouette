@@ -34,7 +34,8 @@ public class NoptisLineParser implements Parser, Constant {
         convert(context, noptisLine, neptuneLine);
 
         // PTNetwork
-        String ptNetworkId = configuration.getObjectIdPrefix() + ":" + Network.PTNETWORK_KEY + ":" + configuration.getObjectIdPrefix();
+        String ptNetworkId = AbstractNoptisParser.composeObjectId(
+                configuration.getObjectIdPrefix(), Network.PTNETWORK_KEY, configuration.getObjectIdPrefix());
         Network ptNetwork = ObjectFactory.getPTNetwork(referential, ptNetworkId);
         neptuneLine.setNetwork(ptNetwork);
 
