@@ -13,6 +13,7 @@ import mobi.chouette.model.type.ChouetteAreaEnum;
 import mobi.chouette.model.type.LongLatTypeEnum;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
+import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,13 +36,18 @@ public class NoptisStopAreaParser implements Parser, Constant {
 
             mobi.chouette.model.StopArea neptuneStopArea = ObjectFactory.getStopArea(referential, objectId);
 
-            neptuneStopArea.setLatitude(new BigDecimal(noptisStopArea.getCentroidNorthingCoordinate()));
-            neptuneStopArea.setLongitude(new BigDecimal(noptisStopArea.getCentroidEastingCoordinate()));
-
-            if (noptisStopArea.getCoordinateSystemName().equals(LongLatTypeEnum.WGS84.name())) {
-                neptuneStopArea.setLongLatType(LongLatTypeEnum.WGS84);
-            } else {
-                neptuneStopArea.setLongLatType(LongLatTypeEnum.WGS84);
+            if (StringUtils.isNotEmpty(noptisStopArea.getCentroidNorthingCoordinate())) {
+                neptuneStopArea.setLatitude(new BigDecimal(noptisStopArea.getCentroidNorthingCoordinate()));
+            }
+            if (StringUtils.isNotEmpty(noptisStopArea.getCentroidEastingCoordinate())) {
+                neptuneStopArea.setLongitude(new BigDecimal(noptisStopArea.getCentroidEastingCoordinate()));
+            }
+            if (StringUtils.isNotEmpty(noptisStopArea.getCoordinateSystemName())) {
+                if (noptisStopArea.getCoordinateSystemName().equals(LongLatTypeEnum.WGS84.name())) {
+                    neptuneStopArea.setLongLatType(LongLatTypeEnum.WGS84);
+                } else {
+                    neptuneStopArea.setLongLatType(LongLatTypeEnum.WGS84);
+                }
             }
 
             neptuneStopArea.setName(NoptisConverter.getNonEmptyTrimedString(noptisStopArea.getName()));

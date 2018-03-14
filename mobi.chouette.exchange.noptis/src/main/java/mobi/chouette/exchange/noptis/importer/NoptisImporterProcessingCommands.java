@@ -48,6 +48,7 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 			}
 			initChain.add(CommandFactory.create(initialContext, UncompressCommand.class.getName())); // TODO remove...
 			initChain.add(CommandFactory.create(initialContext, NoptisInitImportCommand.class.getName()));
+			initChain.add(CommandFactory.create(initialContext, DaoNoptisSharedDataParserCommand.class.getName()));
 			commands.add(initChain);
 		} catch (Exception e) {
 			log.error(e, e);
@@ -67,7 +68,7 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 		try {
 			if (withDao) {
 				commands.add(CommandFactory.create(initialContext, DaoNoptisLineParserCommand.class.getName()));
-				commands.add(CommandFactory.create(initialContext, DaoNoptisJourneyParserCommand.class.getName()));
+				//commands.add(CommandFactory.create(initialContext, DaoNoptisJourneyParserCommand.class.getName()));
 			}
 			if (withDao && !parameters.isNoSave()) {
 				commands.add(CommandFactory.create(initialContext, LineRegisterCommand.class.getName()));
@@ -113,7 +114,7 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 		List<Command> commands = new ArrayList<>();
 
 		try {
-			commands.add(CommandFactory.create(initialContext, NoptisStopAreaParserCommand.class.getName()));
+			//commands.add(CommandFactory.create(initialContext, NoptisStopAreaParserCommand.class.getName()));
 
 			if (withDao && !parameters.isNoSave()) {
 				//commands.add(CommandFactory.create(initialContext, StopAreaRegisterCommand.class.getName()));

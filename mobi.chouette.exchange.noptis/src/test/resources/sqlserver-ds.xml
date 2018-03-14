@@ -5,6 +5,9 @@
 
     <datasource jndi-name="java:jboss/datasources/stip" pool-name="stip">
         <connection-url>jdbc:sqlserver://192.168.10.239:49202;instanceName=MSSQLSERVER01;databaseName=stip-pp;integratedSecurity=false;user=sa;password=sa;</connection-url>
+
+        <!-- Alternative host -->
+        <!--<connection-url>jdbc:sqlserver://192.168.10.181:1433;databaseName=stip-pp;integratedSecurity=false;user=sa;password=samuel123!;</connection-url>-->
         <driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
         <driver>sqlserver</driver>
     </datasource>
