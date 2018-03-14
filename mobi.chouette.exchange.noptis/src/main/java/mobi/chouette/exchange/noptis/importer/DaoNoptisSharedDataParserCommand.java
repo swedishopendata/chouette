@@ -11,8 +11,10 @@ import mobi.chouette.dao.stip.*;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
+import mobi.chouette.exchange.noptis.parser.NoptisContractorParser;
 import mobi.chouette.exchange.noptis.parser.NoptisStopAreaParser;
 import mobi.chouette.exchange.noptis.parser.NoptisTransportAuthorityParser;
+import mobi.chouette.model.stip.Contractor;
 import mobi.chouette.model.stip.StopArea;
 import mobi.chouette.model.stip.TransportAuthority;
 
@@ -62,6 +64,13 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
                     ParserFactory.create(NoptisTransportAuthorityParser.class.getName());
             transportAuthorityParser.setTransportAuthorities(transportAuthorities);
             transportAuthorityParser.parse(context);
+
+            // Contractor
+
+            List<Contractor> contractors = contractorDAO.findByDataSourceId(dataSourceId);
+            NoptisContractorParser contractorParser = (NoptisContractorParser) ParserFactory.create(NoptisContractorParser.class.getName());
+            contractorParser.setContractors(contractors);
+            contractorParser.parse(context);
 
             daoContext.setRollbackOnly();
             stopAreaDAO.clear();
