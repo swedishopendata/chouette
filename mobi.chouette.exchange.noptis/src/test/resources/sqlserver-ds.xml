@@ -4,8 +4,7 @@
         http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
 
     <datasource jndi-name="java:jboss/datasources/stip" pool-name="stip">
-        <!--<connection-url>jdbc:sqlserver://192.168.10.239:1433;DatabaseName=stip-pp</connection-url>-->
-        <connection-url>jdbc:sqlserver://192.168.1.215:1433;DatabaseName=stip-pp</connection-url>
+        <connection-url>jdbc:sqlserver://192.168.10.239:49202;instanceName=MSSQLSERVER01;databaseName=stip-pp;integratedSecurity=false;user=sa;password=sa;</connection-url>
         <driver-class>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver-class>
         <driver>sqlserver</driver>
     </datasource>

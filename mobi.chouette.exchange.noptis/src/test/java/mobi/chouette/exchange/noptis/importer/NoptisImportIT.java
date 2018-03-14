@@ -100,8 +100,14 @@ public class NoptisImportIT extends Arquillian implements Constant, ReportConsta
 			}
 		}
 
-		final WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war").addAsWebInfResource("postgres-ds.xml").addAsWebInfResource("h2-ds.xml")
-				.addClass(NoptisImportIT.class).addClass(NoptisTestUtils.class).addClass(DummyChecker.class).addClass(JobDataTest.class);
+		final WebArchive testWar = ShrinkWrap.create(WebArchive.class, "test.war")
+				.addAsWebInfResource("postgres-ds.xml")
+				.addAsWebInfResource("sqlserver-ds.xml")
+				//.addAsWebInfResource("h2-ds.xml")
+				.addClass(NoptisImportIT.class)
+				.addClass(NoptisTestUtils.class)
+				.addClass(DummyChecker.class)
+				.addClass(JobDataTest.class);
 
 		result = ShrinkWrap.create(EnterpriseArchive.class, "test.ear").addAsLibraries(jars.toArray(new File[0]))
 				.addAsModules(modules.toArray(new JavaArchive[0])).addAsModule(testWar).addAsResource(EmptyAsset.INSTANCE, "beans.xml");
