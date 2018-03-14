@@ -12,7 +12,9 @@ import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.exchange.noptis.parser.NoptisStopAreaParser;
+import mobi.chouette.exchange.noptis.parser.NoptisTransportAuthorityParser;
 import mobi.chouette.model.stip.StopArea;
+import mobi.chouette.model.stip.TransportAuthority;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
@@ -46,20 +48,20 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
             NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
             short dataSourceId = NoptisImporterUtils.getDataSourceId(configuration.getObjectIdPrefix());
 
+            // StopArea
+
             List<StopArea> stopAreas = stopAreaDAO.findByDataSourceId(dataSourceId);
             NoptisStopAreaParser noptisStopAreaParser = (NoptisStopAreaParser) ParserFactory.create(NoptisStopAreaParser.class.getName());
             noptisStopAreaParser.setNoptisStopAreas(stopAreas);
             noptisStopAreaParser.parse(context);
 
-/*
-            Long transportAuthorityId = line.getIsDefinedByTransportAuthorityId();
-            TransportAuthority transportAuthority = transportAuthorityDAO.find(transportAuthorityId);
-            context.put(TRANSPORT_AUTHORITY, transportAuthority);
+            // TransportAuthority
 
-            InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
-            Command parser = CommandFactory.create(initialContext, NoptisLineParserCommand.class.getName());
-            result = parser.execute(context);
-*/
+            List<TransportAuthority> transportAuthorities = transportAuthorityDAO.findByDataSourceId(dataSourceId);
+            NoptisTransportAuthorityParser transportAuthorityParser = (NoptisTransportAuthorityParser)
+                    ParserFactory.create(NoptisTransportAuthorityParser.class.getName());
+            transportAuthorityParser.setTransportAuthorities(transportAuthorities);
+            transportAuthorityParser.parse(context);
 
             daoContext.setRollbackOnly();
             stopAreaDAO.clear();
@@ -68,6 +70,7 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
             transportAuthorityDAO.clear();
             contractorDAO.clear();
 
+            result = SUCCESS;
         } catch (Exception e) {
             log.error(e.getMessage(),e);
         } finally {

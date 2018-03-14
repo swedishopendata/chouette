@@ -8,10 +8,8 @@ import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.dao.stip.LineDAO;
-import mobi.chouette.dao.stip.TransportAuthorityDAO;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.model.stip.Line;
-import mobi.chouette.model.stip.TransportAuthority;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
@@ -31,9 +29,6 @@ public class DaoNoptisLineParserCommand implements Command, Constant {
     @EJB
     private LineDAO lineDAO;
 
-    @EJB
-    private TransportAuthorityDAO transportAuthorityDAO;
-
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public boolean execute(Context context) throws Exception {
@@ -46,18 +41,14 @@ public class DaoNoptisLineParserCommand implements Command, Constant {
             Line line = lineDAO.find(lineId);
             context.put(LINE, line);
 
-            Long transportAuthorityId = line.getIsDefinedByTransportAuthorityId();
-            TransportAuthority transportAuthority = transportAuthorityDAO.find(transportAuthorityId);
-            context.put(TRANSPORT_AUTHORITY, transportAuthority);
-
             InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
             Command parser = CommandFactory.create(initialContext, NoptisLineParserCommand.class.getName());
             result = parser.execute(context);
 
             daoContext.setRollbackOnly();
             lineDAO.clear();
-            transportAuthorityDAO.clear();
 
+            result = SUCCESS;
         } catch (Exception e) {
             log.error(e.getMessage(),e);
         } finally {
