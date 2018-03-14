@@ -7,7 +7,6 @@ import mobi.chouette.common.Context;
 import mobi.chouette.exchange.importer.Parser;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
-import mobi.chouette.exchange.noptis.converter.NoptisConverter;
 import mobi.chouette.exchange.noptis.importer.NoptisImportParameters;
 import mobi.chouette.model.Company;
 import mobi.chouette.model.stip.TransportAuthority;
@@ -29,13 +28,13 @@ public class NoptisTransportAuthorityParser implements Parser, Constant {
         NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
 
         for (TransportAuthority transportAuthority : transportAuthorities) {
-            String objectId = NoptisConverter.composeObjectId(configuration.getObjectIdPrefix(),
+            String objectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
                     Company.COMPANY_KEY, String.valueOf(transportAuthority.getId()));
             Company company = ObjectFactory.getCompany(referential, objectId);
-            company.setName(NoptisConverter.getNonEmptyTrimedString(transportAuthority.getFormalName()));
+            company.setName(AbstractNoptisParser.getNonEmptyTrimedString(transportAuthority.getFormalName()));
 
             if (company.getName() == null)
-                company.setName(NoptisConverter.getNonEmptyTrimedString(transportAuthority.getName()));
+                company.setName(AbstractNoptisParser.getNonEmptyTrimedString(transportAuthority.getName()));
 
             // company.setUrl(NoptisConverter.toString(transportAuthority.getUrl()));
             // company.setPhone(NoptisConverter.getNonEmptyTrimedString(transportAuthority.getPhone()));

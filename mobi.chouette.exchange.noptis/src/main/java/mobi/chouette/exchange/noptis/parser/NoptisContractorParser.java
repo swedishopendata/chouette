@@ -7,7 +7,6 @@ import mobi.chouette.common.Context;
 import mobi.chouette.exchange.importer.Parser;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
-import mobi.chouette.exchange.noptis.converter.NoptisConverter;
 import mobi.chouette.exchange.noptis.importer.NoptisImportParameters;
 import mobi.chouette.model.Company;
 import mobi.chouette.model.stip.Contractor;
@@ -30,7 +29,7 @@ public class NoptisContractorParser implements Parser, Constant {
         NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
 
         for (Contractor contractor : contractors) {
-            String objectId = NoptisConverter.composeObjectId(configuration.getObjectIdPrefix(),
+            String objectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
                     Company.COMPANY_KEY, String.valueOf(contractor.getId()));
             Company contractorCompany = ObjectFactory.getCompany(referential, objectId);
 
@@ -43,7 +42,7 @@ public class NoptisContractorParser implements Parser, Constant {
                 contractorCompany.setName(contractor.getName());
             }
 
-            String transportAuthorityObjectId = NoptisConverter.composeObjectId(configuration.getObjectIdPrefix(),
+            String transportAuthorityObjectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
                     Company.COMPANY_KEY, String.valueOf(contractor.getIsPromotedByTransportAuhthorityId()));
             Company operatingDepartmentCompany = ObjectFactory.getCompany(referential, transportAuthorityObjectId);
             contractorCompany.setOperatingDepartmentName(operatingDepartmentCompany.getName());

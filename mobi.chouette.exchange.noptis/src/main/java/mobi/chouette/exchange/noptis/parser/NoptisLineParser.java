@@ -7,7 +7,6 @@ import mobi.chouette.common.Context;
 import mobi.chouette.exchange.importer.Parser;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
-import mobi.chouette.exchange.noptis.converter.NoptisConverter;
 import mobi.chouette.exchange.noptis.importer.NoptisImportParameters;
 import mobi.chouette.model.Company;
 import mobi.chouette.model.Network;
@@ -57,12 +56,12 @@ public class NoptisLineParser implements Parser, Constant {
     }
 
     private void convert(Context context, mobi.chouette.model.stip.Line noptisLine, mobi.chouette.model.Line neptuneLine) {
-        neptuneLine.setName(NoptisConverter.getNonEmptyTrimedString(noptisLine.getName()));
+        neptuneLine.setName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getName()));
         if (neptuneLine.getName() == null)
-            neptuneLine.setName(NoptisConverter.getNonEmptyTrimedString(noptisLine.getDesignation()));
+            neptuneLine.setName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getDesignation()));
 
-        neptuneLine.setNumber(NoptisConverter.getNonEmptyTrimedString(noptisLine.getDesignation()));
-        neptuneLine.setPublishedName(NoptisConverter.getNonEmptyTrimedString(noptisLine.getName()));
+        neptuneLine.setNumber(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getDesignation()));
+        neptuneLine.setPublishedName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getName()));
 
         if (neptuneLine.getPublishedName() != null) {
             neptuneLine.setName(neptuneLine.getPublishedName());

@@ -11,12 +11,10 @@ import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.parser.AbstractNoptisParser;
 import mobi.chouette.exchange.noptis.parser.NoptisLineParser;
-import mobi.chouette.exchange.noptis.parser.NoptisTransportAuthorityParser;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.exchange.report.IO_TYPE;
 import mobi.chouette.model.Network;
 import mobi.chouette.model.stip.Line;
-import mobi.chouette.model.stip.TransportAuthority;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 

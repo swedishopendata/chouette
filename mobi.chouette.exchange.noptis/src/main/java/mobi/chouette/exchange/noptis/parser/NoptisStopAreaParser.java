@@ -7,7 +7,6 @@ import mobi.chouette.common.Context;
 import mobi.chouette.exchange.importer.Parser;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
-import mobi.chouette.exchange.noptis.converter.NoptisConverter;
 import mobi.chouette.exchange.noptis.importer.NoptisImportParameters;
 import mobi.chouette.model.type.ChouetteAreaEnum;
 import mobi.chouette.model.type.LongLatTypeEnum;
@@ -31,7 +30,7 @@ public class NoptisStopAreaParser implements Parser, Constant {
         NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
 
         for (mobi.chouette.model.stip.StopArea noptisStopArea : noptisStopAreas) {
-            String objectId = NoptisConverter.composeObjectId(configuration.getObjectIdPrefix(),
+            String objectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
                     mobi.chouette.model.StopArea.STOPAREA_KEY, String.valueOf(noptisStopArea.getGid()));
 
             mobi.chouette.model.StopArea neptuneStopArea = ObjectFactory.getStopArea(referential, objectId);
@@ -50,7 +49,7 @@ public class NoptisStopAreaParser implements Parser, Constant {
                 }
             }
 
-            neptuneStopArea.setName(NoptisConverter.getNonEmptyTrimedString(noptisStopArea.getName()));
+            neptuneStopArea.setName(AbstractNoptisParser.getNonEmptyTrimedString(noptisStopArea.getName()));
 
 //        neptuneStopArea.setUrl(...);
 //        neptuneStopArea.setComment(...);
