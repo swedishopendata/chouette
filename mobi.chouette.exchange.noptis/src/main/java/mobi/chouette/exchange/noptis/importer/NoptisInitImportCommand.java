@@ -40,9 +40,7 @@ public class NoptisInitImportCommand implements Command, Constant {
 
         try {
             context.put(REFERENTIAL, new Referential());
-
-            NoptisReferential noptisReferential = new NoptisReferential();
-            context.put(NOPTIS_REFERENTIAL, noptisReferential);
+            context.put(NOPTIS_REFERENTIAL, new NoptisReferential());
 
             context.put(VALIDATION_DATA, new ValidationData());
             context.put(OPTIMIZED, false);

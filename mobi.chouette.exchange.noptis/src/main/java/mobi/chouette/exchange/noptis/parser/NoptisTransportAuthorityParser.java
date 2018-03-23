@@ -33,8 +33,9 @@ public class NoptisTransportAuthorityParser implements Parser, Constant {
             Company company = ObjectFactory.getCompany(referential, objectId);
             company.setName(AbstractNoptisParser.getNonEmptyTrimedString(transportAuthority.getFormalName()));
 
-            if (company.getName() == null)
+            if (company.getName() == null) {
                 company.setName(AbstractNoptisParser.getNonEmptyTrimedString(transportAuthority.getName()));
+            }
 
             // company.setUrl(NoptisConverter.toString(transportAuthority.getUrl()));
             // company.setPhone(NoptisConverter.getNonEmptyTrimedString(transportAuthority.getPhone()));

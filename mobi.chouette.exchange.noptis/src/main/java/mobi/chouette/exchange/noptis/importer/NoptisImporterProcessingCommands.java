@@ -68,7 +68,7 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 		try {
 			if (withDao) {
 				commands.add(CommandFactory.create(initialContext, DaoNoptisLineParserCommand.class.getName()));
-				//commands.add(CommandFactory.create(initialContext, DaoNoptisJourneyParserCommand.class.getName()));
+				commands.add(CommandFactory.create(initialContext, DaoNoptisJourneyParserCommand.class.getName()));
 			}
 			if (withDao && !parameters.isNoSave()) {
 				commands.add(CommandFactory.create(initialContext, LineRegisterCommand.class.getName()));

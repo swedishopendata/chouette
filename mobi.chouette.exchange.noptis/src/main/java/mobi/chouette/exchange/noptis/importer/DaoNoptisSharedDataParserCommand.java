@@ -11,12 +11,12 @@ import mobi.chouette.dao.stip.*;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
+import mobi.chouette.exchange.noptis.importer.util.NoptisReferential;
 import mobi.chouette.exchange.noptis.parser.NoptisContractorParser;
 import mobi.chouette.exchange.noptis.parser.NoptisStopAreaParser;
 import mobi.chouette.exchange.noptis.parser.NoptisTransportAuthorityParser;
-import mobi.chouette.model.stip.Contractor;
-import mobi.chouette.model.stip.StopArea;
-import mobi.chouette.model.stip.TransportAuthority;
+import mobi.chouette.model.stip.*;
+import mobi.chouette.model.util.Referential;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
@@ -47,6 +47,7 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
         Monitor monitor = MonitorFactory.start(COMMAND);
 
         try {
+            NoptisReferential noptisReferential = (NoptisReferential) context.get(NOPTIS_REFERENTIAL);
             NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
             short dataSourceId = NoptisImporterUtils.getDataSourceId(configuration.getObjectIdPrefix());
 
@@ -56,6 +57,19 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
             NoptisStopAreaParser noptisStopAreaParser = (NoptisStopAreaParser) ParserFactory.create(NoptisStopAreaParser.class.getName());
             noptisStopAreaParser.setNoptisStopAreas(stopAreas);
             noptisStopAreaParser.parse(context);
+
+            // StopPoint
+
+            List<StopPoint> stopPoints = stopPointDAO.findByDataSourceId(dataSourceId);
+            stopPoints.forEach(stopPoint -> {
+                if (!noptisReferential.getSharedStopPoints().containsKey(stopPoint.getIsJourneyPatternPointGid())) {
+                    noptisReferential.getSharedStopPoints().put(stopPoint.getIsJourneyPatternPointGid(), stopPoint);
+                }
+            });
+
+            // JourneyPatternPoint
+
+            //List<JourneyPatternPoint> journeyPatternPoints = journeyPatternPointDAO.findByDataSourceId(dataSourceId);
 
             // TransportAuthority
 

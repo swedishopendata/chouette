@@ -8,6 +8,7 @@ import mobi.chouette.exchange.importer.Parser;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.NoptisImportParameters;
+import mobi.chouette.exchange.noptis.importer.util.NoptisReferential;
 import mobi.chouette.model.Company;
 import mobi.chouette.model.stip.Contractor;
 import mobi.chouette.model.util.ObjectFactory;
@@ -26,11 +27,22 @@ public class NoptisContractorParser implements Parser, Constant {
     @Override
     public void parse(Context context) throws Exception {
         Referential referential = (Referential) context.get(REFERENTIAL);
+        NoptisReferential noptisReferential = (NoptisReferential) context.get(NOPTIS_REFERENTIAL);
         NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
 
         for (Contractor contractor : contractors) {
             String objectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
-                    Company.COMPANY_KEY, String.valueOf(contractor.getId()));
+                    Company.COMPANY_KEY, String.valueOf(contractor.getGid()));
+
+/*
+            if (!noptisReferential.getContractorIdMapping().containsKey(contractor.getId())) {
+                noptisReferential.getContractorIdMapping().put(contractor.getId(), objectId);
+            }
+            if (!noptisReferential.getContractorGidMapping().containsKey(contractor.getGid())) {
+                noptisReferential.getContractorGidMapping().put(contractor.getGid(), objectId);
+            }
+*/
+
             Company contractorCompany = ObjectFactory.getCompany(referential, objectId);
 
             String contractorCode = contractor.getCode();
@@ -41,6 +53,8 @@ public class NoptisContractorParser implements Parser, Constant {
             if (StringUtils.isNotEmpty(contractor.getName())) {
                 contractorCompany.setName(contractor.getName());
             }
+
+            // TODO make sure we get the transport authority by gid instead
 
             String transportAuthorityObjectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
                     Company.COMPANY_KEY, String.valueOf(contractor.getIsPromotedByTransportAuhthorityId()));

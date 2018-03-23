@@ -1,5 +1,6 @@
 package mobi.chouette.exchange.noptis.importer;
 
+import com.google.common.collect.Sets;
 import lombok.extern.log4j.Log4j;
 import mobi.chouette.common.Constant;
 import mobi.chouette.common.Context;
@@ -82,6 +83,64 @@ public class AbstractNoptisImporterCommand implements Constant {
 
                 int lineCount = 0;
                 for (Long lineId : lineIds) {
+
+                    // TODO remove below check when production
+                    Set<Long> excludeIds = Sets.newHashSet(
+                            14010000238160607L
+                            , 33010000000570941L
+                            , 33010000000570956L
+                            , 33010000000570971L
+                            , 33010000000570986L
+                            , 33010000000571001L
+                            , 33010000000571016L
+                            , 33010000000571031L
+                            , 33010000000571046L
+                            , 33010000000571061L
+                            , 33010000000719952L
+                            , 33010000000719967L
+                            , 33010000000720012L
+                            , 33010000000720027L
+                            , 33010000006688400L
+                            , 33010000006688415L
+                            , 33010000006688445L
+                            , 33010000006689380L
+                            , 33010000022768923L
+                            , 33010000022768937L
+                            , 33010000032745794L
+                            , 33010000041585342L
+                            , 33010000046738093L
+                            , 33010000046738173L
+                            , 14010000046885939L
+                            , 33010000000658688L
+                            , 33010000000658703L
+                            , 33010000000719652L
+                            , 33010000000719667L
+                            , 33010000000719682L
+                            , 33010000000719742L
+                            , 33010000000719757L
+                            , 33010000000719772L
+                            , 33010000000719787L
+                            , 33010000000719817L
+                            , 33010000000720207L
+                            , 33010000000720297L
+                            , 33010000000720327L
+                            , 33010000006688535L
+                            , 33010000006688550L
+                            , 33010000006688565L
+                            , 33010000006689705L
+                            , 33010000006690080L
+                            , 33010000006690125L
+                            , 33010000006690170L
+                            , 33010000022764420L
+                            , 33010000032745749L
+                            , 33010000039000055L
+                            , 33010000047691644L
+                    );
+
+                    if (excludeIds.contains(lineId)) {
+                        continue;
+                    }
+
                     context.put(LINE_ID, lineId);
                     boolean importFailed = false;
 
