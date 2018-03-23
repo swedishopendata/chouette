@@ -66,12 +66,6 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
     @EJB
     private PointInJourneyPatternDAO pointInJourneyPatternDAO;
 
-    @EJB
-    private JourneyPatternPointDAO journeyPatternPointDAO;
-
-    @EJB
-    private StopPointDAO stopPointDAO;
-
     @SuppressWarnings("unchecked")
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -167,8 +161,6 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
             timetableDAO.clear();
             timedJourneyPatternDAO.clear();
             pointInJourneyPatternDAO.clear();
-            journeyPatternPointDAO.clear();
-            stopPointDAO.clear();
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -69,7 +69,12 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
 
             // JourneyPatternPoint
 
-            //List<JourneyPatternPoint> journeyPatternPoints = journeyPatternPointDAO.findByDataSourceId(dataSourceId);
+            List<JourneyPatternPoint> journeyPatternPoints = journeyPatternPointDAO.findByDataSourceId(dataSourceId);
+            journeyPatternPoints.forEach(journeyPatternPoint -> {
+                if (!noptisReferential.getSharedJourneyPatternPoints().containsKey(journeyPatternPoint.getGid())) {
+                    noptisReferential.getSharedJourneyPatternPoints().put(journeyPatternPoint.getGid(), journeyPatternPoint);
+                }
+            });
 
             // TransportAuthority
 

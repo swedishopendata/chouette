@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import mobi.chouette.model.stip.JourneyPatternPoint;
 import mobi.chouette.model.stip.StopPoint;
 
 import java.util.HashMap;
@@ -28,6 +29,10 @@ public class NoptisReferential implements java.io.Serializable {
     @Getter
     @Setter
     private Map<Long, StopPoint> sharedStopPoints = new HashMap<>();
+
+    @Getter
+    @Setter
+    private Map<Long, JourneyPatternPoint> sharedJourneyPatternPoints = new HashMap<>();
 
     @Getter
     @Setter
