@@ -50,22 +50,8 @@ public class NoptisStopAreaParser implements Parser, Constant {
             }
 
             neptuneStopArea.setName(AbstractNoptisParser.getNonEmptyTrimedString(noptisStopArea.getName()));
-
-//        neptuneStopArea.setUrl(...);
-//        neptuneStopArea.setComment(...);
-//        neptuneStopArea.setTimeZone(...);
-
             neptuneStopArea.setFareCode(0);
-
-            // TODO setting to commercial stop point for now, consider a check if boarding position
             neptuneStopArea.setAreaType(ChouetteAreaEnum.CommercialStopPoint);
-
-//        neptuneStopArea.setRegistrationNumber(...);
-//        neptuneStopArea.setMobilityRestrictedSuitable(WheelchairBoardingType.Allowed.equals(...));
-//        neptuneStopArea.setStreetName(...);
-//        neptuneStopArea.setCityName(...);
-//        neptuneStopArea.setZipCode(...);
-
             neptuneStopArea.setFilled(true);
         }
     }

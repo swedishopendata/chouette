@@ -14,6 +14,7 @@ import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.exchange.noptis.importer.util.NoptisReferential;
 import mobi.chouette.exchange.noptis.parser.NoptisContractorParser;
 import mobi.chouette.exchange.noptis.parser.NoptisStopAreaParser;
+import mobi.chouette.exchange.noptis.parser.NoptisStopPointParser;
 import mobi.chouette.exchange.noptis.parser.NoptisTransportAuthorityParser;
 import mobi.chouette.model.stip.*;
 import mobi.chouette.model.util.Referential;
@@ -54,18 +55,15 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
             // StopArea
 
             List<StopArea> stopAreas = stopAreaDAO.findByDataSourceId(dataSourceId);
+            stopAreas.forEach(stopArea -> {
+                if (!noptisReferential.getSharedStopAreas().containsKey(stopArea.getGid())) {
+                    noptisReferential.getSharedStopAreas().put(stopArea.getGid(), stopArea);
+                }
+            });
+
             NoptisStopAreaParser noptisStopAreaParser = (NoptisStopAreaParser) ParserFactory.create(NoptisStopAreaParser.class.getName());
             noptisStopAreaParser.setNoptisStopAreas(stopAreas);
             noptisStopAreaParser.parse(context);
-
-            // StopPoint
-
-            List<StopPoint> stopPoints = stopPointDAO.findByDataSourceId(dataSourceId);
-            stopPoints.forEach(stopPoint -> {
-                if (!noptisReferential.getSharedStopPoints().containsKey(stopPoint.getIsJourneyPatternPointGid())) {
-                    noptisReferential.getSharedStopPoints().put(stopPoint.getIsJourneyPatternPointGid(), stopPoint);
-                }
-            });
 
             // JourneyPatternPoint
 
@@ -73,6 +71,26 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
             journeyPatternPoints.forEach(journeyPatternPoint -> {
                 if (!noptisReferential.getSharedJourneyPatternPoints().containsKey(journeyPatternPoint.getGid())) {
                     noptisReferential.getSharedJourneyPatternPoints().put(journeyPatternPoint.getGid(), journeyPatternPoint);
+                }
+            });
+
+            // StopPoint
+
+            List<StopPoint> stopPoints = stopPointDAO.findByDataSourceId(dataSourceId);
+            for (StopPoint stopPoint : stopPoints) {
+                StopArea stopArea = noptisReferential.getSharedStopAreas().get(stopPoint.getIsIncludedInStopAreaGid());
+                JourneyPatternPoint journeyPatternPoint = noptisReferential.getSharedJourneyPatternPoints().get(stopPoint.getIsJourneyPatternPointGid());
+
+                NoptisStopPointParser noptisStopPointParser = (NoptisStopPointParser) ParserFactory.create(NoptisStopPointParser.class.getName());
+                noptisStopPointParser.setStopPoint(stopPoint);
+                noptisStopPointParser.setNoptisStopArea(stopArea);
+                noptisStopPointParser.setJourneyPatternPoint(journeyPatternPoint);
+                noptisStopPointParser.parse(context);
+            }
+
+            stopPoints.forEach(stopPoint -> {
+                if (!noptisReferential.getSharedStopPoints().containsKey(stopPoint.getIsJourneyPatternPointGid())) {
+                    noptisReferential.getSharedStopPoints().put(stopPoint.getIsJourneyPatternPointGid(), stopPoint);
                 }
             });
 
