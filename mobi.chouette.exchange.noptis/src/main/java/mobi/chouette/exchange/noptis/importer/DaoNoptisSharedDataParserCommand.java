@@ -17,7 +17,6 @@ import mobi.chouette.exchange.noptis.parser.NoptisStopAreaParser;
 import mobi.chouette.exchange.noptis.parser.NoptisStopPointParser;
 import mobi.chouette.exchange.noptis.parser.NoptisTransportAuthorityParser;
 import mobi.chouette.model.stip.*;
-import mobi.chouette.model.util.Referential;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
