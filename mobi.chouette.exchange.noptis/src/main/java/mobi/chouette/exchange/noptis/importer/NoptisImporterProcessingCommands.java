@@ -109,33 +109,12 @@ public class NoptisImporterProcessingCommands implements ProcessingCommands, Con
 
 	@Override
 	public List<? extends Command> getStopAreaProcessingCommands(Context context, boolean withDao) {
-		InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
-		NoptisImportParameters parameters = (NoptisImportParameters) context.get(CONFIGURATION);
-		List<Command> commands = new ArrayList<>();
-
-		try {
-			//commands.add(CommandFactory.create(initialContext, NoptisStopAreaParserCommand.class.getName()));
-
-			if (withDao && !parameters.isNoSave()) {
-				//commands.add(CommandFactory.create(initialContext, StopAreaRegisterCommand.class.getName()));
-			}
-		} catch (Exception e) {
-			log.error(e, e);
-			throw new RuntimeException("unable to call factories");
-		}
-
-		return commands;
+		return new ArrayList<>();
 	}
 
 	@Override
 	public List<? extends Command> getDisposeCommands(Context context, boolean withDao) {
 		List<Command> commands = new ArrayList<>();
-		InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
-		try {
-		} catch (Exception e) {
-			log.error(e, e);
-			throw new RuntimeException("unable to call factories");
-		}
 		return commands;
 	}
 

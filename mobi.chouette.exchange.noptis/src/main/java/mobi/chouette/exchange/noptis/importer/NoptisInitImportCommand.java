@@ -7,7 +7,6 @@ import mobi.chouette.common.Color;
 import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
-import mobi.chouette.dao.stip.LineDAO;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisReferential;
 import mobi.chouette.exchange.report.ActionReporter;
@@ -15,25 +14,15 @@ import mobi.chouette.exchange.report.IO_TYPE;
 import mobi.chouette.exchange.validation.ValidationData;
 import mobi.chouette.model.util.Referential;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import java.io.IOException;
 
 @Log4j
-@Stateless(name = NoptisInitImportCommand.COMMAND)
 public class NoptisInitImportCommand implements Command, Constant {
 
     public static final String COMMAND = "NoptisInitImportCommand";
 
-    @EJB
-    private LineDAO lineDAO;
-
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public boolean execute(Context context) throws Exception {
         boolean result = ERROR;
         Monitor monitor = MonitorFactory.start(COMMAND);
@@ -68,24 +57,13 @@ public class NoptisInitImportCommand implements Command, Constant {
 
         @Override
         protected Command create(InitialContext context) throws IOException {
-            Command result = null;
-            try {
-                String name = "java:app/mobi.chouette.exchange.noptis/" + COMMAND;
-                result = (Command) context.lookup(name);
-            } catch (NamingException e) {
-                String name = "java:module/" + COMMAND;
-                try {
-                    result = (Command) context.lookup(name);
-                } catch (NamingException e1) {
-                    log.error(e);
-                }
-            }
+            Command result = new NoptisInitImportCommand();
             return result;
         }
     }
 
     static {
-        CommandFactory.factories.put(NoptisInitImportCommand.class.getName(), new NoptisInitImportCommand.DefaultCommandFactory());
+        CommandFactory.factories.put(NoptisInitImportCommand.class.getName(), new DefaultCommandFactory());
     }
 
 }
