@@ -125,7 +125,7 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
                         VehicleJourneyAtStop vehicleJourneyAtStop = ObjectFactory.getVehicleJourneyAtStop();
                         convert(context, noptisVehicleJourney, callOnTimedJourneyPattern, pointInJourneyPattern, vehicleJourneyAtStop);
-                        //vehicleJourneyAtStop.setVehicleJourney(neptuneVehicleJourney);
+                        vehicleJourneyAtStop.setVehicleJourney(neptuneVehicleJourney);
                     }
 
                     // Timetable
@@ -178,6 +178,7 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                         StopPoint noptisStopPoint = noptisReferential.getSharedStopPoints().get(journeyPatternPointGid);
                         String stopPointGidAsString = String.valueOf(noptisStopPoint.getGid());
 
+/*
                         String baseKey = route.getObjectId().replace(Route.ROUTE_KEY, mobi.chouette.model.StopPoint.STOPPOINT_KEY)
                                 + "a" + stopPointGidAsString.trim().replaceAll("[^a-zA-Z_0-9\\-]", "_");
                         String stopKey = baseKey;
@@ -186,8 +187,10 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                             stopKey = baseKey + "_" + (dup++);
                         }
                         stopPointKeys.add(stopKey);
+*/
 
-                        mobi.chouette.model.StopPoint stopPoint = ObjectFactory.getStopPoint(referential, stopKey);
+                        //mobi.chouette.model.StopPoint stopPoint = ObjectFactory.getStopPoint(referential, stopKey);
+                        mobi.chouette.model.StopPoint stopPoint = ObjectFactory.getStopPoint(referential, String.valueOf(pointInJourneyPattern.getId()));
 
                         String stopAreaId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
                                 mobi.chouette.model.StopArea.STOPAREA_KEY, String.valueOf(noptisStopPoint.getGid()));
@@ -445,8 +448,9 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
         //mobi.chouette.model.stip.StopPoint noptisStopPoint = stopPointDAO.findByJourneyPatternPointGid(pointInJourneyPattern.getIsJourneyPatternPointGid());
 
         StopPoint noptisStopPoint = noptisReferential.getSharedStopPoints().get(journeyPatternPointGid);
-        mobi.chouette.model.StopPoint neptuneStopPoint = ObjectFactory.getStopPoint(referential, String.valueOf(noptisStopPoint.getGid()));
-        //vehicleJourneyAtStop.setStopPoint(neptuneStopPoint);
+        //mobi.chouette.model.StopPoint neptuneStopPoint = ObjectFactory.getStopPoint(referential, String.valueOf(noptisStopPoint.getGid()));
+        mobi.chouette.model.StopPoint neptuneStopPoint = ObjectFactory.getStopPoint(referential, String.valueOf(pointInJourneyPattern.getId()));
+        vehicleJourneyAtStop.setStopPoint(neptuneStopPoint);
 
         String arrivalTimeAsString = getArrivalTime(vehicleJourney, callOnTimedJourneyPattern).getAsHourMinuteSecondString();
         arrivalTimeAsString = arrivalTimeAsString.startsWith("24") ? arrivalTimeAsString.replaceFirst("24", "00") : arrivalTimeAsString;
