@@ -25,6 +25,7 @@ import javax.ejb.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +108,10 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
                     // Timetable
 
-                    String timetableId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(), Timetable.TIMETABLE_KEY, String.valueOf(noptisVehicleJourney.getId()));
+                    List<LocalDate> operatingDates = timetableDAO.findDatesForVehicleJourney(noptisVehicleJourney.getId());
+
+                    String timetableId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
+                            Timetable.TIMETABLE_KEY, String.valueOf(noptisVehicleJourney.getId()));
                     Timetable timetable = ObjectFactory.getTimetable(referential, timetableId);
                     neptuneVehicleJourney.getTimetables().add(timetable);
 

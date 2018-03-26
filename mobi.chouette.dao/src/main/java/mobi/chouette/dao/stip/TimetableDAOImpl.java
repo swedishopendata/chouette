@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.util.List;
 
 @Log4j
@@ -34,6 +35,15 @@ public class TimetableDAOImpl extends GenericQueryDAOImpl implements TimetableDA
                 "WHERE c.isOnPointInJourneyPatternId = pj.id " +
                 "AND c.isOnTimedJourneyPatternId = :timedJourneyPatternId ")
                 .setParameter("timedJourneyPatternId", timedJourneyPatternId)
+                .getResultList();
+    }
+
+    @Override
+    public List<LocalDate> findDatesForVehicleJourney(long vehicleJourneyId) {
+        return em.createQuery("SELECT d.operatingDayDate FROM DatedVehicleJourney d " +
+                "WHERE d.isBasedOnVehicleJourneyId = :vehicleJourneyId " +
+                "ORDER BY d.operatingDayDate", LocalDate.class)
+                .setParameter("vehicleJourneyId", vehicleJourneyId)
                 .getResultList();
     }
 

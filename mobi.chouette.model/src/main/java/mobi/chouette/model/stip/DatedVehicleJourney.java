@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import mobi.chouette.model.stip.converter.LocalDateConverter;
 import mobi.chouette.model.stip.type.PlannedTypeCode;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class DatedVehicleJourney extends NoptisIdentifiedObject {
 
     @Getter
     @Setter
+    @Convert(converter = LocalDateConverter.class)
     @Column(name = "OperatingDayDate")
     private LocalDate operatingDayDate;
 
