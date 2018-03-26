@@ -13,6 +13,7 @@ import mobi.chouette.model.type.ConnectionLinkTypeEnum;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.Calendar;
 
@@ -51,6 +52,10 @@ public class NoptisConnectionLinkParser implements Parser, Constant {
         neptuneConnectionLink.setCreationTime(Calendar.getInstance().getTime());
         neptuneConnectionLink.setLinkType(ConnectionLinkTypeEnum.Overground);
         neptuneConnectionLink.setDefaultDuration(new Time(noptisConnectionLink.getDefaultDurationSeconds() * 1000));
+
+        if (noptisConnectionLink.getDistanceMeters() != null) {
+            neptuneConnectionLink.setLinkDistance(BigDecimal.valueOf(noptisConnectionLink.getDistanceMeters()));
+        }
 
         neptuneConnectionLink.setName("from " + neptuneConnectionLink.getStartOfLink().getName()
                 + " to " + neptuneConnectionLink.getEndOfLink().getName());
