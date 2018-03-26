@@ -4,6 +4,7 @@ import mobi.chouette.model.stip.CallOnTimedJourneyPattern;
 import mobi.chouette.model.stip.PointInJourneyPattern;
 
 public class CallAndPointInJourneyPattern {
+
     private final CallOnTimedJourneyPattern callOnTimedJourneyPattern;
     private final PointInJourneyPattern pointInJourneyPattern;
 

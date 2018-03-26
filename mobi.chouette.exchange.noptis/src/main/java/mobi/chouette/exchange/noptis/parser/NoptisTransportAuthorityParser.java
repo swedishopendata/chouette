@@ -39,9 +39,10 @@ public class NoptisTransportAuthorityParser implements Parser, Constant {
 
             // company.setUrl(NoptisConverter.toString(transportAuthority.getUrl()));
             // company.setPhone(NoptisConverter.getNonEmptyTrimedString(transportAuthority.getPhone()));
+            // company.setTimeZone(NoptisConverter.toString(transportAuthority.getTimezone()));
+
             String[] token = company.getObjectId().split(":");
             company.setRegistrationNumber(token[2]);
-            // company.setTimeZone(NoptisConverter.toString(transportAuthority.getTimezone()));
             company.setFilled(true);
         }
     }
