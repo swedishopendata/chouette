@@ -12,10 +12,7 @@ import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.exchange.noptis.importer.util.NoptisReferential;
-import mobi.chouette.exchange.noptis.parser.NoptisContractorParser;
-import mobi.chouette.exchange.noptis.parser.NoptisStopAreaParser;
-import mobi.chouette.exchange.noptis.parser.NoptisStopPointParser;
-import mobi.chouette.exchange.noptis.parser.NoptisTransportAuthorityParser;
+import mobi.chouette.exchange.noptis.parser.*;
 import mobi.chouette.model.stip.*;
 
 import javax.annotation.Resource;
@@ -36,6 +33,7 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
 
     @EJB private StopAreaDAO stopAreaDAO;
     @EJB private StopPointDAO stopPointDAO;
+    @EJB private ConnectionLinkDAO connectionLinkDAO;
     @EJB private JourneyPatternPointDAO journeyPatternPointDAO;
     @EJB private TransportAuthorityDAO transportAuthorityDAO;
     @EJB private ContractorDAO contractorDAO;
@@ -93,6 +91,23 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
                 }
             });
 
+            // ConnectionLink
+            List<ConnectionLink> connectionLinks = connectionLinkDAO.findByDataSourceId(dataSourceId);
+            for (ConnectionLink connectionLink : connectionLinks) {
+                StopPoint fromStopPoint = noptisReferential.getSharedStopPoints().get(connectionLink.getStartsAtJourneyPatternPointGid());
+                StopPoint toStopPoint = noptisReferential.getSharedStopPoints().get(connectionLink.getEndsAtJourneyPatternPointGid());
+
+                if (fromStopPoint == null || toStopPoint == null) {
+                    continue;
+                }
+
+                NoptisConnectionLinkParser connectionLinkParser = (NoptisConnectionLinkParser) ParserFactory.create(NoptisConnectionLinkParser.class.getName());
+                connectionLinkParser.setNoptisConnectionLink(connectionLink);
+                connectionLinkParser.setFromStopPoint(fromStopPoint);
+                connectionLinkParser.setToStopPoint(toStopPoint);
+                connectionLinkParser.parse(context);
+            }
+
             // TransportAuthority
 
             List<TransportAuthority> transportAuthorities = transportAuthorityDAO.findByDataSourceId(dataSourceId);
@@ -111,6 +126,7 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
             daoContext.setRollbackOnly();
             stopAreaDAO.clear();
             stopPointDAO.clear();
+            connectionLinkDAO.clear();
             journeyPatternPointDAO.clear();
             transportAuthorityDAO.clear();
             contractorDAO.clear();
