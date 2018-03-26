@@ -13,18 +13,21 @@ import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.exchange.noptis.importer.util.NoptisReferential;
 import mobi.chouette.exchange.noptis.parser.*;
+import mobi.chouette.model.CalendarDay;
 import mobi.chouette.model.Route;
 import mobi.chouette.model.Timetable;
 import mobi.chouette.model.stip.*;
 import mobi.chouette.model.stip.type.DirectionCode;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,11 +112,20 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                     // Timetable
 
                     List<LocalDate> operatingDates = timetableDAO.findDatesForVehicleJourney(noptisVehicleJourney.getId());
+                    if (CollectionUtils.isNotEmpty(operatingDates)) {
+                        String timetableId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
+                                Timetable.TIMETABLE_KEY, String.valueOf(noptisVehicleJourney.getId()));
+                        Timetable timetable = ObjectFactory.getTimetable(referential, timetableId);
 
-                    String timetableId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
-                            Timetable.TIMETABLE_KEY, String.valueOf(noptisVehicleJourney.getId()));
-                    Timetable timetable = ObjectFactory.getTimetable(referential, timetableId);
-                    neptuneVehicleJourney.getTimetables().add(timetable);
+                        for (LocalDate operatingDate : operatingDates) {
+                            CalendarDay calendarDay = new CalendarDay(Date.valueOf(operatingDate), true);
+                            timetable.addCalendarDay(calendarDay);
+                        }
+
+                        //NamingUtil.setDefaultName(timetable);
+                        timetable.setFilled(true);
+                        neptuneVehicleJourney.getTimetables().add(timetable);
+                    }
 
                     // Route
 
