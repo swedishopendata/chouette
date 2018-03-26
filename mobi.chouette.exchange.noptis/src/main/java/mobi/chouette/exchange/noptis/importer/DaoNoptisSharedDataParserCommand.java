@@ -92,6 +92,7 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
             });
 
             // ConnectionLink
+
             List<ConnectionLink> connectionLinks = connectionLinkDAO.findByDataSourceId(dataSourceId);
             for (ConnectionLink connectionLink : connectionLinks) {
                 StopPoint fromStopPoint = noptisReferential.getSharedStopPoints().get(connectionLink.getStartsAtJourneyPatternPointGid());

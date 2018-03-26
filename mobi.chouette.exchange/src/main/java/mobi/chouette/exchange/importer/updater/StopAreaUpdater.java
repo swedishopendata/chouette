@@ -282,7 +282,7 @@ public class StopAreaUpdater implements Updater<StopArea> {
 				}
 				StopArea endOfLinkArea = cache.getStopAreas().get(item.getEndOfLink().getObjectId());
 				if (endOfLinkArea == null) {
-					log.info(Color.LIGHT_CYAN + "search end stopArea for ConnectionLink" + Color.NORMAL);
+					//log.info(Color.LIGHT_CYAN + "search end stopArea for ConnectionLink" + Color.NORMAL);
 					endOfLinkArea = stopAreaDAO.findByObjectId(item.getEndOfLink().getObjectId());
 				} else {
 					StopArea localArea = referential.getSharedStopAreas().get(endOfLinkArea.getObjectId());
@@ -315,7 +315,7 @@ public class StopAreaUpdater implements Updater<StopArea> {
 				}
 				StopArea startOfLinkArea = cache.getStopAreas().get(item.getStartOfLink().getObjectId());
 				if (startOfLinkArea == null) {
-					log.info(Color.LIGHT_CYAN + "search start stopArea for ConnectionLink" + Color.NORMAL);
+					//log.info(Color.LIGHT_CYAN + "search start stopArea for ConnectionLink" + Color.NORMAL);
 					startOfLinkArea = stopAreaDAO.findByObjectId(item.getStartOfLink().getObjectId());
 				} else {
 					StopArea localArea = referential.getSharedStopAreas().get(startOfLinkArea.getObjectId());
