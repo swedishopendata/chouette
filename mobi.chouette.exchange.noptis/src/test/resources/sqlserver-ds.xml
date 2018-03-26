@@ -9,10 +9,10 @@
         <!--<connection-url>jdbc:sqlserver://192.168.1.215:49202;instanceName=MSSQLSERVER01;databaseName=stip-pp;integratedSecurity=false;user=sa;password=sa;</connection-url>-->
 
         <!-- Second home office host -->
-        <connection-url>jdbc:sqlserver://172.20.10.11:49202;instanceName=MSSQLSERVER01;databaseName=stip-pp;integratedSecurity=false;user=sa;password=sa;</connection-url>
+        <!--<connection-url>jdbc:sqlserver://172.20.10.11:49202;instanceName=MSSQLSERVER01;databaseName=stip-pp;integratedSecurity=false;user=sa;password=sa;</connection-url>-->
 
         <!-- Work office host -->
-        <!--<connection-url>jdbc:sqlserver://192.168.10.239:49202;instanceName=MSSQLSERVER01;databaseName=stip-pp;integratedSecurity=false;user=sa;password=sa;</connection-url>-->
+        <connection-url>jdbc:sqlserver://192.168.10.239:49202;instanceName=MSSQLSERVER01;databaseName=stip-pp;integratedSecurity=false;user=sa;password=sa;</connection-url>
 
         <!-- Alternative host -->
         <!--<connection-url>jdbc:sqlserver://192.168.10.181:1433;databaseName=stip-pp;integratedSecurity=false;user=sa;password=samuel123!;</connection-url>-->

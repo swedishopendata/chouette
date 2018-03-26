@@ -5,7 +5,6 @@ import com.jamonapi.MonitorFactory;
 import lombok.extern.log4j.Log4j;
 import mobi.chouette.common.Color;
 import mobi.chouette.common.Context;
-import mobi.chouette.common.XPPUtil;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.dao.stip.*;
@@ -24,10 +23,11 @@ import mobi.chouette.model.stip.*;
 import mobi.chouette.model.stip.type.DirectionCode;
 import mobi.chouette.model.stip.type.TransportModeCode;
 import mobi.chouette.model.stip.util.OffsetDayTime;
+import mobi.chouette.model.util.NeptuneUtil;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.xmlpull.v1.XmlPullParser;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
@@ -112,47 +112,6 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
                     TimedJourneyPattern timedJourneyPattern = timedJourneyPatternMap.get(vehicleJourneyTemplate.getIsWorkedOnTimedJourneyPatternId());
 
-                    // Timetable
-
-                    String timetableId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(), Timetable.TIMETABLE_KEY, String.valueOf(noptisVehicleJourney.getId()));
-                    Timetable timetable = ObjectFactory.getTimetable(referential, timetableId);
-                    neptuneVehicleJourney.getTimetables().add(timetable);
-
-                    // JourneyPattern
-
-                    long journeyPatternId = timedJourneyPattern.getIsBasedOnJourneyPatternId();
-
-                    String journeyPatternObjectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
-                            mobi.chouette.model.JourneyPattern.JOURNEYPATTERN_KEY, String.valueOf(journeyPatternId));
-                    mobi.chouette.model.JourneyPattern neptuneJourneyPattern = ObjectFactory.getJourneyPattern(referential, journeyPatternObjectId);
-
-                    List<PointInJourneyPattern> pointsInJourneyPattern = pointInJourneyPatternDAO.findByJourneyPatternId(journeyPatternId);
-                    List<JourneyPatternPoint> journeyPatternPoints = new ArrayList<>(pointsInJourneyPattern.size());
-
-                    // TODO consider reusing the ids of entity PointInJourneyPattern, which is also used when creating VehicleJourneyAtStops and StopPoints
-
-                    for (PointInJourneyPattern pointInJourneyPattern : pointsInJourneyPattern) {
-                        if (noptisReferential.getSharedJourneyPatternPoints().containsKey(pointInJourneyPattern.getIsJourneyPatternPointGid())) {
-                            JourneyPatternPoint journeyPatternPoint = noptisReferential.getSharedJourneyPatternPoints().get(pointInJourneyPattern.getIsJourneyPatternPointGid());
-                            journeyPatternPoints.add(journeyPatternPoint);
-
-                            mobi.chouette.model.StopPoint stopPoint = ObjectFactory.getStopPoint(referential, String.valueOf(pointInJourneyPattern.getId()));
-                            neptuneJourneyPattern.addStopPoint(stopPoint);
-                        }
-                    }
-                    List<mobi.chouette.model.StopPoint> journeyPatternStopPoints = neptuneJourneyPattern.getStopPoints();
-                    if (journeyPatternStopPoints != null && journeyPatternStopPoints.size() > 0) {
-                        mobi.chouette.model.StopPoint departureStopPoint = journeyPatternStopPoints.get(0);
-                        neptuneJourneyPattern.setDepartureStopPoint(departureStopPoint);
-
-                        mobi.chouette.model.StopPoint arrivalStopPoint = journeyPatternStopPoints.get(journeyPatternStopPoints.size() - 1);
-                        neptuneJourneyPattern.setArrivalStopPoint(arrivalStopPoint);
-                    }
-
-                    Route route = createRoute(referential, configuration, line, directionOfLine);
-                    neptuneJourneyPattern.setRoute(route);
-                    neptuneJourneyPattern.setFilled(true);
-
                     // VehicleJourneyAtStops
 
                     List<Object[]> callPointResultList = timetableDAO.findCallsForTimedJourneyPattern(timedJourneyPattern.getId());
@@ -163,25 +122,101 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                     for (CallAndPointInJourneyPattern callAndPointInJourneyPattern : callAndPointInJourneyPatterns) {
                         CallOnTimedJourneyPattern callOnTimedJourneyPattern = callAndPointInJourneyPattern.getCallOnTimedJourneyPattern();
                         PointInJourneyPattern pointInJourneyPattern = callAndPointInJourneyPattern.getPointInJourneyPattern();
-                        VehicleJourneyAtStop vehicleJourneyAtStop = new VehicleJourneyAtStop();
+
+                        VehicleJourneyAtStop vehicleJourneyAtStop = ObjectFactory.getVehicleJourneyAtStop();
                         convert(context, noptisVehicleJourney, callOnTimedJourneyPattern, pointInJourneyPattern, vehicleJourneyAtStop);
-                        vehicleJourneyAtStop.setVehicleJourney(neptuneVehicleJourney);
+                        //vehicleJourneyAtStop.setVehicleJourney(neptuneVehicleJourney);
                     }
 
-/*
-                    if (neptuneJourneyPattern == null) {
-                        neptuneJourneyPattern = createJourneyPattern(context, referential, configuration, line, neptuneVehicleJourney, "", null, null, null);
-                    }
-*/
+                    // Timetable
 
-                    //neptuneVehicleJourney.setRoute(journeyPattern.getRoute());
-                    //neptuneVehicleJourney.setJourneyPattern(journeyPattern);
+                    String timetableId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(), Timetable.TIMETABLE_KEY, String.valueOf(noptisVehicleJourney.getId()));
+                    Timetable timetable = ObjectFactory.getTimetable(referential, timetableId);
+                    neptuneVehicleJourney.getTimetables().add(timetable);
+
+                    // Route and JourneyPattern
+
+                    long journeyPatternId = timedJourneyPattern.getIsBasedOnJourneyPatternId();
+                    List<PointInJourneyPattern> pointsInJourneyPattern = pointInJourneyPatternDAO.findByJourneyPatternId(journeyPatternId);
+
+                    // Route
+
+                    String lineId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(), mobi.chouette.model.Line.LINE_KEY, String.valueOf(line.getGid()));
+                    mobi.chouette.model.Line neptuneLine = ObjectFactory.getLine(referential, lineId);
+
+                    String routeKey = line.getGid() + "_" + directionOfLine.getDirectionCode().ordinal();
+                    //routeKey += "_" + buildStopsKey(neptuneVehicleJourney);
+                    routeKey += "_" + buildStopsKey(context, pointsInJourneyPattern);
+
+                    String routeId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(), Route.ROUTE_KEY, routeKey);
+                    log.info(Color.LIGHT_BLUE + "createRoute : route " + routeId + Color.NORMAL);
+
+                    Route route = ObjectFactory.getRoute(referential, routeId);
+                    route.setLine(neptuneLine);
+
+                    String wayBack = directionOfLine.getDirectionCode().equals(DirectionCode.EVEN) ? "A" : "R";
+                    route.setWayBack(wayBack);
+                    route.setFilled(true);
+
+                    // JourneyPattern
+
+                    String journeyPatternObjectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
+                            mobi.chouette.model.JourneyPattern.JOURNEYPATTERN_KEY, String.valueOf(journeyPatternId));
+                    mobi.chouette.model.JourneyPattern neptuneJourneyPattern = ObjectFactory.getJourneyPattern(referential, journeyPatternObjectId);
+
+                    neptuneJourneyPattern.setName("");
+                    neptuneJourneyPattern.setRoute(route);
+
+                    log.info(Color.CYAN + "createJourneyPattern : journeyPattern " +
+                    neptuneJourneyPattern.getObjectId() + Color.NORMAL);
+
+                    Set<String> stopPointKeys = new HashSet<>();
+
+                    for (PointInJourneyPattern pointInJourneyPattern : pointsInJourneyPattern) {
+
+                        long journeyPatternPointGid = pointInJourneyPattern.getIsJourneyPatternPointGid();
+                        StopPoint noptisStopPoint = noptisReferential.getSharedStopPoints().get(journeyPatternPointGid);
+                        String stopPointGidAsString = String.valueOf(noptisStopPoint.getGid());
+
+                        String baseKey = route.getObjectId().replace(Route.ROUTE_KEY, mobi.chouette.model.StopPoint.STOPPOINT_KEY)
+                                + "a" + stopPointGidAsString.trim().replaceAll("[^a-zA-Z_0-9\\-]", "_");
+                        String stopKey = baseKey;
+                        int dup = 1;
+                        while (stopPointKeys.contains(stopKey)) {
+                            stopKey = baseKey + "_" + (dup++);
+                        }
+                        stopPointKeys.add(stopKey);
+
+                        mobi.chouette.model.StopPoint stopPoint = ObjectFactory.getStopPoint(referential, stopKey);
+
+                        String stopAreaId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
+                                mobi.chouette.model.StopArea.STOPAREA_KEY, String.valueOf(noptisStopPoint.getGid()));
+                        mobi.chouette.model.StopArea stopArea = ObjectFactory.getStopArea(referential, stopAreaId);
+                        stopPoint.setContainedInStopArea(stopArea);
+                        stopPoint.setRoute(route);
+                        stopPoint.setPosition(pointInJourneyPattern.getSequenceNumber());
+
+                        stopPoint.setForBoarding(AbstractNoptisParser.convertDepartureType(pointInJourneyPattern.getDepartureType()));
+                        stopPoint.setForAlighting(AbstractNoptisParser.convertArrivalType(pointInJourneyPattern.getArrivalType()));
+
+                        neptuneJourneyPattern.addStopPoint(stopPoint);
+                        stopPoint.setFilled(true);
+                    }
+
+                    List<mobi.chouette.model.StopPoint> journeyPatternStopPoints = neptuneJourneyPattern.getStopPoints();
+                    if (CollectionUtils.isNotEmpty(journeyPatternStopPoints)) {
+                        neptuneJourneyPattern.setDepartureStopPoint(journeyPatternStopPoints.get(0));
+                        neptuneJourneyPattern.setArrivalStopPoint(journeyPatternStopPoints.get(journeyPatternStopPoints.size() - 1));
+                    }
+
+                    NeptuneUtil.refreshDepartureArrivals(neptuneJourneyPattern);
+
+                    neptuneJourneyPattern.setFilled(true);
+
+                    neptuneVehicleJourney.setRoute(neptuneJourneyPattern.getRoute());
+                    neptuneVehicleJourney.setJourneyPattern(neptuneJourneyPattern);
                 }
             }
-
-//            InitialContext initialContext = (InitialContext) context.get(INITIAL_CONTEXT);
-//            Command parser = CommandFactory.create(initialContext, NoptisLineParserCommand.class.getName());
-//            result = parser.execute(context);
 
             result = SUCCESS;
 
@@ -199,6 +234,39 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
         }
 
         return result;
+    }
+
+    private void createStopPoints(Route route, mobi.chouette.model.JourneyPattern journeyPattern, List<VehicleJourneyAtStop> list, Referential referential, NoptisImportParameters configuration) {
+        Set<String> stopPointKeys = new HashSet<String>();
+
+        int position = 0;
+        for (VehicleJourneyAtStop vehicleJourneyAtStop : list) {
+            VehicleJourneyAtStopWrapper wrapper = (VehicleJourneyAtStopWrapper) vehicleJourneyAtStop;
+            //String baseKey = route.getObjectId().replace(Route.ROUTE_KEY, mobi.chouette.model.StopPoint.STOPPOINT_KEY) + "a" + wrapper.stopId.trim().replaceAll("[^a-zA-Z_0-9\\-]", "_"); // TODO FIX
+            String baseKey = "";
+            String stopKey = baseKey;
+            int dup = 1;
+            while (stopPointKeys.contains(stopKey)) {
+                stopKey = baseKey + "_" + (dup++);
+            }
+            stopPointKeys.add(stopKey);
+
+            mobi.chouette.model.StopPoint stopPoint = ObjectFactory.getStopPoint(referential, stopKey);
+
+            String stopAreaId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(), mobi.chouette.model.StopArea.STOPAREA_KEY, wrapper.getStopId());
+            mobi.chouette.model.StopArea stopArea = ObjectFactory.getStopArea(referential, stopAreaId);
+            stopPoint.setContainedInStopArea(stopArea);
+            stopPoint.setRoute(route);
+            stopPoint.setPosition(position++);
+
+            //stopPoint.setForBoarding(wrapper.pickUpType);
+            //stopPoint.setForAlighting(wrapper.dropOffType);
+
+            journeyPattern.addStopPoint(stopPoint);
+            stopPoint.setFilled(true);
+        }
+
+        //NeptuneUtil.refreshDepartureArrivals(journeyPattern);
     }
 
     private Route createRoute(Referential referential, NoptisImportParameters configuration, Line noptisLine, DirectionOfLine directionOfLine) {
@@ -324,37 +392,21 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
         return null;
     }
 
-    private void createStopPoints(Route route, mobi.chouette.model.JourneyPattern journeyPattern, List<VehicleJourneyAtStop> list, Referential referential, NoptisImportParameters configuration) {
-        Set<String> stopPointKeys = new HashSet<String>();
+    private String buildStopsKey(Context context, List<PointInJourneyPattern> pointsInJourneyPattern) {
+        NoptisReferential noptisReferential = (NoptisReferential) context.get(NOPTIS_REFERENTIAL);
+        StringBuilder stopsKey = new StringBuilder();
 
-        int position = 0;
-        for (VehicleJourneyAtStop vehicleJourneyAtStop : list) {
-            VehicleJourneyAtStopWrapper wrapper = (VehicleJourneyAtStopWrapper) vehicleJourneyAtStop;
-            //String baseKey = route.getObjectId().replace(Route.ROUTE_KEY, mobi.chouette.model.StopPoint.STOPPOINT_KEY) + "a" + wrapper.stopId.trim().replaceAll("[^a-zA-Z_0-9\\-]", "_"); // TODO FIX
-            String baseKey = "";
-            String stopKey = baseKey;
-            int dup = 1;
-            while (stopPointKeys.contains(stopKey)) {
-                stopKey = baseKey + "_" + (dup++);
-            }
-            stopPointKeys.add(stopKey);
-
-            mobi.chouette.model.StopPoint stopPoint = ObjectFactory.getStopPoint(referential, stopKey);
-
-            String stopAreaId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(), mobi.chouette.model.StopArea.STOPAREA_KEY, wrapper.getStopId());
-            mobi.chouette.model.StopArea stopArea = ObjectFactory.getStopArea(referential, stopAreaId);
-            stopPoint.setContainedInStopArea(stopArea);
-            stopPoint.setRoute(route);
-            stopPoint.setPosition(position++);
-
-            //stopPoint.setForBoarding(wrapper.pickUpType);
-            //stopPoint.setForAlighting(wrapper.dropOffType);
-
-            journeyPattern.addStopPoint(stopPoint);
-            stopPoint.setFilled(true);
+        for (PointInJourneyPattern pointInJourneyPattern : pointsInJourneyPattern) {
+            long journeyPatternPointGid = pointInJourneyPattern.getIsJourneyPatternPointGid();
+            StopPoint noptisStopPoint = noptisReferential.getSharedStopPoints().get(journeyPatternPointGid);
+            String stopId = String.valueOf(noptisStopPoint.getGid());
+            stopId += "_" + getDepartureTypeOrdinal(pointInJourneyPattern) + "_" + getArrivalTypeOrdinal(pointInJourneyPattern);
+            stopsKey.append(stopId).append(" ");
         }
-
-        //NeptuneUtil.refreshDepartureArrivals(journeyPattern);
+        Checksum checksum = new Adler32();
+        byte bytes[] = stopsKey.toString().getBytes();
+        checksum.update(bytes, 0, bytes.length);
+        return Long.toHexString(checksum.getValue());
     }
 
     private String buildStopsKey(mobi.chouette.model.VehicleJourney vehicleJourney) {
@@ -386,14 +438,15 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
         vehicleJourneyAtStop.setId(callOnTimedJourneyPattern.getId());
 
+        //String objectId = gtfsStopTime.getStopId();
+        //mobi.chouette.model.StopPoint stopPoint = ObjectFactory.getStopPoint(referential, objectId);
+
         long journeyPatternPointGid = pointInJourneyPattern.getIsJourneyPatternPointGid();
         //mobi.chouette.model.stip.StopPoint noptisStopPoint = stopPointDAO.findByJourneyPatternPointGid(pointInJourneyPattern.getIsJourneyPatternPointGid());
 
-        if (noptisReferential.getSharedStopPoints().containsKey(journeyPatternPointGid)) {
-            StopPoint noptisStopPoint = noptisReferential.getSharedStopPoints().get(journeyPatternPointGid);
-            mobi.chouette.model.StopPoint neptuneStopPoint = ObjectFactory.getStopPoint(referential, String.valueOf(noptisStopPoint.getGid()));
-            vehicleJourneyAtStop.setStopPoint(neptuneStopPoint);
-        }
+        StopPoint noptisStopPoint = noptisReferential.getSharedStopPoints().get(journeyPatternPointGid);
+        mobi.chouette.model.StopPoint neptuneStopPoint = ObjectFactory.getStopPoint(referential, String.valueOf(noptisStopPoint.getGid()));
+        //vehicleJourneyAtStop.setStopPoint(neptuneStopPoint);
 
         String arrivalTimeAsString = getArrivalTime(vehicleJourney, callOnTimedJourneyPattern).getAsHourMinuteSecondString();
         arrivalTimeAsString = arrivalTimeAsString.startsWith("24") ? arrivalTimeAsString.replaceFirst("24", "00") : arrivalTimeAsString;
@@ -431,6 +484,14 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
     private int getDropOffTypeOrdinal(VehicleJourneyAtStopWrapper vjas) {
         return (vjas.getDropOffType() == null ? 0 : vjas.getDropOffType().ordinal());
+    }
+
+    private int getDepartureTypeOrdinal(PointInJourneyPattern pointInJourneyPattern) {
+        return (pointInJourneyPattern.getDepartureType() == null ? 0 : pointInJourneyPattern.getDepartureType().ordinal());
+    }
+
+    private int getArrivalTypeOrdinal(PointInJourneyPattern pointInJourneyPattern) {
+        return (pointInJourneyPattern.getArrivalType() == null ? 0 : pointInJourneyPattern.getArrivalType().ordinal());
     }
 
     private OffsetDayTime getDepartureTime(mobi.chouette.model.stip.VehicleJourney vehicleJourney, CallOnTimedJourneyPattern callOnTimedJourneyPattern) {
