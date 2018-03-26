@@ -89,14 +89,15 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                 for (VehicleJourneyAndTemplate vehicleJourneyAndTemplate : vehicleJourneyAndTemplates) {
                     VehicleJourneyTemplate vehicleJourneyTemplate = vehicleJourneyAndTemplate.getVehicleJourneyTemplate();
                     mobi.chouette.model.stip.VehicleJourney noptisVehicleJourney = vehicleJourneyAndTemplate.getVehicleJourney();
-
                     TimedJourneyPattern timedJourneyPattern = timedJourneyPatternMap.get(vehicleJourneyTemplate.getIsWorkedOnTimedJourneyPatternId());
+
                     List<Object[]> callPointResultList = timetableDAO.findCallsForTimedJourneyPattern(timedJourneyPattern.getId());
                     List<CallAndPointInJourneyPattern> callAndPointInJourneyPatterns = new ArrayList<>();
                     callPointResultList.forEach(resultRecord -> callAndPointInJourneyPatterns.add(new CallAndPointInJourneyPattern(
                             (CallOnTimedJourneyPattern) resultRecord[0], (PointInJourneyPattern) resultRecord[1])));
 
                     List<PointInJourneyPattern> pointsInJourneyPattern = pointInJourneyPatternDAO.findByJourneyPatternId(timedJourneyPattern.getIsBasedOnJourneyPatternId());
+                    List<LocalDate> operatingDates = timetableDAO.findDatesForVehicleJourney(noptisVehicleJourney.getId());
 
                     // VehicleJourney
 
@@ -111,7 +112,6 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
                     // Timetable
 
-                    List<LocalDate> operatingDates = timetableDAO.findDatesForVehicleJourney(noptisVehicleJourney.getId());
                     if (CollectionUtils.isNotEmpty(operatingDates)) {
                         String timetableId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
                                 Timetable.TIMETABLE_KEY, String.valueOf(noptisVehicleJourney.getId()));
