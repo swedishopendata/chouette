@@ -82,7 +82,14 @@ public class AbstractNoptisImporterCommand implements Constant {
                 List<? extends Command> lineProcessingCommands = commands.getLineProcessingCommands(context, true);
 
                 int lineCount = 0;
+                int maxLines = 10;
+                int index = 0;
+
                 for (Long lineId : lineIds) {
+
+                    if (index >= maxLines) {
+                        break;
+                    }
 
                     // TODO remove below check when production
                     Set<Long> excludeIds = Sets.newHashSet(
@@ -161,7 +168,9 @@ public class AbstractNoptisImporterCommand implements Constant {
                         return ERROR;
                     }
 
+                    index++;
                 }
+
                 if (lineCount == 0) {
                     progression.execute(context);
                     return ERROR;

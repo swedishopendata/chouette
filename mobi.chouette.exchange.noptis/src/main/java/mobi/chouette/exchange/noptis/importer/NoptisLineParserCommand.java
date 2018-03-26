@@ -9,19 +9,13 @@ import mobi.chouette.common.chain.Command;
 import mobi.chouette.common.chain.CommandFactory;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
-import mobi.chouette.exchange.noptis.parser.AbstractNoptisParser;
 import mobi.chouette.exchange.noptis.parser.NoptisLineParser;
 import mobi.chouette.exchange.report.ActionReporter;
-import mobi.chouette.exchange.report.IO_TYPE;
-import mobi.chouette.model.Network;
 import mobi.chouette.model.stip.Line;
-import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 
 import javax.naming.InitialContext;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Objects;
 
 @Log4j
 public class NoptisLineParserCommand implements Command, Constant {
@@ -41,34 +35,6 @@ public class NoptisLineParserCommand implements Command, Constant {
 
         try {
             Line line = (Line) context.get(LINE);
-            log.info(line);
-
-            NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
-            //short dataSourceId = NoptisImporterUtils.getDataSourceId(configuration.getObjectIdPrefix());
-
-            // Network
-            if (Objects.requireNonNull(referential).getSharedPTNetworks().isEmpty()) {
-                createPTNetwork(referential, configuration);
-                reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.NETWORK,
-                        "networks", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
-                reporter.setStatToObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.NETWORK,
-                        ActionReporter.OBJECT_TYPE.NETWORK, referential.getSharedPTNetworks().size());
-            }
-
-            // 3. TODO parse shared timetables
-
-            // TODO A calendar in noptis is based on specific vehicle journeys (vehicle journey id) and should be processed during vehicle journey parser only
-
-            // Timetable
-            if (referential.getSharedTimetables().isEmpty()) {
-                //GtfsCalendarParser gtfsCalendarParser = (GtfsCalendarParser) ParserFactory.create(GtfsCalendarParser.class.getName());
-                //gtfsCalendarParser.parse(context);
-                reporter.addObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.TIMETABLE,
-                        "time tables", ActionReporter.OBJECT_STATE.OK, IO_TYPE.INPUT);
-                reporter.setStatToObjectReport(context, "merged", ActionReporter.OBJECT_TYPE.TIMETABLE,
-                        ActionReporter.OBJECT_TYPE.TIMETABLE, referential.getSharedTimetables().size());
-            }
-
             NoptisLineParser noptisLineParser = (NoptisLineParser) ParserFactory.create(NoptisLineParser.class.getName());
             noptisLineParser.setNoptisLine(line);
             noptisLineParser.parse(context);
@@ -81,17 +47,6 @@ public class NoptisLineParserCommand implements Command, Constant {
 
         log.info(Color.MAGENTA + monitor.stop() + Color.NORMAL);
         return result;
-    }
-
-    private Network createPTNetwork(Referential referential, NoptisImportParameters configuration) {
-        String objectIdPrefix = configuration.getObjectIdPrefix();
-        String ptNetworkId = AbstractNoptisParser.composeObjectId(objectIdPrefix, Network.PTNETWORK_KEY, objectIdPrefix);
-        Network ptNetwork = ObjectFactory.getPTNetwork(referential, ptNetworkId);
-        ptNetwork.setVersionDate(Calendar.getInstance().getTime());
-        ptNetwork.setName(objectIdPrefix);
-        ptNetwork.setRegistrationNumber(objectIdPrefix);
-        ptNetwork.setSourceName("NOPTIS");
-        return ptNetwork;
     }
 
     public static class DefaultCommandFactory extends CommandFactory {

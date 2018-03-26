@@ -108,7 +108,9 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                     String objectId = AbstractNoptisParser.composeObjectId(configuration.getObjectIdPrefix(),
                             mobi.chouette.model.VehicleJourney.VEHICLEJOURNEY_KEY, String.valueOf(noptisVehicleJourney.getId()));
                     mobi.chouette.model.VehicleJourney neptuneVehicleJourney = ObjectFactory.getVehicleJourney(referential, objectId);
+
                     convert(context, vehicleJourneyTemplate, noptisVehicleJourney, neptuneVehicleJourney);
+                    // parseVehicleJourneyAndTemplate()
 
                     TimedJourneyPattern timedJourneyPattern = timedJourneyPatternMap.get(vehicleJourneyTemplate.getIsWorkedOnTimedJourneyPatternId());
 
@@ -124,7 +126,10 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                         PointInJourneyPattern pointInJourneyPattern = callAndPointInJourneyPattern.getPointInJourneyPattern();
 
                         VehicleJourneyAtStop vehicleJourneyAtStop = ObjectFactory.getVehicleJourneyAtStop();
+
                         convert(context, noptisVehicleJourney, callOnTimedJourneyPattern, pointInJourneyPattern, vehicleJourneyAtStop);
+                        // parseCallsAndPoints() // TODO use instead of convert
+
                         vehicleJourneyAtStop.setVehicleJourney(neptuneVehicleJourney);
                     }
 
