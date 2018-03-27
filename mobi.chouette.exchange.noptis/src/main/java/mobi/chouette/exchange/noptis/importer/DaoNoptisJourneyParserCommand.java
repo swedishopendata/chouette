@@ -156,6 +156,9 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                         }
                     }
 
+                    neptuneJourneyPattern.setName(neptuneJourneyPattern.getRoute().getName());
+                    neptuneJourneyPattern.setPublishedName(neptuneJourneyPattern.getRoute().getPublishedName());
+
                     neptuneVehicleJourney.setRoute(neptuneJourneyPattern.getRoute());
                     neptuneVehicleJourney.setJourneyPattern(neptuneJourneyPattern);
                 }

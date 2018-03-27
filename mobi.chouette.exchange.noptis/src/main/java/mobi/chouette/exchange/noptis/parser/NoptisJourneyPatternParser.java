@@ -45,7 +45,7 @@ public class NoptisJourneyPatternParser implements Parser, Constant {
                 mobi.chouette.model.JourneyPattern.JOURNEYPATTERN_KEY, String.valueOf(timedJourneyPattern.getIsBasedOnJourneyPatternId()));
         mobi.chouette.model.JourneyPattern neptuneJourneyPattern = ObjectFactory.getJourneyPattern(referential, journeyPatternObjectId);
 
-        neptuneJourneyPattern.setName("");
+        neptuneJourneyPattern.setRegistrationNumber(String.valueOf(timedJourneyPattern.getIsBasedOnJourneyPatternId()));
         neptuneJourneyPattern.setRoute(route);
 
         for (PointInJourneyPattern pointInJourneyPattern : pointsInJourneyPattern) {
@@ -57,6 +57,7 @@ public class NoptisJourneyPatternParser implements Parser, Constant {
                     mobi.chouette.model.StopArea.STOPAREA_KEY, String.valueOf(noptisStopPoint.getGid()));
             mobi.chouette.model.StopArea stopArea = ObjectFactory.getStopArea(referential, stopAreaId);
             stopPoint.setContainedInStopArea(stopArea);
+
             stopPoint.setRoute(route);
             stopPoint.setPosition(pointInJourneyPattern.getSequenceNumber());
 
