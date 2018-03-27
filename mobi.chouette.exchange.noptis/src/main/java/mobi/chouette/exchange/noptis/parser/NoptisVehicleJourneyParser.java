@@ -72,9 +72,9 @@ public class NoptisVehicleJourneyParser implements Parser, Constant {
             neptuneVehicleJourney.setVehicleTypeIdentifier(transportModeCode.getCodeValue());
         }
 
-        neptuneVehicleJourney.setMobilityRestrictedSuitability(Boolean.FALSE);
-        neptuneVehicleJourney.setJourneyCategory(JourneyCategoryEnum.Frequency);
-        neptuneVehicleJourney.setFlexibleService(Boolean.FALSE);
+        neptuneVehicleJourney.setMobilityRestrictedSuitability(Boolean.TRUE);
+        neptuneVehicleJourney.setJourneyCategory(JourneyCategoryEnum.Timesheet);
+        //neptuneVehicleJourney.setFlexibleService(Boolean.FALSE);
 
         neptuneVehicleJourney.setFilled(true);
 
