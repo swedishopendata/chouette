@@ -1,5 +1,6 @@
 package mobi.chouette.exchange.noptis.importer;
 
+import com.google.common.base.Splitter;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import lombok.extern.log4j.Log4j;
@@ -21,6 +22,7 @@ import mobi.chouette.model.stip.type.DirectionCode;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
@@ -35,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.Adler32;
 import java.util.zip.Checksum;
+
+import static org.apache.commons.lang.StringUtils.substringBefore;
 
 @Log4j
 @Stateless(name = DaoNoptisJourneyParserCommand.COMMAND)
@@ -143,6 +147,15 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
                             mobi.chouette.model.JourneyPattern.JOURNEYPATTERN_KEY, String.valueOf(timedJourneyPattern.getIsBasedOnJourneyPatternId()));
                     mobi.chouette.model.JourneyPattern neptuneJourneyPattern = ObjectFactory.getJourneyPattern(referential, journeyPatternObjectId);
 
+                    if (route.getName() == null) {
+                        if (CollectionUtils.isNotEmpty(route.getStopPoints())) {
+                            String first = route.getStopPoints().get(0).getContainedInStopArea().getName();
+                            String last = route.getStopPoints().get(route.getStopPoints().size() - 1).getContainedInStopArea().getName();
+                            route.setName(first + " -> " + last);
+                            route.setPublishedName(substringBefore(first, " ") + " -> " + substringBefore(last, " "));
+                        }
+                    }
+
                     neptuneVehicleJourney.setRoute(neptuneJourneyPattern.getRoute());
                     neptuneVehicleJourney.setJourneyPattern(neptuneJourneyPattern);
                 }
@@ -180,6 +193,12 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
         Route route = ObjectFactory.getRoute(referential, routeId);
         route.setLine(neptuneLine);
+
+        //route.setName(xpp.nextText());
+        //route.setPublishedName(xpp.nextText());
+        //route.setDirection(NetexUtils.toPTDirectionType(directionName));
+        //Route wayBackRoute = ObjectFactory.getRoute(referential, ref);
+        //if (wayBackRoute != null) { wayBackRoute.setOppositeRoute(route); }
 
         String wayBack = directionOfLine.getDirectionCode().equals(DirectionCode.EVEN) ? "A" : "R";
         route.setWayBack(wayBack);
