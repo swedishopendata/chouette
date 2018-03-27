@@ -1,5 +1,6 @@
 package mobi.chouette.exchange.noptis.parser;
 
+import com.google.common.base.Splitter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -16,6 +17,7 @@ import mobi.chouette.model.stip.VehicleJourney;
 import mobi.chouette.model.stip.VehicleJourneyTemplate;
 import mobi.chouette.model.stip.type.TransportModeCode;
 import mobi.chouette.model.stip.util.OffsetDayTime;
+import mobi.chouette.model.type.JourneyCategoryEnum;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 
@@ -67,7 +69,12 @@ public class NoptisVehicleJourneyParser implements Parser, Constant {
         if (vehicleJourneyTemplate.getTransportModeCode() != null) {
             TransportModeCode transportModeCode = vehicleJourneyTemplate.getTransportModeCode();
             neptuneVehicleJourney.setTransportMode(AbstractNoptisParser.convertTransportModeCode(transportModeCode));
+            neptuneVehicleJourney.setVehicleTypeIdentifier(transportModeCode.getCodeValue());
         }
+
+        neptuneVehicleJourney.setMobilityRestrictedSuitability(Boolean.FALSE);
+        neptuneVehicleJourney.setJourneyCategory(JourneyCategoryEnum.Frequency);
+        neptuneVehicleJourney.setFlexibleService(Boolean.FALSE);
 
         neptuneVehicleJourney.setFilled(true);
 
@@ -93,25 +100,15 @@ public class NoptisVehicleJourneyParser implements Parser, Constant {
         vehicleJourneyAtStop.setStopPoint(neptuneStopPoint);
 
         String arrivalTimeAsString = getArrivalTime(vehicleJourney, callOnTimedJourneyPattern).getAsHourMinuteSecondString();
-        arrivalTimeAsString = arrivalTimeAsString.startsWith("24") ? arrivalTimeAsString.replaceFirst("24", "00") : arrivalTimeAsString;
-        arrivalTimeAsString = arrivalTimeAsString.startsWith("25") ? arrivalTimeAsString.replaceFirst("25", "01") : arrivalTimeAsString;
-        arrivalTimeAsString = arrivalTimeAsString.startsWith("26") ? arrivalTimeAsString.replaceFirst("26", "02") : arrivalTimeAsString;
-        arrivalTimeAsString = arrivalTimeAsString.startsWith("27") ? arrivalTimeAsString.replaceFirst("27", "03") : arrivalTimeAsString;
-        arrivalTimeAsString = arrivalTimeAsString.startsWith("28") ? arrivalTimeAsString.replaceFirst("28", "04") : arrivalTimeAsString;
-        arrivalTimeAsString = arrivalTimeAsString.startsWith("29") ? arrivalTimeAsString.replaceFirst("29", "05") : arrivalTimeAsString;
-
-        Time arrivalTime = toTime(toCalendar(arrivalTimeAsString, "HH:mm:ss"));
+        String arrivalHour = Splitter.on(":").trimResults().omitEmptyStrings().splitToList(arrivalTimeAsString).get(0);
+        arrivalTimeAsString = Integer.valueOf(arrivalHour) > 23 ? arrivalTimeAsString.replaceFirst(arrivalHour, toHourInDay(arrivalHour)) : arrivalTimeAsString;
+        Time arrivalTime = toTime(toCalendar(arrivalTimeAsString));
         vehicleJourneyAtStop.setArrivalTime(arrivalTime);
 
         String departureTimeAsString = getDepartureTime(vehicleJourney, callOnTimedJourneyPattern).getAsHourMinuteSecondString();
-        departureTimeAsString = departureTimeAsString.startsWith("24") ? departureTimeAsString.replaceFirst("24", "00") : departureTimeAsString;
-        departureTimeAsString = departureTimeAsString.startsWith("25") ? departureTimeAsString.replaceFirst("25", "01") : departureTimeAsString;
-        departureTimeAsString = departureTimeAsString.startsWith("26") ? departureTimeAsString.replaceFirst("26", "02") : departureTimeAsString;
-        departureTimeAsString = departureTimeAsString.startsWith("27") ? departureTimeAsString.replaceFirst("27", "03") : departureTimeAsString;
-        departureTimeAsString = departureTimeAsString.startsWith("28") ? departureTimeAsString.replaceFirst("28", "04") : departureTimeAsString;
-        departureTimeAsString = departureTimeAsString.startsWith("29") ? departureTimeAsString.replaceFirst("29", "05") : departureTimeAsString;
-
-        Time departureTime = toTime(toCalendar(departureTimeAsString, "HH:mm:ss"));
+        String departureHour = Splitter.on(":").trimResults().omitEmptyStrings().splitToList(departureTimeAsString).get(0);
+        departureTimeAsString = Integer.valueOf(departureHour) > 23 ? departureTimeAsString.replaceFirst(departureHour, toHourInDay(departureHour)) : departureTimeAsString;
+        Time departureTime = toTime(toCalendar(departureTimeAsString));
         vehicleJourneyAtStop.setDepartureTime(departureTime);
 
         vehicleJourneyAtStop.setArrivalDayOffset(0);
@@ -152,8 +149,6 @@ public class NoptisVehicleJourneyParser implements Parser, Constant {
     private int arrivalIsAfterDepartureChooseDepartureOrArrivalSeconds(CallOnTimedJourneyPattern callOnTimedJourneyPattern) {
         int departureOffsetSeconds = callOnTimedJourneyPattern.getEarliestDepartureTimeOffsetSeconds();
         if (departureOffsetSeconds == 0) {
-            // The first departure often have a later arrival time in NOPTIS, which makes no sense in GTFS
-            // so in those cases we just use the departure offset seconds 0 for both departure and arrival
             return departureOffsetSeconds;
         }
         return callOnTimedJourneyPattern.getLatestArrivalTimeOffsetSeconds();
@@ -163,9 +158,9 @@ public class NoptisVehicleJourneyParser implements Parser, Constant {
         return new Time(getTimeInMillis(value));
     }
 
-    private Calendar toCalendar(String value, String pattern) {
+    private Calendar toCalendar(String value) {
         try {
-            DateFormat format = new SimpleDateFormat(pattern);
+            DateFormat format = new SimpleDateFormat("HH:mm:ss");
             format.setLenient(false);
             format.parse(value);
             return format.getCalendar();
@@ -194,5 +189,37 @@ public class NoptisVehicleJourneyParser implements Parser, Constant {
         });
     }
 
+    private String toHourInDay(String hourInDay) {
+        String mappedHourInDay;
+        switch (hourInDay) {
+            case "24":
+                mappedHourInDay = "00";
+                break;
+            case "25":
+                mappedHourInDay = "01";
+                break;
+            case "26":
+                mappedHourInDay = "02";
+                break;
+            case "27":
+                mappedHourInDay = "03";
+                break;
+            case "28":
+                mappedHourInDay = "04";
+                break;
+            case "29":
+                mappedHourInDay = "05";
+                break;
+            case "30":
+                mappedHourInDay = "06";
+                break;
+            case "31":
+                mappedHourInDay = "07";
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid hour in day: " + hourInDay);
+        }
+        return mappedHourInDay;
+    }
 }
 
