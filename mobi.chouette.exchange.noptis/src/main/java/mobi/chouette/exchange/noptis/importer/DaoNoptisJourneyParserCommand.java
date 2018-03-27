@@ -1,6 +1,5 @@
 package mobi.chouette.exchange.noptis.importer;
 
-import com.google.common.base.Splitter;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import lombok.extern.log4j.Log4j;
@@ -22,7 +21,6 @@ import mobi.chouette.model.stip.type.DirectionCode;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Resource;
 import javax.ejb.*;
