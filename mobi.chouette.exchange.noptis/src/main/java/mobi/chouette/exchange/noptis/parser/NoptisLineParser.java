@@ -34,9 +34,12 @@ public class NoptisLineParser implements Parser, Constant {
         convert(noptisLine, neptuneLine);
 
         // Network
-        if (Objects.requireNonNull(referential).getSharedPTNetworks().isEmpty()) {
-            Network ptNetwork = createPTNetwork(referential, configuration);
-            neptuneLine.setNetwork(ptNetwork);
+        if (referential.getSharedPTNetworks().isEmpty()) {
+            Network network = createPTNetwork(referential, configuration);
+            neptuneLine.setNetwork(network);
+        } else {
+            Network network = referential.getSharedPTNetworks().values().iterator().next();
+            neptuneLine.setNetwork(network);
         }
 
         // Company
