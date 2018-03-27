@@ -13,4 +13,11 @@ public class NoptisImporterUtils {
         return DATA_SOURCES.get(objectIdPrefix);
     }
 
+    private static final Map<String, String> DATA_SOURCE_NAMES = ImmutableMap.of(
+            "OTR", "AB Östgötatrafiken", "ULA", "Kollektivtrafikförvaltningen UL", "VTK", "Västtrafik AB", "SLT", "Stockholms Lokaltrafik");
+
+    public static String getDataSourceName(String objectIdPrefix) {
+        return DATA_SOURCE_NAMES.get(objectIdPrefix);
+    }
+
 }

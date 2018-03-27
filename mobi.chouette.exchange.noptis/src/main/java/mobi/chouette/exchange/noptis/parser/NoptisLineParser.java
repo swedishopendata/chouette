@@ -8,8 +8,10 @@ import mobi.chouette.exchange.importer.Parser;
 import mobi.chouette.exchange.importer.ParserFactory;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.noptis.importer.NoptisImportParameters;
+import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.model.Company;
 import mobi.chouette.model.Network;
+import mobi.chouette.model.type.PTNetworkSourceTypeEnum;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
 
@@ -89,8 +91,12 @@ public class NoptisLineParser implements Parser, Constant {
         Network ptNetwork = ObjectFactory.getPTNetwork(referential, ptNetworkId);
         ptNetwork.setVersionDate(Calendar.getInstance().getTime());
         ptNetwork.setName(objectIdPrefix);
+        ptNetwork.setComment(NoptisImporterUtils.getDataSourceName(objectIdPrefix));
+        ptNetwork.setDescription(NoptisImporterUtils.getDataSourceName(objectIdPrefix));
         ptNetwork.setRegistrationNumber(objectIdPrefix);
         ptNetwork.setSourceName("NOPTIS");
+        ptNetwork.setSourceType(PTNetworkSourceTypeEnum.PublicTransport);
+        ptNetwork.setSourceIdentifier("NOPTIS");
         return ptNetwork;
     }
 
