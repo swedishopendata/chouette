@@ -161,7 +161,7 @@ public class NoptisImportIT extends Arquillian implements Constant, ReportConsta
 		return context;
 	}
 
-	@Test(groups = { "ImportLine" }, description = "Import Plugin should import file")
+	@Test(enabled = false, groups = { "ImportLine" }, description = "Import Plugin should import file")
 	public void verifyImportLine() throws Exception {
 		Context context = initImportContext();
 
@@ -171,62 +171,6 @@ public class NoptisImportIT extends Arquillian implements Constant, ReportConsta
 
 		JobDataTest jobData = (JobDataTest) context.get(JOB_DATA);
 		jobData.setInputFilename("sample_line.xml");
-
-		NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
-		configuration.setNoSave(false);
-		configuration.setCleanRepository(true);
-
-		boolean result;
-		try {
-			result = command.execute(context);
-		} catch (Exception ex) {
-			log.error("test failed", ex);
-			throw ex;
-		}
-
-		ActionReport report = (ActionReport) context.get(REPORT);
-		assertTrue(true);
-	}
-
-	@Test(enabled = false, groups = { "ImportLine" }, description = "Import Plugin should import file")
-	public void verifyImportCompressedLine() throws Exception {
-		Context context = initImportContext();
-
-		NoptisImporterCommand command = (NoptisImporterCommand) CommandFactory.create(
-				initialContext, NoptisImporterCommand.class.getName());
-
-		NoptisTestUtils.copyFile("single_line.zip");
-
-		JobDataTest jobData = (JobDataTest) context.get(JOB_DATA);
-		jobData.setInputFilename("single_line.zip");
-
-		NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
-		configuration.setNoSave(false);
-		configuration.setCleanRepository(true);
-
-		boolean result;
-		try {
-			result = command.execute(context);
-		} catch (Exception ex) {
-			log.error("test failed", ex);
-			throw ex;
-		}
-
-		ActionReport report = (ActionReport) context.get(REPORT);
-		assertTrue(true);
-	}
-
-	@Test(enabled = false, groups = { "ImportLine" }, description = "Import Plugin should import file")
-	public void verifyImportCompressedMultipleLines() throws Exception {
-		Context context = initImportContext();
-
-		NoptisImporterCommand command = (NoptisImporterCommand) CommandFactory.create(
-				initialContext, NoptisImporterCommand.class.getName());
-
-		NoptisTestUtils.copyFile("multiple_lines.zip");
-
-		JobDataTest jobData = (JobDataTest) context.get(JOB_DATA);
-		jobData.setInputFilename("multiple_lines.zip");
 
 		NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
 		configuration.setNoSave(false);

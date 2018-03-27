@@ -134,6 +134,7 @@
                     </execution>
                 </executions>
             </plugin>
+<!--
             <plugin>
                 <groupId>com.edugility</groupId>
                 <artifactId>h2-maven-plugin</artifactId>
@@ -213,7 +214,7 @@
                             <password>sa</password>
                             <autocommit>true</autocommit>
                             <srcFiles>
-                                <!--<srcFile>src/test/sql/stip_test.sql</srcFile>-->
+                                &lt;!&ndash;<srcFile>src/test/sql/stip_test.sql</srcFile>&ndash;&gt;
                                 <srcFile>src/test/sql/stip_test-20180309.sql</srcFile>
                             </srcFiles>
                             <skip>false</skip>
@@ -221,6 +222,7 @@
                     </execution>
                 </executions>
             </plugin>
+-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
