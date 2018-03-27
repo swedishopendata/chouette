@@ -14,6 +14,7 @@ import mobi.chouette.model.Network;
 import mobi.chouette.model.type.PTNetworkSourceTypeEnum;
 import mobi.chouette.model.util.ObjectFactory;
 import mobi.chouette.model.util.Referential;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -57,30 +58,25 @@ public class NoptisLineParser implements Parser, Constant {
     }
 
     private void convert(mobi.chouette.model.stip.Line noptisLine, mobi.chouette.model.Line neptuneLine) {
-        neptuneLine.setName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getName()));
+        neptuneLine.setNumber(AbstractNoptisParser.getNonEmptyTrimedString(String.valueOf(noptisLine.getNumber())));
 
-        if (neptuneLine.getName() == null) {
-            neptuneLine.setName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getDesignation()));
-        }
-
-        neptuneLine.setNumber(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getDesignation()));
-        neptuneLine.setPublishedName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getName()));
-
-        if (neptuneLine.getPublishedName() != null) {
-            neptuneLine.setName(neptuneLine.getPublishedName());
+        if (StringUtils.isNotEmpty(noptisLine.getName())) {
+            neptuneLine.setName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getName()));
+            neptuneLine.setPublishedName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getName()));
         } else {
-            neptuneLine.setName(neptuneLine.getNumber());
+            if (StringUtils.isNotEmpty(noptisLine.getDesignation())) {
+                neptuneLine.setName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getDesignation()));
+                neptuneLine.setPublishedName(AbstractNoptisParser.getNonEmptyTrimedString(noptisLine.getDesignation()));
+            } else {
+                neptuneLine.setName(String.valueOf(noptisLine.getNumber()));
+                neptuneLine.setPublishedName(String.valueOf(noptisLine.getNumber()));
+            }
         }
 
         neptuneLine.setTransportModeName(AbstractNoptisParser.convertTransportModeCode(noptisLine.getDefaultTransportModeCode()));
 
         String[] token = neptuneLine.getObjectId().split(":");
         neptuneLine.setRegistrationNumber(token[2]);
-
-        //neptuneLine.setComment(noptisLine.getDescription());
-        //neptuneLine.setColor(toHexa(noptisLine.getLineColor()));
-        //neptuneLine.setTextColor(toHexa(noptisLine.getLineTextColor()));
-        //neptuneLine.setUrl(NoptisConverter.toString(noptisLine.getLineUrl()));
 
         neptuneLine.setFilled(true);
     }
