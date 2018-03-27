@@ -1,5 +1,6 @@
 package mobi.chouette.exchange.noptis.parser;
 
+import lombok.extern.log4j.Log4j;
 import mobi.chouette.common.Context;
 import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.model.stip.type.ArrivalType;
@@ -7,8 +8,11 @@ import mobi.chouette.model.stip.type.DepartureType;
 import mobi.chouette.model.stip.type.TransportModeCode;
 import mobi.chouette.model.type.AlightingPossibilityEnum;
 import mobi.chouette.model.type.BoardingPossibilityEnum;
+import mobi.chouette.model.type.PTDirectionEnum;
 import mobi.chouette.model.type.TransportModeNameEnum;
+import org.apache.commons.lang.StringUtils;
 
+@Log4j
 public abstract class AbstractNoptisParser implements Constant {
 
     public static String getNonEmptyTrimedString(String source) {
@@ -140,6 +144,18 @@ public abstract class AbstractNoptisParser implements Constant {
         }
 
         return AlightingPossibilityEnum.normal;
+    }
+
+    public static PTDirectionEnum toPTDirectionType(String value) {
+        if (value == null)
+            return null;
+        PTDirectionEnum result = null;
+        try {
+            result = PTDirectionEnum.valueOf(StringUtils.capitalize(value));
+        } catch (Exception e) {
+            log.error("unable to translate " + value + " as PTDirection");
+        }
+        return result;
     }
 
 }

@@ -194,14 +194,10 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
         Route route = ObjectFactory.getRoute(referential, routeId);
         route.setLine(neptuneLine);
 
-        //route.setName(xpp.nextText());
-        //route.setPublishedName(xpp.nextText());
-        //route.setDirection(NetexUtils.toPTDirectionType(directionName));
-        //Route wayBackRoute = ObjectFactory.getRoute(referential, ref);
-        //if (wayBackRoute != null) { wayBackRoute.setOppositeRoute(route); }
-
         String wayBack = directionOfLine.getDirectionCode().equals(DirectionCode.EVEN) ? "A" : "R";
         route.setWayBack(wayBack);
+        route.setDirection(AbstractNoptisParser.toPTDirectionType(wayBack));
+
         route.setFilled(true);
 
         return route;
