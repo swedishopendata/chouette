@@ -27,6 +27,11 @@ public class DataSource extends NoptisObject {
 
     @Getter
     @Setter
+    @Column(name = "ShortName", nullable = false)
+    private String shortName;
+
+    @Getter
+    @Setter
     @Column(name = "DoiDbUser", nullable = false)
     private String doiDbUser;
 

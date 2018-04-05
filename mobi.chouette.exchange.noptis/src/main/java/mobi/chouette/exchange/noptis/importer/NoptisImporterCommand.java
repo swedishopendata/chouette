@@ -15,21 +15,15 @@ import mobi.chouette.exchange.noptis.Constant;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.model.util.Referential;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import java.io.IOException;
 
 @Log4j
-@Stateless(name = NoptisImporterCommand.COMMAND)
 public class NoptisImporterCommand extends AbstractNoptisImporterCommand implements Command, Constant {
 
     public static final String COMMAND = "NoptisImporterCommand";
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public boolean execute(Context context) throws Exception {
         boolean result = SUCCESS;
         Monitor monitor = MonitorFactory.start(COMMAND);
@@ -75,23 +69,13 @@ public class NoptisImporterCommand extends AbstractNoptisImporterCommand impleme
 
         @Override
         protected Command create(InitialContext context) throws IOException {
-            Command result = null;
-            try {
-                String name = "java:app/mobi.chouette.exchange.noptis/" + COMMAND;
-                result = (Command) context.lookup(name);
-            } catch (NamingException e) {
-                String name = "java:module/" + COMMAND;
-                try {
-                    result = (Command) context.lookup(name);
-                } catch (NamingException e1) {
-                    log.error(e);
-                }
-            }
+            Command result = new NoptisImporterCommand();
             return result;
         }
     }
 
     static {
-        CommandFactory.factories.put(NoptisImporterCommand.class.getName(), new NoptisImporterCommand.DefaultCommandFactory());
+        CommandFactory.factories.put(NoptisImporterCommand.class.getName(), new DefaultCommandFactory());
     }
+
 }

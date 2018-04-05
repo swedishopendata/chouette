@@ -6,9 +6,9 @@ import mobi.chouette.common.Context;
 import mobi.chouette.common.chain.Command;
 import mobi.chouette.exchange.ProcessingCommands;
 import mobi.chouette.exchange.ProgressionCommand;
-import mobi.chouette.exchange.noptis.importer.util.NoptisImporterUtils;
 import mobi.chouette.exchange.report.ActionReporter;
 import mobi.chouette.exchange.report.ActionReporter.OBJECT_TYPE;
+import mobi.chouette.model.stip.DataSource;
 import mobi.chouette.model.util.Referential;
 
 import javax.ejb.EJB;
@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
+import static mobi.chouette.exchange.noptis.Constant.NOPTIS_DATA_SOURCE_ID;
 
 @Log4j
 public class AbstractNoptisImporterCommand implements Constant {
@@ -56,7 +58,9 @@ public class AbstractNoptisImporterCommand implements Constant {
                     referential.clear(true);
                 }
 
-                short dataSourceId = NoptisImporterUtils.getDataSourceId(parameters.getObjectIdPrefix());
+                DataSource dataSource = daoReader.loadDataSource(parameters.getObjectIdPrefix());
+                short dataSourceId = (short) dataSource.getId().longValue();
+                context.put(NOPTIS_DATA_SOURCE_ID, dataSourceId);
 
                 // process stop areas
                 List<? extends Command> stopProcessingCommands = commands.getStopAreaProcessingCommands(context, true);

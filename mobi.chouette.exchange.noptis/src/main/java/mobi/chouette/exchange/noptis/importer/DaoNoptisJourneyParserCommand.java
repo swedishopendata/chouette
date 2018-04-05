@@ -73,7 +73,7 @@ public class DaoNoptisJourneyParserCommand implements Command, Constant {
 
             Referential referential = (Referential) context.get(REFERENTIAL);
             NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
-            short dataSourceId = NoptisImporterUtils.getDataSourceId(configuration.getObjectIdPrefix());
+            short dataSourceId = (short) context.get(NOPTIS_DATA_SOURCE_ID);
             Line line = (Line) context.get(LINE);
 
             List<DirectionOfLine> directionOfLines = directionOfLineDAO.findByDataSourceAndLineId(dataSourceId, line.getId());

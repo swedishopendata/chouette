@@ -141,7 +141,7 @@ public class NoptisImportIT extends Arquillian implements Constant, ReportConsta
 		configuration.setCleanRepository(true);
 		configuration.setOrganisationName("organisation");
 		configuration.setReferentialName("test");
-		configuration.setObjectIdPrefix("ULA");
+		configuration.setObjectIdPrefix("KUL");
 		JobDataTest jobData = new JobDataTest();
 		context.put(JOB_DATA, jobData);
 		jobData.setPathName("target/referential/test");
@@ -161,7 +161,7 @@ public class NoptisImportIT extends Arquillian implements Constant, ReportConsta
 		return context;
 	}
 
-	@Test(enabled = false, groups = { "ImportLine" }, description = "Import Plugin should import file")
+	@Test(enabled = true, groups = { "ImportLine" }, description = "Import Plugin should import file")
 	public void verifyImportLine() throws Exception {
 		Context context = initImportContext();
 

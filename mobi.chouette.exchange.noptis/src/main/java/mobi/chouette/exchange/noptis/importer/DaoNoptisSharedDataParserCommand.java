@@ -46,8 +46,7 @@ public class DaoNoptisSharedDataParserCommand implements Command, Constant {
 
         try {
             NoptisReferential noptisReferential = (NoptisReferential) context.get(NOPTIS_REFERENTIAL);
-            NoptisImportParameters configuration = (NoptisImportParameters) context.get(CONFIGURATION);
-            short dataSourceId = NoptisImporterUtils.getDataSourceId(configuration.getObjectIdPrefix());
+            short dataSourceId = (short) context.get(NOPTIS_DATA_SOURCE_ID);
 
             // StopArea
 
