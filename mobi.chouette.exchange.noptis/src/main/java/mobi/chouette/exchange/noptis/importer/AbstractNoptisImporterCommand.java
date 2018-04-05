@@ -41,6 +41,11 @@ public class AbstractNoptisImporterCommand implements Constant {
             // Initialization
             List<? extends Command> preProcessingCommands = commands.getPreProcessingCommands(context, true);
             progression.initialize(context, preProcessingCommands.size() + 1);
+
+            DataSource dataSource = daoReader.loadDataSource(parameters.getObjectIdPrefix());
+            short dataSourceId = (short) dataSource.getId().longValue();
+            context.put(NOPTIS_DATA_SOURCE_ID, dataSourceId);
+
             for (Command importCommand : preProcessingCommands) {
                 result = importCommand.execute(context);
                 if (!result) {
@@ -57,10 +62,6 @@ public class AbstractNoptisImporterCommand implements Constant {
                 if (referential != null) {
                     referential.clear(true);
                 }
-
-                DataSource dataSource = daoReader.loadDataSource(parameters.getObjectIdPrefix());
-                short dataSourceId = (short) dataSource.getId().longValue();
-                context.put(NOPTIS_DATA_SOURCE_ID, dataSourceId);
 
                 // process stop areas
                 List<? extends Command> stopProcessingCommands = commands.getStopAreaProcessingCommands(context, true);
